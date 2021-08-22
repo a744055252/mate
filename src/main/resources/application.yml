@@ -1,0 +1,16 @@
+server:
+  port: 2001
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    # 指定数据源
+    url: jdbc:mysql://112.74.17.146:8036/mate?serverTimezone=GMT
+    username: root
+    password: GZ_smash8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+# Logger Config
+logging:
+  level:
+    com.cnsmash: debug
