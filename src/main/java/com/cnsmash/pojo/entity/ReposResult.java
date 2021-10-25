@@ -2,6 +2,7 @@ package com.cnsmash.pojo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
@@ -17,6 +18,7 @@ import java.util.function.Function;
  * @author lgh
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class ReposResult<T> implements Serializable {
 
     /**

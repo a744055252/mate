@@ -1,12 +1,14 @@
 package com.cnsmash.pojo.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author guanhuan_li
  */
 @Data
-public class WxUser {
+@EqualsAndHashCode(callSuper=false)
+public class WxUser extends BaseEntity{
 
     private Boolean subscribe;
     private String openId;
