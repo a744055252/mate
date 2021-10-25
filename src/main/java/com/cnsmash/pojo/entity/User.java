@@ -1,9 +1,14 @@
 package com.cnsmash.pojo.entity;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
  * @author guanhuan_li
  */
-public class User {
+@Data
+@EqualsAndHashCode(callSuper=false)
+public class User extends BaseEntity{
 
     private Long id;
 
@@ -13,6 +18,25 @@ public class User {
 
     private String code;
 
+    /**
+     * 队伍
+     */
     private String team;
+
+    /**
+     * 标签
+     */
+    private String tag;
+
+    /**
+     * 自我介绍
+     */
+    private String desc;
+
+    /**
+     * 链接方式
+     * 1.有线 2.无线
+     */
+    private Integer linkType;
 
 }
