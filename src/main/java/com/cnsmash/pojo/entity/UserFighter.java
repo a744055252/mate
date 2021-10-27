@@ -29,7 +29,17 @@ public class UserFighter extends BaseEntity {
     private String fighterName;
 
     /**
+     * 胜局
+     */
+    private Integer win;
+
+    /**
+     * 败局
+     */
+    private Integer lost;
+
+    /**
      * 使用次数
      */
-    private Integer num;
+    private Integer total;
 }

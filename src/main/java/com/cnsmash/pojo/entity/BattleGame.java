@@ -4,19 +4,24 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 对战
+ * 一次对战的一局
  * @author guanhuan_li
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class Battle extends BaseEntity{
+public class BattleGame extends BaseEntity{
 
     private Long id;
 
     /**
-     * 赛季
+     * 对战的id {@link Battle#getId()}
      */
-    private String quarter;
+    private Long battleId;
+
+    /**
+     * 第几局
+     */
+    private Integer sort;
 
     /**
      * 对局类型
@@ -27,9 +32,9 @@ public class Battle extends BaseEntity{
     private String type;
 
     /**
-     * 比赛次数 bio 1 3 5
+     * 选择地图
      */
-    private Integer gameNum;
+    private String map;
 
     /**
      * 被ban图
@@ -38,14 +43,8 @@ public class Battle extends BaseEntity{
     private String banMap;
 
     /**
-     * 获得本次对战胜利的参赛对象
+     * 获得本局胜利的参数对象
      * objectId
      */
-    private Long battleWin;
-
-    /**
-     * 对战结果详情 json格式
-     * single: {@link com.cnsmash.pojo.bean.SingleBattleDetail}
-     */
-    private String detailJson;
+    private Long gameWin;
 }
