@@ -46,5 +46,5 @@ public class BattleGame extends BaseEntity{
      * 获得本局胜利的参数对象
      * objectId
      */
-    private Long gameWin;
+    private Long gameWinId;
 }

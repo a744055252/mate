@@ -1,5 +1,7 @@
 package com.cnsmash.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,29 +11,37 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class User extends BaseEntity{
-
+    @TableId(type = IdType.AUTO)
     private Long id;
 
-    private String name;
+    /**
+     * 主账号id
+     */
+    private Long accountId;
 
-    private Integer sex;
+    /**
+     * 昵称
+     */
+    private String nickName;
+
 
     private String code;
 
     /**
      * 队伍
      */
-    private String team;
+    private Long teamId;
 
     /**
      * 标签
+     * List<String> json格式
      */
-    private String tag;
+    private String tagJson;
 
     /**
      * 自我介绍
      */
-    private String desc;
+    private String intro;
 
     /**
      * 链接方式
