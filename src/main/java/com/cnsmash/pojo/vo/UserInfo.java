@@ -1,14 +1,13 @@
-package com.cnsmash.pojo.entity;
+package com.cnsmash.pojo.vo;
 
+import com.cnsmash.pojo.entity.User;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author guanhuan_li
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class Account extends BaseEntity{
+public class UserInfo {
 
     private Long id;
 
@@ -26,8 +25,8 @@ public class Account extends BaseEntity{
 
     private String account;
 
-    private String password;
-
     private Integer sex;
+
+    private User user;
 
 }

@@ -3,6 +3,9 @@ package com.cnsmash.service;
 import com.cnsmash.pojo.entity.Account;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.ro.RegisterUserRo;
+import com.cnsmash.pojo.vo.UserInfo;
+
+import java.util.List;
 
 /**
  * @author guanhuan_li
@@ -23,4 +26,17 @@ public interface AccountService {
      */
     User register(RegisterUserRo ro);
 
+    /**
+     * 获取用户的身份
+     * @param accountId 账号id
+     * @return 身份列表
+     */
+    List<User> listByAccountId(Long accountId);
+
+    /**
+     * 获取用户信息
+     * @param accountId 账号id
+     * @return 用户信息
+     */
+    UserInfo info(Long accountId);
 }
