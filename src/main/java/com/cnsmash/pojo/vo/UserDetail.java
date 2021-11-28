@@ -1,15 +1,13 @@
-package com.cnsmash.pojo.entity;
+package com.cnsmash.pojo.vo;
 
-import com.cnsmash.pojo.bean.BaseEntity;
+import com.cnsmash.pojo.entity.UploadFile;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author guanhuan_li
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class User extends BaseEntity {
+public class UserDetail {
 
     private Long id;
 
@@ -27,6 +25,8 @@ public class User extends BaseEntity {
      * 头像 {@link UploadFile#getId()}
      */
     private Long head;
+
+    private String headSrc;
 
     private String code;
 
@@ -51,5 +51,4 @@ public class User extends BaseEntity {
      * 1.有线 2.无线
      */
     private Integer linkType;
-
 }

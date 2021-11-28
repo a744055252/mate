@@ -1,8 +1,11 @@
 package com.cnsmash.service;
 
+import com.cnsmash.config.login.pojo.LoginUser;
 import com.cnsmash.pojo.entity.Account;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.ro.RegisterUserRo;
+import com.cnsmash.pojo.ro.UpdatePasswordRo;
+import com.cnsmash.pojo.ro.UpdateUserInfoRo;
 import com.cnsmash.pojo.vo.UserInfo;
 
 import java.util.List;
@@ -26,12 +29,6 @@ public interface AccountService {
      */
     User register(RegisterUserRo ro);
 
-    /**
-     * 获取用户的身份
-     * @param accountId 账号id
-     * @return 身份列表
-     */
-    List<User> listByAccountId(Long accountId);
 
     /**
      * 获取用户信息
@@ -39,4 +36,17 @@ public interface AccountService {
      * @return 用户信息
      */
     UserInfo info(Long accountId);
+
+    /**
+     * 更新用户密码
+     * @param ro 更新
+     */
+    void updatePassword(LoginUser loginUser, UpdatePasswordRo ro);
+
+    /**
+     * 更新用户信息
+     * @param loginUser 登录用户
+     * @param ro 更新值
+     */
+    void updateUserInfo(LoginUser loginUser, UpdateUserInfoRo ro);
 }

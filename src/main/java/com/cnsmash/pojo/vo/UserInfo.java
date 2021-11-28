@@ -1,6 +1,5 @@
 package com.cnsmash.pojo.vo;
 
-import com.cnsmash.pojo.entity.User;
 import lombok.Data;
 
 /**
@@ -27,6 +26,6 @@ public class UserInfo {
 
     private Integer sex;
 
-    private User user;
+    private UserDetail user;
 
 }

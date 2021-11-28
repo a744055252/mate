@@ -1,5 +1,6 @@
 package com.cnsmash.pojo.ro;
 
+import com.cnsmash.pojo.entity.UploadFile;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -16,6 +17,11 @@ public class RegisterUserRo {
      * 用户姓名
      */
     private String name;
+
+    /**
+     * 头像 {@link UploadFile#getId()}
+     */
+    private Long head;
 
     /**
      * 手机号

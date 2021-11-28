@@ -1,5 +1,6 @@
 package com.cnsmash.pojo.entity;
 
+import com.cnsmash.pojo.bean.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,7 +10,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class BattleGame extends BaseEntity{
+public class BattleGame extends BaseEntity {
 
     private Long id;
 

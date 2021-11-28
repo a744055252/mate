@@ -4,7 +4,7 @@ import com.cnsmash.config.login.pojo.LoginType;
 import com.cnsmash.config.login.pojo.LoginUser;
 import com.cnsmash.config.login.pojo.LoginUserVo;
 import com.cnsmash.config.login.service.LoginUserService;
-import com.cnsmash.pojo.entity.ReposResult;
+import com.cnsmash.pojo.bean.ReposResult;
 import com.cnsmash.util.JsonUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;

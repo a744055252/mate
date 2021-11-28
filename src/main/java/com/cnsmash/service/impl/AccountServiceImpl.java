@@ -1,15 +1,23 @@
 package com.cnsmash.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.cnsmash.config.login.MateAuthenticationProvider;
+import com.cnsmash.config.login.pojo.LoginUser;
+import com.cnsmash.config.login.service.LoginUserService;
 import com.cnsmash.exception.CodeException;
 import com.cnsmash.exception.ErrorCode;
 import com.cnsmash.mapper.AccountMapper;
-import com.cnsmash.mapper.UserMapper;
 import com.cnsmash.pojo.entity.Account;
+import com.cnsmash.pojo.entity.UploadFile;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.ro.RegisterUserRo;
+import com.cnsmash.pojo.ro.UpdatePasswordRo;
+import com.cnsmash.pojo.ro.UpdateUserInfoRo;
+import com.cnsmash.pojo.vo.UserDetail;
 import com.cnsmash.pojo.vo.UserInfo;
 import com.cnsmash.service.AccountService;
+import com.cnsmash.service.FileService;
+import com.cnsmash.service.UserService;
 import com.cnsmash.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -36,7 +44,10 @@ public class AccountServiceImpl implements AccountService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserMapper userMapper;
+    UserService userService;
+
+    @Autowired
+    FileService fileService;
 
     @Override
     public Account login(String username){
@@ -49,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
         if (getAccountByAccount(ro.getAccount()) != null) {
             throw new CodeException(ErrorCode.ACCOUNT_EXIT, "账号已存在");
         }
-        if (getUserByNickName(ro.getNickName()) != null) {
+        if (userService.getUserByNickName(ro.getNickName()) != null) {
             throw new CodeException(ErrorCode.NICKNAME_EXIT, "昵称已存在");
         }
 
@@ -69,17 +80,12 @@ public class AccountServiceImpl implements AccountService {
         user.setTagJson(JsonUtil.toJson(ro.getTags()));
         user.setUpdateTime(now);
         user.setCreateTime(now);
-        userMapper.insert(user);
+        userService.add(user);
 
         return user;
     }
 
-    @Override
-    public List<User> listByAccountId(Long accountId) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("account_id", accountId);
-        return userMapper.selectList(queryWrapper);
-    }
+
 
     @Override
     public UserInfo info(Long accountId) {
@@ -87,26 +93,59 @@ public class AccountServiceImpl implements AccountService {
         UserInfo userInfo = new UserInfo();
         BeanUtils.copyProperties(account, userInfo);
 
-        List<User> users = listByAccountId(accountId);
+        List<User> users = userService.listByAccountId(accountId);
 
         if (!CollectionUtils.isEmpty(users)) {
             User user = users.get(0);
-            userInfo.setUser(user);
+            UserDetail userDetail = new UserDetail();
+            BeanUtils.copyProperties(user, userDetail);
+            userInfo.setUser(userDetail);
+            UploadFile head = fileService.findById(user.getHead());
+            if (head != null) {
+                userDetail.setHead(head.getId());
+                userDetail.setHeadSrc(head.getSrc());
+            }
         }
 
         return userInfo;
+    }
+
+    @Override
+    public void updatePassword(LoginUser loginUser, UpdatePasswordRo ro) {
+        Account account = accountMapper.selectById(loginUser.getId());
+        LoginUserService loginUserService = MateAuthenticationProvider.getType2service().get(loginUser.getLoginType());
+        PasswordEncoder encoder = loginUserService.getPasswordEncoder();
+        if (!encoder.matches(ro.getOldPassword(), account.getPassword())) {
+            // 密码不对
+            throw new CodeException(ErrorCode.PASSWORD_ERROR, "密码错误！");
+        }
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        account.setUpdateTime(now);
+        account.setPassword(encoder.encode(ro.getNewPassword()));
+        accountMapper.updateById(account);
+    }
+
+    @Override
+    public void updateUserInfo(LoginUser loginUser, UpdateUserInfoRo ro) {
+        Account account = accountMapper.selectById(loginUser.getId());
+        User user = userService.getById(loginUser.getUserId());
+
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        BeanUtils.copyProperties(ro, account);
+        account.setUpdateTime(now);
+
+        BeanUtils.copyProperties(ro, user);
+        user.setUpdateTime(now);
+        user.setTagJson(JsonUtil.toJson(ro.getTags()));
+
+        accountMapper.updateById(account);
+        userService.update(user);
     }
 
     private Account getAccountByAccount(String username) {
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("account", username);
         return accountMapper.selectOne(queryWrapper);
-    }
-
-    private User getUserByNickName(String nickName) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("nick_name", nickName);
-        return userMapper.selectOne(queryWrapper);
     }
 
     private boolean exit(String username, String nickName) {

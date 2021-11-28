@@ -4,6 +4,7 @@ import com.cnsmash.config.login.pojo.*;
 import com.cnsmash.pojo.entity.Account;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.service.AccountService;
+import com.cnsmash.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class AccountLoginServiceImpl implements LoginUserService {
 
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public LoginUserVo getLoginUserVo(LoginUser loginUser) {
@@ -63,7 +67,7 @@ public class AccountLoginServiceImpl implements LoginUserService {
             throw new BadCredentialsException("账号不存在！");
         }
 
-        List<User> users = accountService.listByAccountId(account.getId());
+        List<User> users = userService.listByAccountId(account.getId());
         if (CollectionUtils.isEmpty(users)) {
             throw new BadCredentialsException("身份不存在！");
         }

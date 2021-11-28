@@ -10,7 +10,11 @@ spring:
     username: root
     password: GZ_smash8
     driver-class-name: com.mysql.cj.jdbc.Driver
+file:
+  rootPath: /Users/guanhuan/temp
 # Logger Config
 logging:
   level:
     com.cnsmash: debug
+mybatis:
+  mapper-locations: classpath*:com/cnsmash/**/*Mapper.xml

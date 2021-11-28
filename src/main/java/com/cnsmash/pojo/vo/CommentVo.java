@@ -1,15 +1,16 @@
-package com.cnsmash.pojo.entity;
+package com.cnsmash.pojo.vo;
 
-import com.cnsmash.pojo.bean.BaseEntity;
+import com.cnsmash.pojo.entity.Battle;
+import com.cnsmash.pojo.entity.User;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.sql.Timestamp;
 
 /**
  * @author guanhuan_li
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class Comment extends BaseEntity {
+public class CommentVo {
 
     private Long id;
 
@@ -36,4 +37,12 @@ public class Comment extends BaseEntity {
      * 评论人
      */
     private Long userId;
+
+    private UserDetail userDetail;
+
+    private Timestamp createTime;
+
+    private Timestamp updateTime;
+
+
 }

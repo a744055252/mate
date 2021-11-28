@@ -1,22 +1,21 @@
-package com.cnsmash.pojo.entity;
+package com.cnsmash.pojo.ro;
 
-import com.cnsmash.pojo.bean.BaseEntity;
+import com.cnsmash.pojo.entity.UploadFile;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 /**
  * @author guanhuan_li
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class User extends BaseEntity {
+public class UpdateUserInfoRo {
 
-    private Long id;
+    private String name;
 
-    /**
-     * 主账号id
-     */
-    private Long accountId;
+    private String mail;
+
+    private Integer sex;
 
     /**
      * 昵称
@@ -39,7 +38,7 @@ public class User extends BaseEntity {
      * 标签
      * List<String> json格式
      */
-    private String tagJson;
+    private List<String> tags;
 
     /**
      * 自我介绍
@@ -51,5 +50,4 @@ public class User extends BaseEntity {
      * 1.有线 2.无线
      */
     private Integer linkType;
-
 }

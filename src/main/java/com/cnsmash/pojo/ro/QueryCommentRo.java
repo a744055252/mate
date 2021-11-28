@@ -1,6 +1,9 @@
-package com.cnsmash.pojo.entity;
+package com.cnsmash.pojo.ro;
 
-import com.cnsmash.pojo.bean.BaseEntity;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cnsmash.pojo.CommentType;
+import com.cnsmash.pojo.entity.Battle;
+import com.cnsmash.pojo.entity.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,16 +12,14 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Comment extends BaseEntity {
-
-    private Long id;
+public class QueryCommentRo {
 
     /**
      * 评论的对象类型
      * 用户 user
      * 对战 battle
      */
-    private String objectType;
+    private CommentType objectType;
 
     /**
      * 评论的对象类型
@@ -27,13 +28,5 @@ public class Comment extends BaseEntity {
      */
     private Long objectId;
 
-    /**
-     * 内容
-     */
-    private String content;
 
-    /**
-     * 评论人
-     */
-    private Long userId;
 }

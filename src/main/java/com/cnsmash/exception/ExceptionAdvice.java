@@ -1,6 +1,6 @@
 package com.cnsmash.exception;
 
-import com.cnsmash.pojo.entity.ReposResult;
+import com.cnsmash.pojo.bean.ReposResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;

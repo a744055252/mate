@@ -1,19 +1,26 @@
-package com.cnsmash.pojo.entity;
+package com.cnsmash.pojo.vo;
 
-import com.cnsmash.pojo.bean.BaseEntity;
+import com.cnsmash.pojo.entity.User;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
- * 用户排名
- *
  * @author guanhuan_li
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class UserRank extends BaseEntity {
+public class MyRankVo {
 
-    private Long id;
+    public MyRankVo() {
+    }
+
+    public MyRankVo(Long userId, String quarter) {
+        this.userId = userId;
+        this.quarter = quarter;
+        this.lost = 0;
+        this.win = 0;
+        this.rank = 0L;
+        this.total = 0;
+        this.score = 0L;
+    }
 
     /**
      * 用户id {@link User#getId()}
@@ -49,4 +56,5 @@ public class UserRank extends BaseEntity {
      * 总对局
      */
     private Integer total;
+
 }
