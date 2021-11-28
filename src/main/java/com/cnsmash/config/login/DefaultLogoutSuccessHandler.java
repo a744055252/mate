@@ -1,6 +1,6 @@
 package com.cnsmash.config.login;
 
-import com.cnsmash.pojo.entity.ReposResult;
+import com.cnsmash.pojo.bean.ReposResult;
 import com.cnsmash.util.JsonUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;

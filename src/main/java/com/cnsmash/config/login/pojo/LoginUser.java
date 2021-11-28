@@ -15,6 +15,7 @@ import java.util.Collection;
 public class LoginUser implements UserDetails, Serializable {
     private static final long serialVersionUID = -1257363449090585625L;
     private Long id;
+    private Long userId;
     private String name;
     private String phone;
     private String mail;

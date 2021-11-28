@@ -1,5 +1,6 @@
 package com.cnsmash.pojo.entity;
 
+import com.cnsmash.pojo.bean.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -8,12 +9,18 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class Account extends BaseEntity{
+public class Account extends BaseEntity {
 
     private Long id;
 
+    /**
+     * 用户姓名
+     */
     private String name;
 
+    /**
+     * 手机号
+     */
     private String phone;
 
     private String mail;
@@ -21,4 +28,7 @@ public class Account extends BaseEntity{
     private String account;
 
     private String password;
+
+    private Integer sex;
+
 }

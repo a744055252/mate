@@ -2,7 +2,9 @@ package com.cnsmash.config.login.service;
 
 import com.cnsmash.config.login.pojo.*;
 import com.cnsmash.pojo.entity.Account;
+import com.cnsmash.pojo.entity.User;
 import com.cnsmash.service.AccountService;
+import com.cnsmash.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,9 @@ public class AccountLoginServiceImpl implements LoginUserService {
 
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public LoginUserVo getLoginUserVo(LoginUser loginUser) {
@@ -61,6 +67,11 @@ public class AccountLoginServiceImpl implements LoginUserService {
             throw new BadCredentialsException("账号不存在！");
         }
 
+        List<User> users = userService.listByAccountId(account.getId());
+        if (CollectionUtils.isEmpty(users)) {
+            throw new BadCredentialsException("身份不存在！");
+        }
+        User user = users.get(0);
         LoginUser loginUser = new LoginUser();
         BeanUtils.copyProperties(account, loginUser);
         loginUser.setAccountNonLocked(true);
@@ -73,6 +84,7 @@ public class AccountLoginServiceImpl implements LoginUserService {
         loginUser.setAccountNonExpired(true);
         loginUser.setEnabled(true);
         loginUser.setId(account.getId());
+        loginUser.setUserId(user.getId());
         loginUser.setPassword(account.getPassword());
         loginUser.setUsername(username);
         return loginUser;

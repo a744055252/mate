@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnsmash.mapper.UserMapper">
+
+    <select id="listUserDetail" resultType="com.cnsmash.pojo.vo.UserDetail">
+        SELECT u.*, uf.id as head, uf.src as headSrc
+        FROM user u
+            inner join upload_file uf on u.head = uf.id
+        <where>
+            u.id in
+            <foreach collection="userIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+</mapper>

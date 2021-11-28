@@ -1,5 +1,6 @@
 package com.cnsmash.pojo.entity;
 
+import com.cnsmash.pojo.bean.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

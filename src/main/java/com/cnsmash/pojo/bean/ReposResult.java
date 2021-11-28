@@ -1,4 +1,4 @@
-package com.cnsmash.pojo.entity;
+package com.cnsmash.pojo.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

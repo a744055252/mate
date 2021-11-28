@@ -1,5 +1,6 @@
 package com.cnsmash.pojo.entity;
 
+import com.cnsmash.pojo.bean.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -8,30 +9,42 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
     private Long id;
 
-    private String name;
+    /**
+     * 主账号id
+     */
+    private Long accountId;
 
-    private Integer sex;
+    /**
+     * 昵称
+     */
+    private String nickName;
+
+    /**
+     * 头像 {@link UploadFile#getId()}
+     */
+    private Long head;
 
     private String code;
 
     /**
      * 队伍
      */
-    private String team;
+    private Long teamId;
 
     /**
      * 标签
+     * List<String> json格式
      */
-    private String tag;
+    private String tagJson;
 
     /**
      * 自我介绍
      */
-    private String desc;
+    private String intro;
 
     /**
      * 链接方式

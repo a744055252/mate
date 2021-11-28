@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.server.session.DefaultWebSessionManager;
+import org.springframework.web.server.session.HeaderWebSessionIdResolver;
+import org.springframework.web.server.session.WebSessionIdResolver;
 
 /**
  * @author guanhuan_li
@@ -54,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authenticationEntryPoint(new DefaultAuthenticationEntryPoint())
             .and()
             .authorizeRequests()
-            .antMatchers("/actuator/**").permitAll()
+            .antMatchers("/actuator/**", "/account/register").permitAll()
             .anyRequest()
             .authenticated();
 
