@@ -15,4 +15,15 @@ public interface SystemArgService {
      */
     SystemArg get(Arg arg);
 
+    /**
+     * 是否允许建房
+     * @return 是否
+     */
+    boolean allowCreateRoom();
+
+    /**
+     * 是否允许匹配
+     * @return 是否
+     */
+    boolean allowJoinRoom();
 }

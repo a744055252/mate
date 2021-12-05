@@ -27,11 +27,11 @@ public class RankServiceImpl implements RankService {
     QuarterService quarterService;
 
     @Override
-    public MyRankVo myRank(LoginUser loginUser) {
+    public MyRankVo userRank(Long userId) {
         Quarter quarter = quarterService.getCurrent();
         String quarterCode = quarter.getCode();
-        UserRank userRank = get(loginUser.getUserId(), quarterCode);
-        MyRankVo vo = new MyRankVo(loginUser.getUserId(), quarterCode);
+        UserRank userRank = get(userId, quarterCode);
+        MyRankVo vo = new MyRankVo(userId, quarterCode);
         if (userRank == null) {
             return vo;
         }

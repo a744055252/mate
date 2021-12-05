@@ -28,4 +28,16 @@ public class SystemArgServiceImpl implements SystemArgService {
         queryWrapper.eq("argKey", arg.name());
         return systemArgMapper.selectOne(queryWrapper);
     }
+
+    @Override
+    public boolean allowCreateRoom() {
+        SystemArg systemArg = get(Arg.createRoom);
+        return Boolean.parseBoolean(systemArg.getArgValue());
+    }
+
+    @Override
+    public boolean allowJoinRoom() {
+        SystemArg systemArg = get(Arg.joinRoom);
+        return Boolean.parseBoolean(systemArg.getArgValue());
+    }
 }

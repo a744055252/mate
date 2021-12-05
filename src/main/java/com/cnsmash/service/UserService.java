@@ -1,6 +1,7 @@
 package com.cnsmash.service;
 
 import com.cnsmash.pojo.entity.User;
+import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
 import com.cnsmash.pojo.vo.UserDetail;
 
 import java.util.List;
@@ -49,4 +50,11 @@ public interface UserService {
      * @param user 用户
      */
     void update(User user);
+
+    /**
+     * 更新匹配规则
+     * @param userId  用户
+     * @param ro 匹配规则
+     */
+    void updateMatchRule(Long userId, UpdateMatchRuleRo ro);
 }

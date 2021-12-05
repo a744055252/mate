@@ -4,6 +4,8 @@ import com.cnsmash.pojo.bean.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.sql.Timestamp;
+
 /**
  * 一次对战的一局
  * @author guanhuan_li
@@ -26,6 +28,7 @@ public class BattleGame extends BaseEntity {
 
     /**
      * 对局类型
+     * {@link com.cnsmash.pojo.BattleType}
      * 单打、双打
      * type 是 single 单打 objectId存userId
      * type 是 doubles 双打 objectId存teamId
@@ -39,7 +42,7 @@ public class BattleGame extends BaseEntity {
 
     /**
      * 被ban图
-     * List<String> 格式
+     * Set<String> 格式
      */
     private String banMap;
 
@@ -48,4 +51,13 @@ public class BattleGame extends BaseEntity {
      * objectId
      */
     private Long gameWinId;
+
+    /**
+     * 比赛状态
+     * {@link com.cnsmash.pojo.GameStatus}
+     */
+    private String gameStatus;
+
+    /** 对局结束时间 */
+    private Timestamp endTime;
 }

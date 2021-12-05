@@ -1,6 +1,5 @@
 package com.cnsmash.pojo;
 
-import lombok.Data;
 import lombok.Getter;
 
 /**
@@ -9,8 +8,10 @@ import lombok.Getter;
  */
 @Getter
 public enum Arg {
-    /** 赛季 */
-    quarter,
+    /** 允许建房 */
+    createRoom,
+    /** 允许匹配 */
+    joinRoom
     ;
     
 }
