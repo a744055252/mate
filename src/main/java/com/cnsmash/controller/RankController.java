@@ -23,7 +23,7 @@ public class RankController {
     @GetMapping
     public ReposResult<MyRankVo> myRank(){
         LoginUser loginUser = MateAuthUtils.getLoginUser();
-        return ReposResult.ok(rankService.myRank(loginUser));
+        return ReposResult.ok(rankService.userRank(loginUser.getUserId()));
     }
 
 }

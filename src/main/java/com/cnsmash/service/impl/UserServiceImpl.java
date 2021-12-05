@@ -2,17 +2,18 @@ package com.cnsmash.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cnsmash.mapper.UserMapper;
-import com.cnsmash.pojo.entity.UploadFile;
 import com.cnsmash.pojo.entity.User;
+import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
 import com.cnsmash.pojo.vo.UserDetail;
 import com.cnsmash.service.UserService;
+import com.cnsmash.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author guanhuan_li
@@ -56,5 +57,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(User user) {
         userMapper.updateById(user);
+    }
+
+    @Override
+    public void updateMatchRule(Long userId, UpdateMatchRuleRo ro) {
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+
+        User user = getById(userId);
+        user.setBanMap(JsonUtil.toJson(ro.getBanMap()));
+        user.setUpdateTime(now);
+        update(user);
     }
 }

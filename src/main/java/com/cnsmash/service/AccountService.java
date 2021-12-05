@@ -40,6 +40,7 @@ public interface AccountService {
     /**
      * 更新用户密码
      * @param ro 更新
+     * @param loginUser 登录用户
      */
     void updatePassword(LoginUser loginUser, UpdatePasswordRo ro);
 

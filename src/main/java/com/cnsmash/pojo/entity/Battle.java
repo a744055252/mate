@@ -4,6 +4,8 @@ import com.cnsmash.pojo.bean.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.sql.Timestamp;
+
 /**
  * 对战
  * @author guanhuan_li
@@ -34,7 +36,7 @@ public class Battle extends BaseEntity {
 
     /**
      * 被ban图
-     * List<String> 格式
+     * Set<String> 格式
      */
     private String banMap;
 
@@ -45,8 +47,27 @@ public class Battle extends BaseEntity {
     private Long battleWin;
 
     /**
+     * 比赛状态
+     * {@link com.cnsmash.pojo.GameStatus}
+     */
+    private String gameStatus;
+
+    /**
      * 对战结果详情 json格式
      * single: {@link com.cnsmash.pojo.bean.SingleBattleDetail}
      */
     private String detailJson;
+
+    /**
+     * 结果提交人
+     */
+    private Long commitId;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /** 对战结束时间 */
+    private Timestamp endTime;
 }

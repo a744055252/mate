@@ -52,4 +52,10 @@ public class User extends BaseEntity {
      */
     private Integer linkType;
 
+    /**
+     * 被ban图
+     * Set<String> 格式
+     */
+    private String banMap;
+
 }

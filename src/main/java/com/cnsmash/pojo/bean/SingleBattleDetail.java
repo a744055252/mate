@@ -3,6 +3,7 @@ package com.cnsmash.pojo.bean;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 单打结果
@@ -11,33 +12,26 @@ import java.util.List;
 @Data
 public class SingleBattleDetail {
 
-    /**
-     * 参赛用户1
-     */
-    private Long userId1;
+    List<UserBattleDetail> userBattleDetails;
 
     /**
-     * 参赛用户2
+     * 单个用户对战详情
      */
-    private Long userId2;
+    @Data
+    public static class UserBattleDetail{
+        /**
+         * 参赛用户
+         */
+        private Long userId;
 
-    /**
-     * 参赛用户1分数
-     */
-    private Long battleScore1;
+        /**
+         * 参赛用户分数
+         */
+        private Long battleScore;
 
-    /**
-     * 参赛用户1分数
-     */
-    private Long battleScore2;
-
-    /**
-     * 参赛用户1使用斗士
-     */
-    private List<String> user1FighterList;
-
-    /**
-     * 参赛用户1使用斗士
-     */
-    private List<String> user2FighterList;
+        /**
+         * 参赛用户使用斗士
+         */
+        private Set<String> userFighterSet;
+    }
 }
