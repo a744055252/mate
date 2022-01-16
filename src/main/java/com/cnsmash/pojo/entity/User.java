@@ -4,6 +4,8 @@ import com.cnsmash.pojo.bean.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.sql.Timestamp;
+
 /**
  * @author guanhuan_li
  */
@@ -58,4 +60,20 @@ public class User extends BaseEntity {
      */
     private String banMap;
 
+    /**
+     * 服务器
+     * 裸连zh 日服jp 港服hk 美服usa
+     */
+    private String server;
+
+    /**
+     * 分差
+     */
+    private Long scoreGap;
+
+    /**
+     * 上次建房时间
+     * 比赛完会更新一次
+     */
+    private Timestamp createRoomTime;
 }

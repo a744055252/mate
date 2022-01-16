@@ -19,7 +19,7 @@ public class MyRankVo {
         this.win = 0;
         this.rank = 0L;
         this.total = 0;
-        this.score = 0L;
+        this.score = 1500L;
     }
 
     /**

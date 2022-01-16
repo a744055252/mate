@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,8 +15,8 @@ import java.util.Set;
 @Data
 public class BattleResultRo {
 
-    @NotBlank
-    private Long roomId;
+    @NotNull
+    private Long battleId;
 
     /** 用户id和对应的比分 */
     @NotEmpty

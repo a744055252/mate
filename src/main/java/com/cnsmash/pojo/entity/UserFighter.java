@@ -20,14 +20,14 @@ public class UserFighter extends BaseEntity {
     private Long userId;
 
     /**
+     * 赛季
+     */
+    private String quarter;
+
+    /**
      * 斗士编码
      */
     private String fighterNo;
-
-    /**
-     * 斗士名
-     */
-    private String fighterName;
 
     /**
      * 胜局
