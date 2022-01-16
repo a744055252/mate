@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnsmash.mapper.BattleMapper">
+
+    <select id="page" resultType="com.cnsmash.pojo.vo.PageBattleVo">
+        SELECT DISTINCT b.id, b.*
+        FROM battle b
+            LEFT JOIN game_fighter gf on gf.battle_id = b.id
+        <where>
+            <if test="ro.userId != null">
+                gf.user_id = #{ro.userId}
+            </if>
+            <if test="ro.quarter != null and ro.quarter != ''">
+                gf.quarter = #{ro.quarter}
+            </if>
+            <if test="ro.type != null and ro.type != ''">
+                gf.type = #{ro.type}
+            </if>
+            <if test="ro.gameStatus != null and ro.gameStatus != ''">
+                gf.game_status = #{ro.gameStatus}
+            </if>
+            <if test="ro.beforeTime != null">
+                gf.end_time &gt;= #{ro.beforeTime}
+            </if>
+            <if test="ro.afterTime != null">
+                gf.end_time &lt; #{ro.afterTime}
+            </if>
+        </where>
+        ORDER BY b.id
+    </select>
+</mapper>

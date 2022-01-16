@@ -1,0 +1,52 @@
+package com.cnsmash.match;
+
+import lombok.Builder;
+import lombok.Data;
+
+import java.sql.Timestamp;
+import java.util.Objects;
+
+/**
+ * @author guanhuan_li
+ */
+@Data
+@Builder
+public class MatchBean {
+
+    /** 用户id */
+    private Long userId;
+
+    /** 分数 */
+    private Long score;
+
+    /**
+     * 服务器
+     * 裸连zh 日服jp 港服hk 美服usa
+     */
+    private String server;
+
+    /**
+     * 分差
+     */
+    private Long scoreGap;
+
+    /** 开始排位时间 */
+    private Timestamp findTime;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MatchBean matchBean = (MatchBean) o;
+        return userId.equals(matchBean.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
+}

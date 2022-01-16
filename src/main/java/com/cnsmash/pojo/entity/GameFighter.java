@@ -20,6 +20,7 @@ public class GameFighter extends BaseEntity {
 
     /**
      * 对局的id {@link BattleGame#getId()}
+     * 为空时，记录比赛参赛人
      */
     private Long gameId;
 

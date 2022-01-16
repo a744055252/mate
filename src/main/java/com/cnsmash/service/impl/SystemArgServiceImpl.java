@@ -25,19 +25,13 @@ public class SystemArgServiceImpl implements SystemArgService {
     @Override
     public SystemArg get(Arg arg) {
         QueryWrapper<SystemArg> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("argKey", arg.name());
+        queryWrapper.eq("arg_key", arg.name());
         return systemArgMapper.selectOne(queryWrapper);
     }
 
     @Override
-    public boolean allowCreateRoom() {
-        SystemArg systemArg = get(Arg.createRoom);
-        return Boolean.parseBoolean(systemArg.getArgValue());
-    }
-
-    @Override
-    public boolean allowJoinRoom() {
-        SystemArg systemArg = get(Arg.joinRoom);
+    public boolean allowMatch() {
+        SystemArg systemArg = get(Arg.allowMatch);
         return Boolean.parseBoolean(systemArg.getArgValue());
     }
 }

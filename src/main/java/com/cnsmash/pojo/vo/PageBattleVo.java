@@ -1,18 +1,14 @@
-package com.cnsmash.pojo.entity;
+package com.cnsmash.pojo.vo;
 
-import com.cnsmash.pojo.bean.BaseEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.sql.Timestamp;
 
 /**
- * 对战
  * @author guanhuan_li
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class Battle extends BaseEntity {
+public class PageBattleVo {
 
     private Long id;
 
@@ -59,6 +55,11 @@ public class Battle extends BaseEntity {
     private String detailJson;
 
     /**
+     * 结果提交人
+     */
+    private Long commitId;
+
+    /**
      * 备注
      */
     private String remark;
@@ -68,9 +69,4 @@ public class Battle extends BaseEntity {
      */
     private Timestamp endTime;
 
-    /**
-     * 房间信息 Json 格式
-     * {@link com.cnsmash.pojo.bean.Room}
-     */
-    private String roomJson;
 }

@@ -28,11 +28,20 @@ public interface ErrorCode {
     int CREATE_ROOM_ERROR = 1009;
 
     /** 当前不允许匹配 */
-    int JOIN_ROOM_ERROR = 1010;
+    int MATCH_ALLOW_ERROR = 1010;
 
     /** 对战房间不存在 */
     int BATTLE_ROOM_ERROR = 1011;
 
     /** 对战分数不对 */
     int BATTLE_SCORE_ERROR = 1012;
+    
+    /** 分数计算出错 */
+    int RANK_SCORE_ERROR = 1013;
+
+    /** 不支持的枚举 */
+    int NOT_SUPPORT_ENUM = 1014;
+
+    /** 参赛人数有误 */
+    int GAME_NUM_ERROR = 1015;
 }
