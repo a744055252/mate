@@ -1,7 +1,11 @@
 package com.cnsmash.pojo.vo;
 
 import com.cnsmash.pojo.entity.UploadFile;
+import com.cnsmash.pojo.entity.UserFighter;
+import com.cnsmash.pojo.entity.UserRank;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author guanhuan_li
@@ -51,4 +55,25 @@ public class UserDetail {
      * 1.有线 2.无线
      */
     private Integer linkType;
+
+    /**
+     * 服务器
+     * 裸连zh 日服jp 港服hk 美服usa
+     */
+    private String server;
+
+    /**
+     * 分差
+     */
+    private Long scoreGap;
+
+    /**
+     * 排位分数
+     */
+    private UserRank userRank;
+
+    /**
+     * 使用斗士
+     */
+    private List<UserFighter> userFighterList;
 }

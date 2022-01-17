@@ -1,9 +1,12 @@
 package com.cnsmash.service;
 
+import com.cnsmash.pojo.BattleResultType;
 import com.cnsmash.pojo.entity.User;
+import com.cnsmash.pojo.entity.UserFighter;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
 import com.cnsmash.pojo.vo.UserDetail;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -57,4 +60,19 @@ public interface UserService {
      * @param ro 匹配规则
      */
     void updateMatchRule(Long userId, UpdateMatchRuleRo ro);
+
+    /**
+     * 使用角色列表
+     * @param userId 用户
+     * @param type 对战结果
+     * @param fighterList 斗士列表
+     */
+    void useFighter(Long userId, BattleResultType type, Collection<String> fighterList);
+
+    /**
+     * 获取用户使用角色
+     * @param userId 用户id
+     * @return 角色列表
+     */
+    List<UserFighter> listUserFighter(Long userId);
 }

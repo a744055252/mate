@@ -26,6 +26,7 @@ public class UserController {
         LoginUser loginUser = MateAuthUtils.getLoginUser();
         return ReposResult.ok(userService.getById(loginUser.getUserId()));
     }
+
     @PostMapping("/rule")
     public ReposResult<Void> updateMatchRule(@RequestBody @Valid UpdateMatchRuleRo ro) {
         LoginUser loginUser = MateAuthUtils.getLoginUser();
@@ -33,5 +34,9 @@ public class UserController {
         return ReposResult.ok();
     }
 
+    @GetMapping("/id")
+    public ReposResult<User> getById(@RequestParam Long userId){
+        return ReposResult.ok(userService.getById(userId));
+    }
 
 }

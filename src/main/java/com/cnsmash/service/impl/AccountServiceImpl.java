@@ -8,6 +8,7 @@ import com.cnsmash.exception.CodeException;
 import com.cnsmash.exception.ErrorCode;
 import com.cnsmash.mapper.AccountMapper;
 import com.cnsmash.pojo.entity.Account;
+import com.cnsmash.pojo.entity.Quarter;
 import com.cnsmash.pojo.entity.UploadFile;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.ro.RegisterUserRo;
@@ -17,6 +18,7 @@ import com.cnsmash.pojo.vo.UserDetail;
 import com.cnsmash.pojo.vo.UserInfo;
 import com.cnsmash.service.AccountService;
 import com.cnsmash.service.FileService;
+import com.cnsmash.service.QuarterService;
 import com.cnsmash.service.UserService;
 import com.cnsmash.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +50,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     FileService fileService;
+
+    @Autowired
+    QuarterService quarterService;
 
     @Override
     public Account login(String username){

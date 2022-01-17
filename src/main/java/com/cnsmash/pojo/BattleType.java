@@ -8,8 +8,17 @@ import lombok.Getter;
 @Getter
 public enum BattleType {
     /** 对战类型 */
-    single,
-    doubles,
+    single(2),
+    doubles(4),
     ;
+
+    /**
+     * 参赛人数
+     */
+    private int num;
+
+    BattleType(int num) {
+        this.num = num;
+    }
 
 }
