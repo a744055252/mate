@@ -92,8 +92,17 @@ public class RankServiceImpl implements RankService {
             userRankMapper.updateById(userRank);
         }
 
+        addRankLog(userId, change, logKey, changeType, quarter.getCode());
+    }
 
-        add(quarter.getCode(), userId, changeType, change, battleId.toString());
+    private void addRankLog(Long userId, Long change, String logKey, RankChangeType changeType, String quarter) {
+        RankLog log = new RankLog();
+        log.setQuarter(quarter);
+        log.setUserId(userId);
+        log.setChangeScore(change);
+        log.setChangeType(changeType.name());
+        log.setLogKey(logKey);
+        rankLogMapper.insert(log);
     }
 
     private RankChangeType convertType(BattleResultType type) {
@@ -144,13 +153,7 @@ public class RankServiceImpl implements RankService {
             userRankMapper.updateById(userRank);
         }
 
-        RankLog log = new RankLog();
-        log.setQuarter(quarter);
-        log.setUserId(userId);
-        log.setChangeScore(change);
-        log.setChangeType(type.name());
-        log.setLogKey(logKey);
-        rankLogMapper.insert(log);
+        addRankLog(userId, change, logKey, type, quarter);
     }
 
     /**
