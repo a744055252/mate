@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void useFighter(Long userId, BattleResultType type, Collection<String> fighterList) {
+    public void useFighter(String quarter, Long userId, BattleResultType type, Collection<String> fighterList) {
         Map<String, UserFighter> no2fighter = listAllUserFighter(userId).stream()
                 .collect(Collectors.toMap(UserFighter::getFighterNo, Function.identity()));
 
@@ -92,6 +92,7 @@ public class UserServiceImpl implements UserService {
             if (userFighter == null) {
                 userFighter = new UserFighter();
                 userFighter.setUserId(userId);
+                userFighter.setQuarter(quarter);
                 userFighter.setFighterNo(fighter);
                 userFighter.setCreateTime(now);
                 userFighter.setLost(0);

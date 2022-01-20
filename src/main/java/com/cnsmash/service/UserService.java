@@ -63,11 +63,12 @@ public interface UserService {
 
     /**
      * 使用角色列表
-     * @param userId 用户
-     * @param type 对战结果
+     * @param quarter     赛季
+     * @param userId      用户
+     * @param type        对战结果
      * @param fighterList 斗士列表
      */
-    void useFighter(Long userId, BattleResultType type, Collection<String> fighterList);
+    void useFighter(String quarter, Long userId, BattleResultType type, Collection<String> fighterList);
 
     /**
      * 获取用户使用角色

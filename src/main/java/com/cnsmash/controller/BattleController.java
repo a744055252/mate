@@ -8,6 +8,8 @@ import com.cnsmash.pojo.bean.Room;
 import com.cnsmash.pojo.ro.BattleResultRo;
 import com.cnsmash.pojo.ro.CreateRoomRo;
 import com.cnsmash.pojo.ro.PageBattleRo;
+import com.cnsmash.pojo.ro.StopBattleRo;
+import com.cnsmash.pojo.ro.SubmitFighterRo;
 import com.cnsmash.pojo.vo.MatchResultVo;
 import com.cnsmash.pojo.vo.PageBattleVo;
 import com.cnsmash.service.BattleService;
@@ -84,6 +86,30 @@ public class BattleController {
     public ReposResult<Void> submitGameResult(@RequestBody @Valid BattleResultRo ro){
         LoginUser loginUser = MateAuthUtils.getLoginUser();
         battleService.submitBattleResult(loginUser.getUserId(), ro);
+        return ReposResult.ok();
+    }
+
+    /**
+     * 中止对战
+     * @param ro 中止
+     * @return 结果
+     */
+    @PostMapping("/stop")
+    public ReposResult<Void> stopBattle(@RequestBody @Valid StopBattleRo ro) {
+        LoginUser loginUser = MateAuthUtils.getLoginUser();
+        battleService.stop(loginUser.getUserId(), ro);
+        return ReposResult.ok();
+    }
+
+    /**
+     * 提交对手角色
+     * @param ro 比赛结果
+     * @return 空
+     */
+    @PostMapping("/fighter")
+    public ReposResult<Void> submitFighter(@RequestBody @Valid SubmitFighterRo ro){
+        LoginUser loginUser = MateAuthUtils.getLoginUser();
+        battleService.submitFighter(loginUser.getUserId(), ro);
         return ReposResult.ok();
     }
 

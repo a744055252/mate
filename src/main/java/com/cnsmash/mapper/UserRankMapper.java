@@ -7,10 +7,12 @@ import com.cnsmash.pojo.entity.UserRank;
 import com.cnsmash.pojo.ro.PageFighterRo;
 import com.cnsmash.pojo.vo.UserDetail;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author guanhuan_li
  */
+@Repository
 public interface UserRankMapper extends BaseMapper<UserRank> {
 
     /**

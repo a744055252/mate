@@ -2,6 +2,7 @@ package com.cnsmash.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cnsmash.pojo.BattleResultType;
+import com.cnsmash.pojo.RankChangeType;
 import com.cnsmash.pojo.entity.UserRank;
 import com.cnsmash.pojo.ro.PageFighterRo;
 import com.cnsmash.pojo.vo.MyRankVo;
@@ -21,11 +22,12 @@ public interface RankService {
 
     /**
      * 提交结果
+     * @param battleId 对战id
      * @param userId 用户
      * @param type 类型
      * @param change 变化
      */
-    void submitRank(Long userId, BattleResultType type, Long change);
+    void submitRank(Long battleId, Long userId, BattleResultType type, Long change);
 
     /**
      * 分页查看角色排名
@@ -49,4 +51,14 @@ public interface RankService {
      * @return 分数
      */
     UserRank get(Long userId, String quarter);
+
+    /**
+     * 添加用户分数
+     * @param quarter 赛季
+     * @param userId 用户id
+     * @param type 分数变化类型
+     * @param change 变化量
+     * @param logKey 唯一主键
+     */
+    void add(String quarter, Long userId, RankChangeType type, Long change, String logKey);
 }

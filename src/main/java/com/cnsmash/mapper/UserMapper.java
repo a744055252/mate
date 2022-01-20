@@ -5,12 +5,14 @@ import com.cnsmash.pojo.entity.Account;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.vo.UserDetail;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * @author guanhuan_li
  */
+@Repository
 public interface UserMapper extends BaseMapper<User> {
 
     /**

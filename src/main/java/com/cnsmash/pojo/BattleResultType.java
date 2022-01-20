@@ -30,13 +30,13 @@ public enum BattleResultType {
     lose{
         @Override
         public void changeRank(UserRank userRank) {
-            userRank.setLost(userRank.getWin() + 1);
+            userRank.setLost(userRank.getLost() + 1);
             userRank.setTotal(userRank.getTotal() + 1);
         }
 
         @Override
         public void changeFighter(UserFighter userFighter) {
-            userFighter.setLost(userFighter.getWin() + 1);
+            userFighter.setLost(userFighter.getLost() + 1);
             userFighter.setTotal(userFighter.getTotal() + 1);
         }
     },
