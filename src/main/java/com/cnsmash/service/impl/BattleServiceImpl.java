@@ -14,16 +14,29 @@ import com.cnsmash.pojo.BattleType;
 import com.cnsmash.pojo.GameStatus;
 import com.cnsmash.pojo.bean.Room;
 import com.cnsmash.pojo.bean.SingleBattleDetail;
-import com.cnsmash.pojo.entity.*;
+import com.cnsmash.pojo.entity.Battle;
+import com.cnsmash.pojo.entity.BattleGame;
+import com.cnsmash.pojo.entity.GameFighter;
+import com.cnsmash.pojo.entity.Quarter;
+import com.cnsmash.pojo.entity.User;
+import com.cnsmash.pojo.entity.UserFighter;
+import com.cnsmash.pojo.entity.UserRank;
 import com.cnsmash.pojo.ro.BattleResultRo;
 import com.cnsmash.pojo.ro.CreateRoomRo;
 import com.cnsmash.pojo.ro.PageBattleRo;
+import com.cnsmash.pojo.ro.StopBattleRo;
+import com.cnsmash.pojo.ro.SubmitFighterRo;
 import com.cnsmash.pojo.vo.MatchResultVo;
 import com.cnsmash.pojo.vo.MyRankVo;
 import com.cnsmash.pojo.vo.PageBattleVo;
 import com.cnsmash.pojo.vo.UserDetail;
 import com.cnsmash.rank.IRankCountHandle;
-import com.cnsmash.service.*;
+import com.cnsmash.service.BattleService;
+import com.cnsmash.service.FileService;
+import com.cnsmash.service.QuarterService;
+import com.cnsmash.service.RankService;
+import com.cnsmash.service.SystemArgService;
+import com.cnsmash.service.UserService;
 import com.cnsmash.util.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +49,13 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -188,7 +207,7 @@ public class BattleServiceImpl implements BattleService {
         Battle battle = battleMapper.selectById(battleId);
         Quarter quarter = quarterService.getCurrent();
         if (battle == null) {
-            throw new CodeException(ErrorCode.BATTLE_ROOM_ERROR, "对战不存在");
+            throw new CodeException(ErrorCode.BATTLE_ERROR, "对战不存在");
         }
         Set<Long> userIdList = listGameFighterByBattleId(battleId).stream()
                 .map(GameFighter::getUserId)
@@ -203,6 +222,7 @@ public class BattleServiceImpl implements BattleService {
         User user2 = userService.getById(idIter.next());
         MatchResultVo vo = getMatchResultVo(quarter, user1, user2);
         vo.setBattleId(battle.getId());
+        vo.setBattle(battle);
         if (StringUtils.isNoneBlank(battle.getRoomJson())) {
             vo.setRoom(JsonUtil.parseJson(battle.getRoomJson(), new TypeReference<Room>() {
             }));
@@ -217,7 +237,7 @@ public class BattleServiceImpl implements BattleService {
 
         Battle battle = battleMapper.selectById(ro.getBattleId());
         if (battle == null || !GameStatus.ing.name().equals(battle.getGameStatus())) {
-            throw new CodeException(ErrorCode.BATTLE_ROOM_ERROR, "对战结束、终止或不存在");
+            throw new CodeException(ErrorCode.BATTLE_ERROR, "对战结束、终止或不存在");
         }
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         Room room = new Room();
@@ -237,10 +257,10 @@ public class BattleServiceImpl implements BattleService {
 
 
     @Override
-    public void submitBattleResult(Long userId, BattleResultRo ro) {
+    public synchronized void submitBattleResult(Long userId, BattleResultRo ro) {
         Battle battle = battleMapper.selectById(ro.getBattleId());
         if (battle == null || !GameStatus.ing.name().equals(battle.getGameStatus())) {
-            throw new CodeException(ErrorCode.BATTLE_ROOM_ERROR, "对战结束、终止或不存在");
+            throw new CodeException(ErrorCode.BATTLE_ERROR, "对战结束、终止或不存在");
         }
         Map<Long, Long> id2score = ro.getId2score();
         long totalScore = id2score.values().stream().mapToLong(score->score).sum();
@@ -269,6 +289,19 @@ public class BattleServiceImpl implements BattleService {
         SingleBattleDetail.UserBattleDetail userBattleDetail = userId2detail.get(userId);
         userBattleDetail.setId2score(id2score);
 
+        // 设置对手角色
+        Set<String> userFighterSet = ro.getUserFighterSet();
+        if (!CollectionUtils.isEmpty(userFighterSet)) {
+            for (Map.Entry<Long, Long> entry : id2score.entrySet()) {
+                Long winUserId = entry.getKey();
+                SingleBattleDetail.UserBattleDetail detail = userId2detail.get(winUserId);
+                if (!winUserId.equals(userId)) {
+                    // 对手
+                    detail.setUserFighterSet(userFighterSet);
+                }
+            }
+        }
+
         // 校验比赛结果
         // 双方都提交了比赛结果，且一致
         boolean flag = true;
@@ -296,7 +329,7 @@ public class BattleServiceImpl implements BattleService {
                 Long tempUserId = entry.getKey();
                 Long tempScore = entry.getValue();
                 Long defaultScore = defaultSubmitScore.get(tempUserId);
-                if (defaultScore == null || defaultScore.equals(tempScore)) {
+                if (defaultScore == null || !defaultScore.equals(tempScore)) {
                     flag = false;
                     break;
                 }
@@ -314,9 +347,6 @@ public class BattleServiceImpl implements BattleService {
         }
 
         // 全部提交完成,比分一致。结束比赛，计算分数
-        Set<String> userFighterSet = ro.getUserFighterSet();
-        // 是否第一次提交对手角色
-        boolean firstSubmitFighterFlag = false;
         for (Map.Entry<Long, Long> entry : id2score.entrySet()) {
             Long winUserId = entry.getKey();
             Long score = entry.getValue();
@@ -327,13 +357,6 @@ public class BattleServiceImpl implements BattleService {
 
             SingleBattleDetail.UserBattleDetail detail = userId2detail.get(winUserId);
             detail.setBattleScore(score);
-
-            Set<String> winUserFighterSet = detail.getUserFighterSet();
-            if (!winUserId.equals(userId) && CollectionUtils.isEmpty(winUserFighterSet)) {
-                // 对手
-                detail.setUserFighterSet(userFighterSet);
-                firstSubmitFighterFlag = true;
-            }
 
             for (; score > 0; score--) {
                 BattleGame battleGame = new BattleGame();
@@ -349,6 +372,39 @@ public class BattleServiceImpl implements BattleService {
                 battleGameMapper.insert(battleGame);
             }
         }
+
+        // 角色使用
+        // 删除原先添加的没有斗士的数据
+        for (SingleBattleDetail.UserBattleDetail detail : userId2detail.values()) {
+
+            Long tempUserId = detail.getUserId();
+            BattleResultType type;
+            if (!battleWinUserId.equals(tempUserId)) {
+                // 用户没有赢下比赛
+                type = BattleResultType.lose;
+            } else {
+                type = BattleResultType.win;
+            }
+            detail.setType(type);
+            // 对手
+            Set<String> userFighterSetTemp = detail.getUserFighterSet();
+            if (!CollectionUtils.isEmpty(userFighterSetTemp)) {
+                // 新增对局使用角色
+                deleteGameFighterByBattleId(battle.getId(), tempUserId);
+                for (String fighter : detail.getUserFighterSet()) {
+                    GameFighter gameFighter = new GameFighter();
+                    gameFighter.setBattleId(battle.getId());
+                    gameFighter.setFighter(fighter);
+                    gameFighter.setUserId(detail.getUserId());
+                    gameFighter.setGameScore(0);
+                    gameFighter.setUpdateTime(now);
+                    gameFighter.setCreateTime(now);
+                    gameFighterMapper.insert(gameFighter);
+                }
+                userService.useFighter(battle.getQuarter(), tempUserId, type, userFighterSetTemp);
+            }
+        }
+
         singleBattleDetail.setUserId2detail(userId2detail);
         battle.setUpdateTime(now);
         battle.setBattleWin(battleWinUserId);
@@ -356,32 +412,14 @@ public class BattleServiceImpl implements BattleService {
         battle.setGameStatus(GameStatus.end.name());
         battleMapper.updateById(battle);
 
-        // 更新使用角色
-        if (firstSubmitFighterFlag) {
-            // 第一次提交才更新
-            for (Long tempUserId : id2score.keySet()) {
-                if (!tempUserId.equals(userId)) {
-                    BattleResultType type;
-                    if (!battleWinUserId.equals(tempUserId)) {
-                        // 用户没有赢下比赛
-                        type = BattleResultType.lose;
-                    } else {
-                        type = BattleResultType.win;
-                    }
-                    // 对手
-                    userService.useFighter(tempUserId, type, userFighterSet);
-                }
-            }
-        }
-
         // 更新排位分数
-        updateRankScore(id2score, battleWinUserId);
+        updateRankScore(battle.getId(), id2score, battleWinUserId);
 
         // 更新用户建房时间
         updateCreateRoomTime(battle);
     }
 
-    private void updateRankScore(Map<Long, Long> id2score, Long battleWinUserId) {
+    private void updateRankScore(Long battleId, Map<Long, Long> id2score, Long battleWinUserId) {
         Map<Long, Long> id2RankScore = new HashMap<>(2);
         for (Long id : id2score.keySet()) {
             MyRankVo rank = rankService.userRank(id);
@@ -399,7 +437,7 @@ public class BattleServiceImpl implements BattleService {
             } else {
                 type = BattleResultType.lose;
             }
-            rankService.submitRank(tempUserId, type, changeScore);
+            rankService.submitRank(battleId, tempUserId, type, changeScore);
         }
     }
 
@@ -416,6 +454,74 @@ public class BattleServiceImpl implements BattleService {
     @Override
     public Map<Long, MatchBean> allWaitMatch() {
         return this.waitMatchMap;
+    }
+
+    @Override
+    public void stop(Long userId, StopBattleRo ro) {
+        Battle battle = battleMapper.selectById(ro.getBattleId());
+        if (battle == null || !GameStatus.ing.name().equals(battle.getGameStatus())) {
+            throw new CodeException(ErrorCode.BATTLE_ERROR, "对战结束、终止或不存在");
+        }
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        battle.setGameStatus(GameStatus.stop.name());
+        battle.setEndTime(now);
+        battle.setStopReason(ro.getStopReason());
+        battle.setStopUserId(userId);
+
+        log.info("对战【{}】中止，原因【{}】", battle, ro.getStopReason());
+        battleMapper.updateById(battle);
+    }
+
+    @Override
+    public void submitFighter(Long userId, SubmitFighterRo ro) {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        Battle battle = battleMapper.selectById(ro.getBattleId());
+
+        if (battle == null || !GameStatus.end.name().equals(battle.getGameStatus())) {
+            throw new CodeException(ErrorCode.BATTLE_ERROR, "对战未结束或不存在");
+        }
+
+        SingleBattleDetail singleBattleDetail = JsonUtil.parseJson(battle.getDetailJson(), new TypeReference<SingleBattleDetail>() {
+        });
+        Map<Long, SingleBattleDetail.UserBattleDetail> userId2detail = singleBattleDetail.getUserId2detail();
+
+        // 设置对手角色
+        Set<String> userFighterSet = ro.getUserFighterSet();
+        for (SingleBattleDetail.UserBattleDetail detail : userId2detail.values()) {
+            Long winUserId = detail.getUserId();
+            if (!winUserId.equals(userId)) {
+                if (!CollectionUtils.isEmpty(detail.getUserFighterSet())) {
+                    throw new CodeException(ErrorCode.BATTLE_ERROR, "不能重复提交对手斗士");
+                }
+                // 对手
+                detail.setUserFighterSet(userFighterSet);
+                deleteGameFighterByBattleId(battle.getId(), winUserId);
+                for (String fighter : detail.getUserFighterSet()) {
+                    GameFighter gameFighter = new GameFighter();
+                    gameFighter.setBattleId(battle.getId());
+                    gameFighter.setFighter(fighter);
+                    gameFighter.setUserId(detail.getUserId());
+                    gameFighter.setGameScore(0);
+                    gameFighter.setUpdateTime(now);
+                    gameFighter.setCreateTime(now);
+                    gameFighterMapper.insert(gameFighter);
+                }
+
+                // 更新用户使用角色
+                userService.useFighter(battle.getQuarter(), winUserId, detail.getType(), userFighterSet);
+            }
+        }
+        battle.setDetailJson(JsonUtil.toJson(singleBattleDetail));
+        battle.setUpdateTime(now);
+        battleMapper.updateById(battle);
+
+    }
+
+    private void deleteGameFighterByBattleId(Long battleId, Long userId) {
+        QueryWrapper<GameFighter> wrapper = new QueryWrapper<>();
+        wrapper.eq("battle_id", battleId);
+        wrapper.eq("user_id", userId);
+        gameFighterMapper.delete(wrapper);
     }
 
     private MatchResultVo getMatchResultVo(Quarter quarter, User user, User targetUser) {

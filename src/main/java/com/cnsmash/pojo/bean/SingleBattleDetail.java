@@ -1,5 +1,6 @@
 package com.cnsmash.pojo.bean;
 
+import com.cnsmash.pojo.BattleResultType;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -35,6 +36,11 @@ public class SingleBattleDetail {
          * 排位分数
          */
         private Long rankScore;
+
+        /**
+         * 对战结果
+         */
+        private BattleResultType type;
 
         /**
          * 当前用户提交的

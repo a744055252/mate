@@ -44,4 +44,7 @@ public interface ErrorCode {
 
     /** 参赛人数有误 */
     int GAME_NUM_ERROR = 1015;
+
+    /** 对战不存在 */
+    int BATTLE_ERROR = 1016;
 }

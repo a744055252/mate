@@ -8,6 +8,8 @@ import com.cnsmash.pojo.ro.BattleResultRo;
 import com.cnsmash.pojo.ro.CreateRoomRo;
 import com.cnsmash.pojo.ro.FindRoomRo;
 import com.cnsmash.pojo.ro.PageBattleRo;
+import com.cnsmash.pojo.ro.StopBattleRo;
+import com.cnsmash.pojo.ro.SubmitFighterRo;
 import com.cnsmash.pojo.vo.MatchResultVo;
 import com.cnsmash.pojo.vo.PageBattleVo;
 
@@ -71,5 +73,19 @@ public interface BattleService {
      * @return 在匹配用户
      */
     MatchBean waitMatch(Long userId);
+
+    /**
+     * 中止对战
+     * @param ro 请求
+     */
+    void stop(Long userId, StopBattleRo ro);
+
+    /**
+     * 提交对手斗士结果
+     * @param userId 用户id
+     * @param ro 请求
+     */
+    void submitFighter(Long userId, SubmitFighterRo ro);
+
 
 }

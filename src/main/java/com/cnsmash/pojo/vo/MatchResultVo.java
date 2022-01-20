@@ -15,6 +15,8 @@ public class MatchResultVo {
      */
     private Long battleId;
 
+    private Battle battle;
+
     private UserDetail p1;
 
     private UserDetail p2;
