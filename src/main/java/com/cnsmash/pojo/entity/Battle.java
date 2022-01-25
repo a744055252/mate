@@ -73,4 +73,14 @@ public class Battle extends BaseEntity {
      * {@link com.cnsmash.pojo.bean.Room}
      */
     private String roomJson;
+
+    /**
+     * 中止原因
+     */
+    private String stopReason;
+
+    /**
+     * 中止人
+     */
+    private Long stopUserId;
 }

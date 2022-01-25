@@ -1,16 +1,17 @@
 package com.cnsmash.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cnsmash.pojo.entity.Battle;
 import com.cnsmash.pojo.ro.PageBattleRo;
 import com.cnsmash.pojo.vo.PageBattleVo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author guanhuan_li
  */
+@Repository
 public interface BattleMapper extends BaseMapper<Battle> {
 
     /**
