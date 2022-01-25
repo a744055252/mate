@@ -23,6 +23,7 @@ import java.util.Map;
  * @author guanhuan_li
  */
 @Slf4j
+@CrossOrigin
 @RestController
 @RequestMapping("/battle")
 public class BattleController {

@@ -14,6 +14,7 @@ import javax.validation.Valid;
 /**
  * @author guanhuan_li
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/user")
 public class UserController {
