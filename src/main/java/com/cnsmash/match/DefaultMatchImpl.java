@@ -1,12 +1,8 @@
 package com.cnsmash.match;
 
-import com.cnsmash.pojo.bean.Room;
-
-import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author guanhuan_li
@@ -28,4 +24,5 @@ public class DefaultMatchImpl implements MatchHandle {
         long gap = Math.abs(ro.getScore() - bean.getScore());
         return gap < ro.getScoreGap() && gap < bean.getScoreGap() && ro.getServer().equals(bean.getServer());
     }
+
 }
