@@ -443,7 +443,7 @@ public class BattleServiceImpl implements BattleService {
     private UserDetail getUserDetail(Quarter quarter, User user) {
         UserDetail detail = new UserDetail();
         BeanUtils.copyProperties(user, detail);
-        detail.setHeadSrc(fileService.findById(user.getHead()).getSrc());
+        // detail.setHeadSrc(fileService.findById(user.getHead()).getSrc());
 
         // 排位分
         UserRank userRank = rankService.get(user.getId(), quarter.getCode());
