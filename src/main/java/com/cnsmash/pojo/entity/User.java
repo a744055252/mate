@@ -62,9 +62,9 @@ public class User extends BaseEntity {
 
     /**
      * 服务器
-     * 裸连zh 日服jp 港服hk 美服usa
+     * 裸连1 港服2 日服4 字节流
      */
-    private String server;
+    private Integer server;
 
     /**
      * 分差

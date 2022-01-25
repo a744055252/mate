@@ -60,7 +60,7 @@ public class UserDetail {
      * 服务器
      * 裸连zh 日服jp 港服hk 美服usa
      */
-    private String server;
+    private Integer server;
 
     /**
      * 分差
@@ -76,4 +76,9 @@ public class UserDetail {
      * 使用斗士
      */
     private List<UserFighter> userFighterList;
+
+    /**
+     * ban图
+     */
+    private String banMap;
 }

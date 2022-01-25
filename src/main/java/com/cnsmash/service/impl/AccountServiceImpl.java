@@ -78,7 +78,7 @@ public class AccountServiceImpl implements AccountService {
         User user = new User();
         BeanUtils.copyProperties(ro, user);
         user.setAccountId(account.getId());
-        user.setNickName("player_" + account.getId());
+        user.setNickName(ro.getAccount());
         user.setCode("");
         user.setTagJson(JsonUtil.toJson(ro.getTags()));
         user.setUpdateTime(now);

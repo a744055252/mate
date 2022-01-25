@@ -26,6 +26,6 @@ public class DefaultMatchImpl implements MatchHandle {
 
     private boolean match(MatchBean ro, MatchBean bean) {
         long gap = Math.abs(ro.getScore() - bean.getScore());
-        return gap < ro.getScoreGap() && gap < bean.getScoreGap() && ro.getServer().equals(bean.getServer());
+        return gap < ro.getScoreGap() && gap < bean.getScoreGap() && ((ro.getServer() & bean.getServer()) != 0);
     }
 }

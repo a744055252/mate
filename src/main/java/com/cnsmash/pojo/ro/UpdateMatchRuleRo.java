@@ -22,8 +22,8 @@ public class UpdateMatchRuleRo {
      * 服务器
      * 裸连Noting 日服Japan 港服Hongkong 美服America
      */
-    @NotBlank
-    private String server;
+    @NotNull
+    private Integer server;
 
     /**
      * 分差
