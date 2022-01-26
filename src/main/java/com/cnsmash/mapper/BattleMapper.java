@@ -22,4 +22,10 @@ public interface BattleMapper extends BaseMapper<Battle> {
      */
     Page<PageBattleVo> page(Page<Battle> page, @Param("ro") PageBattleRo ro);
 
+    /**
+     * 获取用户正在进行的对战
+     * @param userId 用户id
+     * @return 对战
+     */
+    Battle getCurrentBattle(@Param("userId") Long userId);
 }

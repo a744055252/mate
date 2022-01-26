@@ -11,21 +11,35 @@
                 gf.user_id = #{ro.userId}
             </if>
             <if test="ro.quarter != null and ro.quarter != ''">
-                gf.quarter = #{ro.quarter}
+                b.quarter = #{ro.quarter}
             </if>
             <if test="ro.type != null and ro.type != ''">
-                gf.type = #{ro.type}
+                b.type = #{ro.type}
             </if>
             <if test="ro.gameStatus != null and ro.gameStatus != ''">
-                gf.game_status = #{ro.gameStatus}
+                bgame_status = #{ro.gameStatus}
             </if>
             <if test="ro.beforeTime != null">
-                gf.end_time &gt;= #{ro.beforeTime}
+                b.end_time &gt;= #{ro.beforeTime}
             </if>
             <if test="ro.afterTime != null">
-                gf.end_time &lt; #{ro.afterTime}
+                b.end_time &lt; #{ro.afterTime}
             </if>
         </where>
         ORDER BY b.id
+    </select>
+
+    <select id="getCurrentBattle" resultType="com.cnsmash.pojo.entity.Battle">
+        SELECT DISTINCT b.*
+        FROM battle b
+                 LEFT JOIN game_fighter gf ON gf.battle_id = b.id
+        where
+            gf.user_id = #{userId}
+          AND
+            /** 比赛正在进行 */
+            b.game_status = 'ing'
+          AND
+            /** 用户未提交结果 */
+            gf.game_fighter_status = 'ing'
     </select>
 </mapper>

@@ -43,4 +43,9 @@ public class GameFighter extends BaseEntity {
      * 使用斗士
      */
     private String fighter;
+
+    /**
+     * 用户状态
+     */
+    private String gameFighterStatus;
 }

@@ -11,6 +11,7 @@ import com.cnsmash.match.MatchBean;
 import com.cnsmash.match.MatchHandle;
 import com.cnsmash.pojo.BattleResultType;
 import com.cnsmash.pojo.BattleType;
+import com.cnsmash.pojo.GameFighterStatus;
 import com.cnsmash.pojo.GameStatus;
 import com.cnsmash.pojo.bean.Room;
 import com.cnsmash.pojo.bean.SingleBattleDetail;
@@ -112,6 +113,30 @@ public class BattleServiceImpl implements BattleService {
 
         Quarter quarter = quarterService.getCurrent();
         User user = userService.getById(userId);
+        Battle currentBattle = battleMapper.getCurrentBattle(userId);
+        if (currentBattle != null) {
+            // 已经有对战
+            List<GameFighter> gameFighters = listGameFighterByBattleId(currentBattle.getId());
+            // 对手id
+            Long targetUserId = null;
+            for (GameFighter gameFighter : gameFighters) {
+                if (!gameFighter.getUserId().equals(userId)) {
+                    targetUserId = gameFighter.getUserId();
+                }
+            }
+            if (targetUserId == null) {
+                // 对手不存在
+                log.error("对战数据有问题{}", currentBattle.getId());
+                throw new CodeException(ErrorCode.BATTLE_ERROR, "对战有问题，请联系管理员！");
+            }
+            User targetUser = userService.getById(targetUserId);
+            MatchResultVo vo = getMatchResultVo(quarter, user, targetUser);
+            vo.setBattleId(currentBattle.getId());
+            vo.setRoom(JsonUtil.parseJson(currentBattle.getRoomJson(), new TypeReference<Room>() {
+            }));
+            return vo;
+        }
+
         MyRankVo rank = rankService.userRank(userId);
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         MatchBean matchBean = waitMatchMap.computeIfAbsent(userId, (id)->
@@ -170,6 +195,7 @@ public class BattleServiceImpl implements BattleService {
             GameFighter gameFighter = new GameFighter();
             gameFighter.setBattleId(battle.getId());
             gameFighter.setUserId(userId);
+            gameFighter.setGameFighterStatus(GameFighterStatus.ing.name());
             gameFighter.setUpdateTime(now);
             gameFighter.setCreateTime(now);
             gameFighterMapper.insert(gameFighter);
@@ -184,6 +210,7 @@ public class BattleServiceImpl implements BattleService {
             GameFighter gameFighter = new GameFighter();
             gameFighter.setBattleId(battle.getId());
             gameFighter.setUserId(targetUser.getId());
+            gameFighter.setGameFighterStatus(GameFighterStatus.ing.name());
             gameFighter.setUpdateTime(now);
             gameFighter.setCreateTime(now);
             gameFighterMapper.insert(gameFighter);
@@ -343,6 +370,9 @@ public class BattleServiceImpl implements BattleService {
             battle.setUpdateTime(now);
             battle.setDetailJson(JsonUtil.toJson(singleBattleDetail));
             battleMapper.updateById(battle);
+
+            // 提交了结果
+            updateGameFighterStatus(battle.getId(), userId, GameFighterStatus.submit);
             return;
         }
 
@@ -397,6 +427,7 @@ public class BattleServiceImpl implements BattleService {
                     gameFighter.setFighter(fighter);
                     gameFighter.setUserId(detail.getUserId());
                     gameFighter.setGameScore(0);
+                    gameFighter.setGameFighterStatus(GameFighterStatus.end.name());
                     gameFighter.setUpdateTime(now);
                     gameFighter.setCreateTime(now);
                     gameFighterMapper.insert(gameFighter);
@@ -584,5 +615,16 @@ public class BattleServiceImpl implements BattleService {
         QueryWrapper<GameFighter> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("battle_id", battleId);
         return gameFighterMapper.selectList(queryWrapper);
+    }
+
+    private void updateGameFighterStatus(Long battleId, Long userId, GameFighterStatus status) {
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        QueryWrapper<GameFighter> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("battle_id", battleId)
+                        .eq("user_id", userId);
+        GameFighter gameFighter = new GameFighter();
+        gameFighter.setUpdateTime(now);
+        gameFighter.setGameFighterStatus(status.name());
+        gameFighterMapper.update(gameFighter, queryWrapper);
     }
 }
