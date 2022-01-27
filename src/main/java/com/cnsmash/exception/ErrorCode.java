@@ -47,4 +47,7 @@ public interface ErrorCode {
 
     /** 对战不存在 */
     int BATTLE_ERROR = 1016;
+
+    /** 评论出错 */
+    int COMMENT_ERROR = 1017;
 }
