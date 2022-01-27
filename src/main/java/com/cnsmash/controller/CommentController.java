@@ -2,7 +2,6 @@ package com.cnsmash.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cnsmash.config.login.pojo.LoginUser;
-import com.cnsmash.pojo.CommentType;
 import com.cnsmash.pojo.bean.PageRo;
 import com.cnsmash.pojo.bean.ReposResult;
 import com.cnsmash.pojo.ro.AddCommentRo;
