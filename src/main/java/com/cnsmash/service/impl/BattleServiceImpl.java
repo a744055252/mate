@@ -9,35 +9,14 @@ import com.cnsmash.mapper.BattleMapper;
 import com.cnsmash.mapper.GameFighterMapper;
 import com.cnsmash.match.MatchBean;
 import com.cnsmash.match.MatchHandle;
-import com.cnsmash.pojo.BattleResultType;
-import com.cnsmash.pojo.BattleType;
-import com.cnsmash.pojo.GameFighterStatus;
-import com.cnsmash.pojo.GameStatus;
+import com.cnsmash.pojo.*;
 import com.cnsmash.pojo.bean.Room;
 import com.cnsmash.pojo.bean.SingleBattleDetail;
-import com.cnsmash.pojo.entity.Battle;
-import com.cnsmash.pojo.entity.BattleGame;
-import com.cnsmash.pojo.entity.GameFighter;
-import com.cnsmash.pojo.entity.Quarter;
-import com.cnsmash.pojo.entity.User;
-import com.cnsmash.pojo.entity.UserFighter;
-import com.cnsmash.pojo.entity.UserRank;
-import com.cnsmash.pojo.ro.BattleResultRo;
-import com.cnsmash.pojo.ro.CreateRoomRo;
-import com.cnsmash.pojo.ro.PageBattleRo;
-import com.cnsmash.pojo.ro.StopBattleRo;
-import com.cnsmash.pojo.ro.SubmitFighterRo;
-import com.cnsmash.pojo.vo.MatchResultVo;
-import com.cnsmash.pojo.vo.MyRankVo;
-import com.cnsmash.pojo.vo.PageBattleVo;
-import com.cnsmash.pojo.vo.UserDetail;
+import com.cnsmash.pojo.entity.*;
+import com.cnsmash.pojo.ro.*;
+import com.cnsmash.pojo.vo.*;
 import com.cnsmash.rank.IRankCountHandle;
-import com.cnsmash.service.BattleService;
-import com.cnsmash.service.FileService;
-import com.cnsmash.service.QuarterService;
-import com.cnsmash.service.RankService;
-import com.cnsmash.service.SystemArgService;
-import com.cnsmash.service.UserService;
+import com.cnsmash.service.*;
 import com.cnsmash.util.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
@@ -50,13 +29,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -220,6 +193,26 @@ public class BattleServiceImpl implements BattleService {
 
         MatchResultVo vo = getMatchResultVo(quarter, user, targetUser);
         vo.setBattleId(battle.getId());
+        return vo;
+    }
+
+    @Override
+    public UserBattleStatusVo userBattleStatus(Long userId) {
+        UserBattleStatusVo vo = new UserBattleStatusVo();
+        vo.setBattleStatus(UserBattleStatus.noting);
+        if (waitMatchMap.containsKey(userId)) {
+            // 在排队
+            MatchBean matchBean = waitMatchMap.get(userId);
+            vo.setFindTime(matchBean.getFindTime());
+            vo.setBattleStatus(UserBattleStatus.match);
+            return vo;
+        }
+        Battle currentBattle = battleMapper.getCurrentBattle(userId);
+        if (currentBattle != null) {
+            // 在比赛
+            vo.setBattleStatus(UserBattleStatus.battle);
+            vo.setBattleId(currentBattle.getId());
+        }
         return vo;
     }
 

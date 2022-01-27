@@ -12,6 +12,7 @@ import com.cnsmash.pojo.ro.StopBattleRo;
 import com.cnsmash.pojo.ro.SubmitFighterRo;
 import com.cnsmash.pojo.vo.MatchResultVo;
 import com.cnsmash.pojo.vo.PageBattleVo;
+import com.cnsmash.pojo.vo.UserBattleStatusVo;
 import com.cnsmash.service.BattleService;
 import com.cnsmash.util.MateAuthUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,17 @@ public class BattleController {
     public ReposResult<MatchResultVo> match(){
         LoginUser loginUser = MateAuthUtils.getLoginUser();
         MatchResultVo vo = battleService.match(loginUser.getUserId());
+        return ReposResult.ok(vo);
+    }
+
+    /**
+     * 获取用户匹配状态
+     * @return 状态
+     */
+    @GetMapping("/user")
+    public ReposResult<UserBattleStatusVo> getUserBattle() {
+        LoginUser loginUser = MateAuthUtils.getLoginUser();
+        UserBattleStatusVo vo = battleService.userBattleStatus(loginUser.getUserId());
         return ReposResult.ok(vo);
     }
 

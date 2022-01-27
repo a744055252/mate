@@ -12,6 +12,7 @@ import com.cnsmash.pojo.ro.StopBattleRo;
 import com.cnsmash.pojo.ro.SubmitFighterRo;
 import com.cnsmash.pojo.vo.MatchResultVo;
 import com.cnsmash.pojo.vo.PageBattleVo;
+import com.cnsmash.pojo.vo.UserBattleStatusVo;
 
 import java.util.Map;
 
@@ -27,6 +28,13 @@ public interface BattleService {
      * @return 匹配结果
      */
     MatchResultVo match(Long userId);
+
+    /**
+     * 获取用户匹配状态
+     * @param userId 用户id
+     * @return 结果
+     */
+    UserBattleStatusVo userBattleStatus(Long userId);
 
     /**
      * 取消匹配
