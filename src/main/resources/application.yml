@@ -10,7 +10,7 @@ spring:
     password: GZ_smash8
     driver-class-name: com.mysql.cj.jdbc.Driver
 file:
-  rootPath: /Users/guanhuan/temp
+  rootPath: /usr/temp
 # Logger Config
 logging:
   level:
