@@ -28,6 +28,11 @@ public class SingleBattleDetail {
         private Long userId;
 
         /**
+         * 昵称
+         */
+        private String nickName;
+
+        /**
          * 参赛用户分数
          */
         private Long battleScore;
@@ -36,6 +41,11 @@ public class SingleBattleDetail {
          * 排位分数
          */
         private Long rankScore;
+
+        /**
+         * 变化分数
+         */
+        private Long changeScore;
 
         /**
          * 对战结果

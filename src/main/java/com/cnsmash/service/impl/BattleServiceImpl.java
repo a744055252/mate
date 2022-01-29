@@ -162,6 +162,7 @@ public class BattleServiceImpl implements BattleService {
             SingleBattleDetail.UserBattleDetail detail = new SingleBattleDetail.UserBattleDetail();
             detail.setUserId(userId);
             detail.setRankScore(rank.getScore());
+            detail.setNickName(user.getNickName());
             userId2detail.put(userId, detail);
 
             // 用户1
@@ -177,6 +178,7 @@ public class BattleServiceImpl implements BattleService {
             SingleBattleDetail.UserBattleDetail detail = new SingleBattleDetail.UserBattleDetail();
             detail.setUserId(targetUserId);
             detail.setRankScore(targetMatch.getScore());
+            detail.setNickName(targetUser.getNickName());
             userId2detail.put(targetUserId, detail);
 
             // 用户2
@@ -396,12 +398,16 @@ public class BattleServiceImpl implements BattleService {
             }
         }
 
+        // 更新排位分数
+        Map<Long, Long> id2changeScore = updateRankScore(battle.getId(), id2score, battleWinUserId);
+
         // 角色使用
         // 删除原先添加的没有斗士的数据
         for (SingleBattleDetail.UserBattleDetail detail : userId2detail.values()) {
 
             Long tempUserId = detail.getUserId();
             BattleResultType type;
+            Long changeScore = id2changeScore.get(tempUserId);
             if (!battleWinUserId.equals(tempUserId)) {
                 // 用户没有赢下比赛
                 type = BattleResultType.lose;
@@ -409,6 +415,7 @@ public class BattleServiceImpl implements BattleService {
                 type = BattleResultType.win;
             }
             detail.setType(type);
+            detail.setChangeScore(changeScore);
             // 对手
             Set<String> userFighterSetTemp = detail.getUserFighterSet();
             if (!CollectionUtils.isEmpty(userFighterSetTemp)) {
@@ -436,14 +443,11 @@ public class BattleServiceImpl implements BattleService {
         battle.setGameStatus(GameStatus.end.name());
         battleMapper.updateById(battle);
 
-        // 更新排位分数
-        updateRankScore(battle.getId(), id2score, battleWinUserId);
-
         // 更新用户建房时间
         updateCreateRoomTime(battle);
     }
 
-    private void updateRankScore(Long battleId, Map<Long, Long> id2score, Long battleWinUserId) {
+    private Map<Long, Long> updateRankScore(Long battleId, Map<Long, Long> id2score, Long battleWinUserId) {
         Map<Long, Long> id2RankScore = new HashMap<>(2);
         for (Long id : id2score.keySet()) {
             MyRankVo rank = rankService.userRank(id);
@@ -463,6 +467,7 @@ public class BattleServiceImpl implements BattleService {
             }
             rankService.submitRank(battleId, tempUserId, type, changeScore);
         }
+        return id2rankResult;
     }
 
     @Override
