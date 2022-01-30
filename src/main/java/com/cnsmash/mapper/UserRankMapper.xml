@@ -3,20 +3,21 @@
 <mapper namespace="com.cnsmash.mapper.UserRankMapper">
 
     <select id="pageFighter" resultType="com.cnsmash.pojo.vo.UserDetail">
-        SELECT DISTINCT u.id, u.*, f.id as head, f.src as headSrc
+        SELECT u.id, u.*, ur.score, uc.fighters fighters<!--, f.id as head, f.src as headSrc -->
         FROM user_rank ur
         INNER JOIN user u on u.id = ur.user_id
-        INNER JOIN upload_file f on u.head = f.id
-        <if test="ro.fighterNo != null and ro.fighterNo != ''">
-            INNER JOIN user_fighter uf on uf.user_id = ur.user_id
-                  AND uf.fighter_no = #{ro.fighterNo} AND uf.total &gt;= 5
-        </if>
+        <!--INNER JOIN upload_file f on u.head = f.id-->
+        LEFT JOIN (
+            SELECT user_id, GROUP_CONCAT(fighter_no) AS fighters FROM user_fighter
+            WHERE quarter = #{ro.quarter} AND total >= 5
+            GROUP BY user_id
+        )uc ON u.id = uc.user_id
         <where>
             <if test="ro.fighterNo != null and ro.fighterNo != ''">
-                uf.id IS NOT NULL
+                fighters like concat('%',#{ro.fighterNo,jdbcType=VARCHAR},'%')
             </if>
             and ur.quarter = #{ro.quarter}
         </where>
-        ORDER BY ur.rank
+        ORDER BY ur.score DESC
     </select>
 </mapper>
