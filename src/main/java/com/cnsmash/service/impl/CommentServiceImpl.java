@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -67,7 +64,10 @@ public class CommentServiceImpl implements CommentService {
         BeanUtils.copyProperties(page, result);
 
         List<Long> userIds = page.getRecords().stream().map(Comment::getUserId).collect(Collectors.toList());
-        Map<Long, UserDetail> id2detail = userService.listUserDetail(userIds).stream().collect(Collectors.toMap(UserDetail::getId, Function.identity()));
+        Map<Long, UserDetail> id2detail = new HashMap<>();
+        if (userIds.size() != 0) {
+            id2detail = userService.listUserDetail(userIds).stream().collect(Collectors.toMap(UserDetail::getId, Function.identity()));
+        }
 
         List<CommentVo> vos = new ArrayList<>();
         for (Comment comment : page.getRecords()) {
@@ -109,5 +109,18 @@ public class CommentServiceImpl implements CommentService {
         comment.setUpdateTime(now);
         comment.setCreateTime(now);
         commentMapper.insert(comment);
+    }
+
+    public Boolean getCanComment(Long author, Long player) {
+        Long playedCount = battleService.getHead2HeadCount(author, player);
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("object_type", "user")
+                .eq("object_id", player)
+                .eq("user_id", author);
+        List<Comment> commentList = commentMapper.selectList(queryWrapper);
+        if (playedCount > commentList.size()) {
+            return true;
+        }
+        return false;
     }
 }

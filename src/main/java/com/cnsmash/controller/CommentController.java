@@ -5,6 +5,7 @@ import com.cnsmash.config.login.pojo.LoginUser;
 import com.cnsmash.pojo.bean.PageRo;
 import com.cnsmash.pojo.bean.ReposResult;
 import com.cnsmash.pojo.ro.AddCommentRo;
+import com.cnsmash.pojo.ro.PageCommentRo;
 import com.cnsmash.pojo.vo.CommentVo;
 import com.cnsmash.service.CommentService;
 import com.cnsmash.util.MateAuthUtils;
@@ -24,7 +25,7 @@ public class CommentController {
     CommentService commentService;
 
     @GetMapping
-    public ReposResult<Page<CommentVo>> myComment(@Valid PageRo ro){
+    public ReposResult<Page<CommentVo>> myComment(@Valid PageCommentRo ro){
         return ReposResult.ok(commentService.page(ro.getCommentType(), ro.getObjectId(), ro));
     }
 
@@ -33,6 +34,12 @@ public class CommentController {
         LoginUser loginUser = MateAuthUtils.getLoginUser();
         commentService.addComment(loginUser.getUserId(), ro);
         return ReposResult.ok();
+    }
+
+    @GetMapping("/canComment")
+    public ReposResult<Boolean> getCanComment(Long userId) {
+        LoginUser loginUser = MateAuthUtils.getLoginUser();
+        return ReposResult.ok(commentService.getCanComment(loginUser.getUserId(), userId));
     }
 
 }

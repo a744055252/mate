@@ -37,4 +37,12 @@ public interface CommentService {
      * @param ro 评论
      */
     void addComment(Long userId, AddCommentRo ro);
+
+    /**
+     * 查询是否可以评论对方
+     * @param author
+     * @param player
+     * @return 能否评论的boolean
+     */
+    Boolean getCanComment(Long author, Long player);
 }
