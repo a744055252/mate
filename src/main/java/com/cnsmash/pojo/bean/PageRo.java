@@ -14,22 +14,6 @@ import javax.validation.constraints.NotNull;
 @Data
 public class PageRo {
 
-    /**
-     * 评论的对象类型
-     * 用户 user
-     * 对战 battle
-     */
-    @NotNull
-    private CommentType commentType;
-
-    /**
-     * 评论的对象类型
-     * 用户 user {@link User#getId()}
-     * 对战 battle {@link Battle#getId()}
-     */
-    @NotNull
-    private Long objectId;
-
     /** 当前页*/
     @NotNull
     @Min(0)
