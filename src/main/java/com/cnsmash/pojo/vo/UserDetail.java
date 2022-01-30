@@ -78,7 +78,17 @@ public class UserDetail {
     private List<UserFighter> userFighterList;
 
     /**
+     * 使用斗士（字符串）
+     */
+    private String fighters;
+
+    /**
      * ban图
      */
     private String banMap;
+
+    /**
+     * 分数
+     */
+    private String score;
 }
