@@ -11,6 +11,7 @@ import com.cnsmash.util.MateAuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,6 +28,11 @@ public class RankController {
     public ReposResult<MyRankVo> myRank(){
         LoginUser loginUser = MateAuthUtils.getLoginUser();
         return ReposResult.ok(rankService.userRank(loginUser.getUserId()));
+    }
+
+    @GetMapping("/id")
+    public ReposResult<MyRankVo> getById(@RequestParam Long userId){
+        return ReposResult.ok(rankService.userRank(userId));
     }
 
     @GetMapping("/total")
