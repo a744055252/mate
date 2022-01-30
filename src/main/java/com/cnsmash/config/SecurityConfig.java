@@ -63,11 +63,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
             .antMatchers("/actuator/**", "/account/register",
-                    "/user/id", "/rank/fighter")
+                    "/user/id", "/rank/fighter", "/quarter/**", "/rank/total")
                 .permitAll()
             .anyRequest()
                 .authenticated();
 
+        // 将已登录者挤下线
+        http.sessionManagement().maximumSessions(1);
     }
 
 }
