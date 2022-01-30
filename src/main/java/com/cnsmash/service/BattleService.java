@@ -95,5 +95,11 @@ public interface BattleService {
      */
     void submitFighter(Long userId, SubmitFighterRo ro);
 
-
+    /**
+     * 查询双方对战次数
+     * @param userId1
+     * @param userId2
+     * @return
+     */
+    Long getHead2HeadCount(Long userId1, Long userId2);
 }

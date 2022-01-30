@@ -42,4 +42,17 @@
             /** 用户未提交结果 */
             gf.game_fighter_status = 'ing'
     </select>
+
+    <select id="getHead2HeadCount" resultType="java.lang.Long">
+        SELECT COUNT(DISTINCT a.id1) FROM (
+            SELECT a.id1 FROM (
+                SELECT * FROM
+                    (SELECT battle_id id1 FROM game_fighter WHERE user_id = #{userId1})a INNER JOIN
+                    (SELECT battle_id id2 FROM game_fighter WHERE user_id = #{userId2})b
+                    ON a.id1 = b.id2
+            )a INNER JOIN (
+                SELECT * FROM battle WHERE game_status = 'end' AND quarter = #{quarter}
+            )b ON a.id1 = b.id
+        )a
+    </select>
 </mapper>

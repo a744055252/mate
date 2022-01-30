@@ -565,11 +565,11 @@ public class BattleServiceImpl implements BattleService {
             p2 = user;
         }
         {
-            UserDetail detail = getUserDetail(quarter, p1);
+            UserDetail detail = userService.getUserDetail(p1.getId());
             vo.setP1(detail);
         }
         {
-            UserDetail detail = getUserDetail(quarter, p2);
+            UserDetail detail = userService.getUserDetail(p2.getId());
             vo.setP2(detail);
         }
         return vo;
@@ -624,5 +624,10 @@ public class BattleServiceImpl implements BattleService {
         gameFighter.setUpdateTime(now);
         gameFighter.setGameFighterStatus(status.name());
         gameFighterMapper.update(gameFighter, queryWrapper);
+    }
+
+    public Long getHead2HeadCount(Long userId1, Long userId2) {
+        Quarter quarter = quarterService.getCurrent();
+        return battleMapper.getHead2HeadCount(userId1, userId2, quarter.getCode());
     }
 }

@@ -28,4 +28,12 @@ public interface BattleMapper extends BaseMapper<Battle> {
      * @return 对战
      */
     Battle getCurrentBattle(@Param("userId") Long userId);
+
+    /**
+     * 计算两人对战次数
+     * @param userId1
+     * @param userId2
+     * @return
+     */
+    Long getHead2HeadCount(@Param("userId1") Long userId1, @Param("userId2") Long userId2, @Param("quarter") String quarter);
 }
