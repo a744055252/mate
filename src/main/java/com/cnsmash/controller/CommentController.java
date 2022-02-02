@@ -38,6 +38,9 @@ public class CommentController {
 
     @GetMapping("/canComment")
     public ReposResult<Boolean> getCanComment(Long userId) {
+        if (userId == null) {
+            return ReposResult.ok(false);
+        }
         LoginUser loginUser = MateAuthUtils.getLoginUser();
         return ReposResult.ok(commentService.getCanComment(loginUser.getUserId(), userId));
     }

@@ -62,8 +62,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authenticationEntryPoint(new DefaultAuthenticationEntryPoint())
             .and()
             .authorizeRequests()
-            .antMatchers("/actuator/**", "/account/register",
-                    "/user/id", "/rank/fighter", "/quarter/**", "/rank/total")
+            .antMatchers("/actuator/**",
+                    "/account/register",
+                    "/battle/detail", "/battle/page",
+                    "/comment/**",
+                    "/quarter/**",
+                    "/rank/id", "/rank/total",
+                    "/user/id", "/user/fighter")
                 .permitAll()
             .anyRequest()
                 .authenticated();

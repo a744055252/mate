@@ -72,7 +72,7 @@ public class BattleController {
      * @param battleId 对战id
      * @return 详情
      */
-    @GetMapping
+    @GetMapping("/detail")
     public ReposResult<MatchResultVo> get(@RequestParam Long battleId) {
         return ReposResult.ok(battleService.get(battleId));
     }
