@@ -26,7 +26,7 @@ public class UpdateRankTask {
     @Autowired
     QuarterService quarterService;
 
-    @Scheduled(cron = "0 */36 * * * ?")
+    @Scheduled(cron = "0 */30 * * * ?")
     public void updateRank(){
         log.info("更新用户排名！------start------");
         Quarter current = quarterService.getCurrent();
