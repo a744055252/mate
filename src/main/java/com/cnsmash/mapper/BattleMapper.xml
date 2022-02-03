@@ -3,7 +3,7 @@
 <mapper namespace="com.cnsmash.mapper.BattleMapper">
 
     <select id="page" resultType="com.cnsmash.pojo.vo.PageBattleVo">
-        SELECT DISTINCT b.id, b.*
+        SELECT DISTINCT b.*
         FROM battle b
             LEFT JOIN game_fighter gf on gf.battle_id = b.id
         <where>
@@ -26,7 +26,7 @@
                 b.end_time &lt; #{ro.afterTime}
             </if>
         </where>
-        ORDER BY b.id
+        ORDER BY b.create_time DESC
     </select>
 
     <select id="getCurrentBattle" resultType="com.cnsmash.pojo.entity.Battle">
@@ -41,6 +41,19 @@
           AND
             /** 用户未提交结果 */
             gf.game_fighter_status = 'ing'
+    </select>
+
+    <select id="getConflictBattle" resultType="java.lang.Long">
+        SELECT COUNT(DISTINCT a.id1) FROM (
+            SELECT a.id1 FROM (
+                SELECT * FROM
+                    (SELECT battle_id id1 FROM game_fighter WHERE user_id = #{userId} AND game_fighter_status = 'submit')a INNER JOIN
+                    (SELECT battle_id id2 FROM game_fighter WHERE user_id != #{userId} AND game_fighter_status = 'submit')b
+                    ON a.id1 = b.id2
+            )a INNER JOIN (
+                SELECT * FROM battle WHERE game_status = 'ing'
+            )b ON a.id1 = b.id
+        )a
     </select>
 
     <select id="getHead2HeadCount" resultType="java.lang.Long">

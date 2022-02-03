@@ -57,7 +57,8 @@ public class CommentServiceImpl implements CommentService {
     public Page<CommentVo> page(CommentType type, Long objectId, PageRo ro) {
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("object_type", type.name())
-                .eq("object_id", objectId);
+                .eq("object_id", objectId)
+                .orderByDesc("create_time");
         Page<Comment> page = commentMapper.selectPage(new Page<>(ro.getCurrent(), ro.getSize()), queryWrapper);
 
         Page<CommentVo> result = new Page<>();

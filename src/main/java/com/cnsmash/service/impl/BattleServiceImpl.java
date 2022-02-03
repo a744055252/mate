@@ -86,6 +86,12 @@ public class BattleServiceImpl implements BattleService {
 
         Quarter quarter = quarterService.getCurrent();
         User user = userService.getById(userId);
+
+        // 判断是否完成赛季设置
+        if (user.getServer() == null) {
+            throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "请先完成赛季匹配设置");
+        }
+
         Battle currentBattle = battleMapper.getCurrentBattle(userId);
         if (currentBattle != null) {
             // 已经有对战
@@ -109,6 +115,11 @@ public class BattleServiceImpl implements BattleService {
             }));
             return vo;
         }
+
+//        Long conflictBattleCount = battleMapper.getConflictBattle(userId);
+//        if (conflictBattleCount != 0) {
+//            throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "存在结果冲突的对局，请重新填写结果后重试");
+//        }
 
         MyRankVo rank = rankService.userRank(userId);
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());

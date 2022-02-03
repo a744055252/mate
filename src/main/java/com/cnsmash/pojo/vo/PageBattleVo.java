@@ -69,4 +69,9 @@ public class PageBattleVo {
      */
     private Timestamp endTime;
 
+    /**
+     * 对战创建时间
+     */
+    private Timestamp createTime;
+
 }
