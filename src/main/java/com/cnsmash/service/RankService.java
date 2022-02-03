@@ -8,6 +8,9 @@ import com.cnsmash.pojo.ro.PageFighterRo;
 import com.cnsmash.pojo.vo.MyRankVo;
 import com.cnsmash.pojo.vo.UserDetail;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * @author guanhuan_li
  */
@@ -61,4 +64,18 @@ public interface RankService {
      * @param logKey 唯一主键
      */
     void add(String quarter, Long userId, RankChangeType type, Long change, String logKey);
+
+    /**
+     * 获取所有用户排名
+     * @param quarter 赛季
+     * @return 用户排位
+     */
+    List<UserRank> listAll(String quarter);
+
+    /**
+     * 批量更新
+     * @param userRanks 用户
+     * @return 结果
+     */
+    boolean updateBatchById(Collection<UserRank> userRanks);
 }
