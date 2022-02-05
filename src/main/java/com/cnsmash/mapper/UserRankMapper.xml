@@ -13,10 +13,11 @@
             GROUP BY user_id
         )uc ON u.id = uc.user_id
         <where>
+            ur.quarter = #{ro.quarter}
             <if test="ro.fighterNo != null and ro.fighterNo != ''">
-                fighters like concat('%',#{ro.fighterNo,jdbcType=VARCHAR},'%')
+                AND (fighters LIKE concat('%',#{ro.fighterNo,jdbcType=VARCHAR},',%')
+                        OR fighters = #{ro.fighterNo})
             </if>
-            and ur.quarter = #{ro.quarter}
         </where>
         ORDER BY ur.score DESC
     </select>

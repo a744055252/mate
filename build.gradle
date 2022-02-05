@@ -30,7 +30,7 @@ repositories {
 }
 
 group 'com.cnsmash'
-version '1.0-SNAPSHOT'
+version '1.0.1-SNAPSHOT'
 
 dependencies {
     implementation group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.5.0'
