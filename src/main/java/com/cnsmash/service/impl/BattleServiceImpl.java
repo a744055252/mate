@@ -448,6 +448,7 @@ public class BattleServiceImpl implements BattleService {
         }
 
         singleBattleDetail.setUserId2detail(userId2detail);
+        battle.setEndTime(now);
         battle.setUpdateTime(now);
         battle.setBattleWin(battleWinUserId);
         battle.setDetailJson(JsonUtil.toJson(singleBattleDetail));
