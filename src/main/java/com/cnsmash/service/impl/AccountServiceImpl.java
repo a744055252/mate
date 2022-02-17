@@ -65,9 +65,6 @@ public class AccountServiceImpl implements AccountService {
         if (getAccountByAccount(ro.getAccount()) != null) {
             throw new CodeException(ErrorCode.ACCOUNT_EXIT, "账号已存在");
         }
-        if (userService.getUserByNickName(ro.getNickName()) != null) {
-            throw new CodeException(ErrorCode.NICKNAME_EXIT, "昵称已存在");
-        }
 
         Account account = new Account();
         BeanUtils.copyProperties(ro, account);
@@ -81,6 +78,7 @@ public class AccountServiceImpl implements AccountService {
         User user = new User();
         BeanUtils.copyProperties(ro, user);
         user.setAccountId(account.getId());
+        user.setNickName(ro.getAccount());
         user.setCode("");
         user.setTagJson(JsonUtil.toJson(ro.getTags()));
         user.setUpdateTime(now);

@@ -3,14 +3,18 @@
 <mapper namespace="com.cnsmash.mapper.UserMapper">
 
     <select id="listUserDetail" resultType="com.cnsmash.pojo.vo.UserDetail">
-        SELECT u.*, uf.id as head, uf.src as headSrc
+        SELECT u.*<!--, uf.id as head, uf.src as headSrc-->
         FROM user u
-            inner join upload_file uf on u.head = uf.id
+            <!--inner join upload_file uf on u.head = uf.id-->
         <where>
             u.id in
             <foreach collection="userIds" item="id" index="index" open="(" close=")" separator=",">
                 #{id}
             </foreach>
         </where>
+    </select>
+
+    <select id="getNickNameById" resultType="java.lang.String">
+        SELECT nick_name FROM user WHERE id = #{id}
     </select>
 </mapper>

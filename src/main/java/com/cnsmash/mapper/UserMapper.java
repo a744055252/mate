@@ -22,4 +22,11 @@ public interface UserMapper extends BaseMapper<User> {
      */
     List<UserDetail> listUserDetail(@Param("userIds") List<Long> userIds);
 
+    /**
+     * 根据ID获取用户昵称
+     * @param id 用户ID
+     * @return 对应昵称
+     */
+    String getNickNameById(@Param("id") Long id);
+
 }

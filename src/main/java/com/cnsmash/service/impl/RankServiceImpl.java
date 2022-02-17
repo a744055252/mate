@@ -2,6 +2,7 @@ package com.cnsmash.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cnsmash.exception.CodeException;
 import com.cnsmash.exception.ErrorCode;
 import com.cnsmash.mapper.RankLogMapper;
@@ -23,13 +24,15 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author guanhuan_li
  */
 @Slf4j
 @Service
-public class RankServiceImpl implements RankService {
+public class RankServiceImpl extends ServiceImpl<UserRankMapper,UserRank>  implements RankService {
 
     @Autowired
     UserRankMapper userRankMapper;
@@ -156,13 +159,21 @@ public class RankServiceImpl implements RankService {
         addRankLog(userId, change, logKey, type, quarter);
     }
 
+    @Override
+    public List<UserRank> listAll(String quarter) {
+        QueryWrapper<UserRank> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("quarter", quarter)
+                .orderByDesc("score");
+        return userRankMapper.selectList(queryWrapper);
+    }
+
     /**
      * 定义用户一种加分类型里面logkey不能重复
      * 例如：用户1 对战胜利类型 logkey定义成对战id（battleId） 不能重复加分
      * @param userId 用户id
      * @param changeType 变化类型
      * @param logKey 唯一标识
-     * @return
+     * @return 是否重复
      */
     private boolean check(Long userId, RankChangeType changeType, String logKey) {
         QueryWrapper<RankLog> queryWrapper = new QueryWrapper<>();
@@ -188,5 +199,10 @@ public class RankServiceImpl implements RankService {
         queryWrapper.eq("user_id", userId)
                 .eq("quarter",quarter);
         return userRankMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public boolean updateBatchById(Collection<UserRank> entityList) {
+        return super.updateBatchById(entityList);
     }
 }

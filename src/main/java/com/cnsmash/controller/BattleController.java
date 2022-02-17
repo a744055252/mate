@@ -12,6 +12,7 @@ import com.cnsmash.pojo.ro.StopBattleRo;
 import com.cnsmash.pojo.ro.SubmitFighterRo;
 import com.cnsmash.pojo.vo.MatchResultVo;
 import com.cnsmash.pojo.vo.PageBattleVo;
+import com.cnsmash.pojo.vo.UserBattleStatusVo;
 import com.cnsmash.service.BattleService;
 import com.cnsmash.util.MateAuthUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import java.util.Map;
  * @author guanhuan_li
  */
 @Slf4j
+@CrossOrigin
 @RestController
 @RequestMapping("/battle")
 public class BattleController {
@@ -44,6 +46,17 @@ public class BattleController {
     }
 
     /**
+     * 获取用户匹配状态
+     * @return 状态
+     */
+    @GetMapping("/user")
+    public ReposResult<UserBattleStatusVo> getUserBattle() {
+        LoginUser loginUser = MateAuthUtils.getLoginUser();
+        UserBattleStatusVo vo = battleService.userBattleStatus(loginUser.getUserId());
+        return ReposResult.ok(vo);
+    }
+
+    /**
      * 取消匹配
      * @return 结果
      */
@@ -59,7 +72,7 @@ public class BattleController {
      * @param battleId 对战id
      * @return 详情
      */
-    @GetMapping
+    @GetMapping("/detail")
     public ReposResult<MatchResultVo> get(@RequestParam Long battleId) {
         return ReposResult.ok(battleService.get(battleId));
     }

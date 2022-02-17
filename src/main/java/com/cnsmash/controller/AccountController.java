@@ -20,6 +20,7 @@ import javax.validation.Valid;
  * @author guanhuan_li
  */
 @Slf4j
+@CrossOrigin
 @RestController
 @RequestMapping("/account")
 public class AccountController {

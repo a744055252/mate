@@ -23,7 +23,7 @@ public class MatchBean {
      * 服务器
      * 裸连zh 日服jp 港服hk 美服usa
      */
-    private String server;
+    private Integer server;
 
     /**
      * 分差

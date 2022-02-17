@@ -10,6 +10,7 @@ import lombok.Data;
 public class LoginUserVo {
     private String username;
     private String id;
+    private Long userId;
     private String name;
     private RoleType roleType;
     private String token;

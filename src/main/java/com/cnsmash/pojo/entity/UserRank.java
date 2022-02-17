@@ -49,4 +49,9 @@ public class UserRank extends BaseEntity {
      * 总对局
      */
     private Integer total;
+
+    /**
+     * 状态 0 正常 1 禁止
+     */
+    private Integer status;
 }

@@ -39,10 +39,8 @@ public class RegisterUserRo {
     /**
      * 昵称
      */
-    @NotBlank
     private String nickName;
 
-    @NotNull
     private Integer sex;
 
     /**
@@ -59,7 +57,6 @@ public class RegisterUserRo {
      * 链接方式
      * 1.有线 2.无线
      */
-    @NotNull
     private Integer linkType;
 
 }

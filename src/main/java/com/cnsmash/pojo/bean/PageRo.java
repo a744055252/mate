@@ -1,5 +1,8 @@
 package com.cnsmash.pojo.bean;
 
+import com.cnsmash.pojo.CommentType;
+import com.cnsmash.pojo.entity.Battle;
+import com.cnsmash.pojo.entity.User;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
