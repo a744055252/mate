@@ -163,6 +163,7 @@ public class RankServiceImpl extends ServiceImpl<UserRankMapper,UserRank>  imple
     public List<UserRank> listAll(String quarter) {
         QueryWrapper<UserRank> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("quarter", quarter)
+                .eq("status", 0)
                 .orderByDesc("score");
         return userRankMapper.selectList(queryWrapper);
     }

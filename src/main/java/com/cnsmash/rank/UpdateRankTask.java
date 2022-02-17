@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,19 +27,25 @@ public class UpdateRankTask {
     @Autowired
     QuarterService quarterService;
 
-    @Scheduled(cron = "0 */30 * * * ?")
+    @Scheduled(cron = "0 5 * * * ?")
     public void updateRank(){
         log.info("更新用户排名！------start------");
         Quarter current = quarterService.getCurrent();
         List<UserRank> userRanks = rankService.listAll(current.getCode());
         long rank = 1L;
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        List<UserRank> needUpdate = new ArrayList<>();
         for (UserRank userRank : userRanks) {
-            userRank.setRank(rank++);
+            long currentRank = rank++;
+            if (currentRank == userRank.getRank()) {
+                continue;
+            }
+            userRank.setRank(currentRank);
             userRank.setUpdateTime(now);
+            needUpdate.add(userRank);
         }
-        rankService.updateBatchById(userRanks);
-        log.info("更新用户数量{}", userRanks.size());
+        rankService.updateBatchById(needUpdate);
+        log.info("更新用户数量{}", needUpdate.size());
         log.info("更新用户排名！------end------");
     }
 
