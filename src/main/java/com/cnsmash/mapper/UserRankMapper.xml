@@ -13,7 +13,7 @@
             GROUP BY user_id
         )uc ON u.id = uc.user_id
         <where>
-            ur.quarter = #{ro.quarter}
+            ur.quarter = #{ro.quarter} AND ur.status = 0
             <if test="ro.fighterNo != null and ro.fighterNo != ''">
                 AND (fighters LIKE concat('%',#{ro.fighterNo,jdbcType=VARCHAR},',%')
                         OR fighters = #{ro.fighterNo})

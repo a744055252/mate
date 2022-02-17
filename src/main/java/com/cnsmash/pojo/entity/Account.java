@@ -31,4 +31,8 @@ public class Account extends BaseEntity {
 
     private Integer sex;
 
+    /**
+     * 状态 0 正常 1 禁止
+     */
+    private Integer status;
 }

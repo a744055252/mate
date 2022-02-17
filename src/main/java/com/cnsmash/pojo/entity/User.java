@@ -76,4 +76,9 @@ public class User extends BaseEntity {
      * 比赛完会更新一次
      */
     private Timestamp createRoomTime;
+
+    /**
+     * 状态 0 正常 1 禁止
+     */
+    private Integer status;
 }
