@@ -55,6 +55,11 @@ public class UserController {
         return ReposResult.ok(userService.getUserDetail(loginUser.getUserId()));
     }
 
+    @GetMapping("/userDetail")
+    public ReposResult<UserDetail> getDetailById(@RequestParam Long userId) {
+        return ReposResult.ok(userService.getUserDetail(userId));
+    }
+
     @GetMapping("/fighter")
     public ReposResult<List<String>> getUserFighter(@RequestParam Long userId) {
         return ReposResult.ok(userService.getFighterById(userId));
