@@ -11,10 +11,7 @@ import com.cnsmash.pojo.entity.Comment;
 import com.cnsmash.pojo.ro.AddCommentRo;
 import com.cnsmash.pojo.vo.CommentVo;
 import com.cnsmash.pojo.vo.UserDetail;
-import com.cnsmash.service.BattleService;
-import com.cnsmash.service.CommentService;
-import com.cnsmash.service.FileService;
-import com.cnsmash.service.UserService;
+import com.cnsmash.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +42,9 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     BattleService battleService;
 
+    @Autowired
+    TournamentService tournamentService;
+
     @Override
     public List<Comment> listByObject(CommentType type, Long objectId) {
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
@@ -54,11 +54,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Page<CommentVo> page(CommentType type, Long objectId, PageRo ro) {
+    public Page<CommentVo> page(CommentType type, Long objectId, Long latestId, PageRo ro) {
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("object_type", type.name())
-                .eq("object_id", objectId)
-                .orderByDesc("create_time");
+                .eq("object_id", objectId);
+        if (latestId != null) {
+            queryWrapper.gt("id", latestId);
+        }
+        queryWrapper.orderByDesc("create_time");
         Page<Comment> page = commentMapper.selectPage(new Page<>(ro.getCurrent(), ro.getSize()), queryWrapper);
 
         Page<CommentVo> result = new Page<>();
@@ -96,6 +99,8 @@ public class CommentServiceImpl implements CommentService {
             case battle:
                 Optional.ofNullable(battleService.get(objectId))
                         .orElseThrow(()-> new CodeException(ErrorCode.COMMENT_ERROR, "对战不存在"));
+                break;
+            case tournament:
                 break;
             default:
                 throw new CodeException(ErrorCode.NOT_SUPPORT_ENUM, "不支持的评论对象！");

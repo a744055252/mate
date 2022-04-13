@@ -11,6 +11,7 @@ public enum CommentType {
     /** 评论类型 */
     user,
     battle,
+    tournament
     ;
     
 }
