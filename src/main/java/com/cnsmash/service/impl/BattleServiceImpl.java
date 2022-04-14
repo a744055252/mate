@@ -617,8 +617,11 @@ public class BattleServiceImpl implements BattleService {
         Room room = JsonUtil.parseJson(battle.getRoomJson(), new TypeReference<Room>() {
         });
         User user = userService.getById(room.getCreateId());
-        user.setCreateRoomTime(now);
-        userService.update(user);
+        // 房间信息可能不存在
+        if (user != null) {
+            user.setCreateRoomTime(now);
+            userService.update(user);
+        }
     }
 
     private List<GameFighter> listGameFighterByBattleId(Long battleId) {
