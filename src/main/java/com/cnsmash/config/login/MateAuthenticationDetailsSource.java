@@ -7,6 +7,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author guanhuan_li
@@ -27,15 +28,22 @@ public class MateAuthenticationDetailsSource implements AuthenticationDetailsSou
 
         private final LoginType loginType;
 
+        private final HttpSession httpSession;
+
         private final static String TYPE_PARAM = "loginType";
 
         private MateWebAuthenticationDetails(HttpServletRequest request) {
             super(request);
             loginType = LoginType.valueOf(request.getParameter(TYPE_PARAM));
+            httpSession = request.getSession();
         }
 
         public LoginType getLoginType(){
             return this.loginType;
+        }
+
+        public HttpSession getHttpSession() {
+            return httpSession;
         }
     }
 

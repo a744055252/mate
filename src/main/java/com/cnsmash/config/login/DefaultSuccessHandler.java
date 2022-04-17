@@ -5,6 +5,7 @@ import com.cnsmash.config.login.pojo.LoginUser;
 import com.cnsmash.config.login.pojo.LoginUserVo;
 import com.cnsmash.config.login.service.LoginUserService;
 import com.cnsmash.pojo.bean.ReposResult;
+import com.cnsmash.service.AccountService;
 import com.cnsmash.util.JsonUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
@@ -29,8 +31,11 @@ public class DefaultSuccessHandler implements AuthenticationSuccessHandler {
         // 获取完整数据
         Map<LoginType, LoginUserService> type2service = MateAuthenticationProvider.getType2service();
         LoginUserVo loginUserVo = type2service.get(loginUser.getLoginType()).getLoginUserVo(loginUser);
-        String sessionId = httpServletRequest.getSession().getId();
+        HttpSession session = httpServletRequest.getSession();
+        String sessionId = session.getId();
         loginUserVo.setToken(sessionId);
+
+        session.removeAttribute(AccountService.LOGIN_AUTH_KEY);
 
         httpServletResponse.setStatus(HttpStatus.OK.value());
         httpServletResponse.setCharacterEncoding("utf-8");
