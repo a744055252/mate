@@ -3,9 +3,11 @@ package com.cnsmash.service;
 import com.cnsmash.config.login.pojo.LoginUser;
 import com.cnsmash.pojo.entity.Account;
 import com.cnsmash.pojo.entity.User;
+import com.cnsmash.pojo.ro.AccountUserRo;
 import com.cnsmash.pojo.ro.RegisterUserRo;
 import com.cnsmash.pojo.ro.UpdatePasswordRo;
 import com.cnsmash.pojo.ro.UpdateUserInfoRo;
+import com.cnsmash.pojo.vo.AccountUserVo;
 import com.cnsmash.pojo.vo.UserInfo;
 
 import java.util.List;
@@ -15,12 +17,21 @@ import java.util.List;
  */
 public interface AccountService {
 
+    String LOGIN_AUTH_KEY = "login_auth";
+
     /**
      * 登录
      * @param username 账号
      * @return 账号
      */
     Account login(String username);
+
+    /**
+     * 获取用户身份列表
+     * @param ro 用户凭证信息
+     * @return 登录信息
+     */
+    AccountUserVo user(AccountUserRo ro);
 
     /**
      * 注册
@@ -50,4 +61,11 @@ public interface AccountService {
      * @param ro 更新值
      */
     void updateUserInfo(LoginUser loginUser, UpdateUserInfoRo ro);
+
+    /**
+     * 获取账号信息
+     * @param accountId 账号id
+     * @return 账号
+     */
+    Account get(Long accountId);
 }

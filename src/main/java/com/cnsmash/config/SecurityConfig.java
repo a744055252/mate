@@ -69,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/quarter/**",
                     "/rank/id", "/rank/total",
                     "/user/id", "/user/fighter",
-                    "/tournament/list", "**")
+                    "/tournament/list", "/account/user")
                 .permitAll()
             .anyRequest()
                 .authenticated();

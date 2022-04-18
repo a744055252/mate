@@ -3,6 +3,7 @@ package com.cnsmash.controller;
 import com.cnsmash.config.login.pojo.LoginUser;
 import com.cnsmash.pojo.bean.ReposResult;
 import com.cnsmash.pojo.entity.User;
+import com.cnsmash.pojo.ro.AddUserRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
 import com.cnsmash.pojo.vo.RuleVo;
 import com.cnsmash.pojo.vo.UserDetail;
@@ -29,6 +30,14 @@ public class UserController {
     public ReposResult<User> get() {
         LoginUser loginUser = MateAuthUtils.getLoginUser();
         return ReposResult.ok(userService.getById(loginUser.getUserId()));
+    }
+
+    @PostMapping
+    public ReposResult<Void> add(@RequestBody @Valid AddUserRo ro) {
+        LoginUser loginUser = MateAuthUtils.getLoginUser();
+        ro.setAccountId(loginUser.getId());
+        userService.add(ro);
+        return ReposResult.ok();
     }
 
     @PostMapping("/rule")

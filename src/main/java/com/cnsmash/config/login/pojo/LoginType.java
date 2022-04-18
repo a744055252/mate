@@ -10,6 +10,9 @@ import lombok.Getter;
 public enum LoginType {
 
     /** 账号密码登录类型 */
-    account
+    account,
+
+    /** 多身份登录 */
+    auth;
 
 }

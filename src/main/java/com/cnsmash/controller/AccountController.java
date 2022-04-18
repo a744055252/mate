@@ -1,18 +1,23 @@
 package com.cnsmash.controller;
 
 import com.cnsmash.config.login.pojo.LoginUser;
+import com.cnsmash.pojo.LoginAuth;
 import com.cnsmash.pojo.bean.ReposResult;
 import com.cnsmash.pojo.entity.User;
+import com.cnsmash.pojo.ro.AccountUserRo;
 import com.cnsmash.pojo.ro.RegisterUserRo;
 import com.cnsmash.pojo.ro.UpdatePasswordRo;
 import com.cnsmash.pojo.ro.UpdateUserInfoRo;
+import com.cnsmash.pojo.vo.AccountUserVo;
 import com.cnsmash.pojo.vo.UserInfo;
 import com.cnsmash.service.AccountService;
+import com.cnsmash.util.JsonUtil;
 import com.cnsmash.util.MateAuthUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 
@@ -27,6 +32,13 @@ public class AccountController {
 
     @Autowired
     AccountService accountService;
+
+    @PostMapping("/user")
+    public ReposResult<AccountUserVo> user(@RequestBody @Valid AccountUserRo ro, HttpSession session) {
+        AccountUserVo vo = accountService.user(ro);
+        session.setAttribute(AccountService.LOGIN_AUTH_KEY, JsonUtil.toJson(new LoginAuth(vo)));
+        return ReposResult.ok(vo);
+    }
 
     @PostMapping("/register")
     public ReposResult<User> register(@RequestBody @Valid RegisterUserRo ro) {
