@@ -120,9 +120,20 @@ public class BattleServiceImpl implements BattleService {
 //        if (conflictBattleCount != 0) {
 //            throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "存在结果冲突的对局，请重新填写结果后重试");
 //        }
+        // 上次玩过的对手
+        Battle lastBattle = battleMapper.getLastBattle(userId);
+        Set<Long> lastUserIds = new HashSet<>();
+        if (lastBattle != null) {
+            lastUserIds = listGameFighterByBattleId(lastBattle.getId())
+                    .stream()
+                    .map(GameFighter::getUserId)
+                    .filter(id ->!id.equals(userId))
+                    .collect(Collectors.toSet());
+        }
 
         MyRankVo rank = rankService.userRank(userId);
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        Set<Long> finalLastUserIds = lastUserIds;
         MatchBean matchBean = waitMatchMap.computeIfAbsent(userId, (id)->
                 MatchBean.builder()
                 .userId(userId)
@@ -130,6 +141,7 @@ public class BattleServiceImpl implements BattleService {
                 .server(user.getServer())
                 .scoreGap(user.getScoreGap())
                 .findTime(now)
+                .lastUserIds(finalLastUserIds)
                 .build());
 
         Optional<MatchBean> matchOpt = matchHandle.match(matchBean, waitMatchMap);
@@ -638,6 +650,7 @@ public class BattleServiceImpl implements BattleService {
         gameFighterMapper.update(gameFighter, queryWrapper);
     }
 
+    @Override
     public Long getHead2HeadCount(Long userId1, Long userId2) {
         Quarter quarter = quarterService.getCurrent();
         return battleMapper.getHead2HeadCount(userId1, userId2, quarter.getCode());

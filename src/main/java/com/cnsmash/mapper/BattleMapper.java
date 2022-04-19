@@ -30,6 +30,13 @@ public interface BattleMapper extends BaseMapper<Battle> {
     Battle getCurrentBattle(@Param("userId") Long userId);
 
     /**
+     * 获取用户上次对战
+     * @param userId 用户id
+     * @return 对战
+     */
+    Battle getLastBattle(@Param("userId") Long userId);
+
+    /**
      * 获取用户未能正常结束的对战数量
      * @param userId 用户id
      * @return 对战

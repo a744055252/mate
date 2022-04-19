@@ -43,6 +43,19 @@
             gf.game_fighter_status = 'ing'
     </select>
 
+    <select id="getLastBattle" resultType="com.cnsmash.pojo.entity.Battle">
+        SELECT DISTINCT b.*
+        FROM battle b
+                 LEFT JOIN game_fighter gf ON gf.battle_id = b.id
+        WHERE
+            gf.user_id = #{userId}
+          AND
+            /** 比赛已经结束的 */
+            (b.game_status = 'end' OR b.game_status = 'stop')
+        ORDER BY b.id DESC
+        LIMIT 1
+    </select>
+
     <select id="getConflictBattle" resultType="java.lang.Long">
         SELECT COUNT(DISTINCT a.id1) FROM (
             SELECT a.id1 FROM (
