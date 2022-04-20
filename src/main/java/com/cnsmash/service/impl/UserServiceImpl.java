@@ -211,6 +211,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void banUser(Long id) {
+        User user = userMapper.selectById(id);
         List<Battle> battleList = battleMapper.getPlayerBattle(id, 10);
         int point = 0;
         for (int index = 9; index >= 0; index --) {
@@ -226,15 +227,27 @@ public class UserServiceImpl implements UserService {
             }
         }
         LocalDateTime now = LocalDateTime.now();
-        if (point <= 5) {
-            // 不ban
-            return;
+        Integer banCount = user.getBanCount();
+
+        if (point <= 2) {
+            banCount = 0;
         } else if (point <= 10) {
-            userMapper.updateBanTime(id, Timestamp.valueOf(now.plusMinutes(30)));
+            banCount += 1;
+            if (banCount == 3) {
+                user.setBanUntil(Timestamp.valueOf(now.plusMinutes(30)));
+            }
         } else if (point <= 15) {
-            userMapper.updateBanTime(id, Timestamp.valueOf(now.plusHours(2)));
+            banCount += 1;
+            if (banCount == 3) {
+                user.setBanUntil(Timestamp.valueOf(now.plusHours(2)));
+            }
         } else {
-            userMapper.updateBanTime(id, Timestamp.valueOf(now.plusHours(6)));
+            banCount += 1;
+            if (banCount == 3) {
+                user.setBanUntil(Timestamp.valueOf(now.plusHours(6)));
+            }
         }
+        user.setBanCount(banCount);
+        userMapper.updateById(user);
     }
 }

@@ -91,4 +91,9 @@ public class User extends BaseEntity {
      * 被ban时间
      */
     private Timestamp banUntil;
+
+    /**
+     * 封禁计数
+     */
+    private Integer banCount;
 }
