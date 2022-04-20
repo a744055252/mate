@@ -1,13 +1,12 @@
 package com.cnsmash.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.cnsmash.mapper.BattleMapper;
 import com.cnsmash.mapper.UserFighterMapper;
 import com.cnsmash.mapper.UserMapper;
 import com.cnsmash.pojo.BattleResultType;
-import com.cnsmash.pojo.entity.Quarter;
-import com.cnsmash.pojo.entity.User;
-import com.cnsmash.pojo.entity.UserFighter;
-import com.cnsmash.pojo.entity.UserRank;
+import com.cnsmash.pojo.GameStatus;
+import com.cnsmash.pojo.entity.*;
 import com.cnsmash.pojo.ro.AddUserRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
 import com.cnsmash.pojo.vo.RuleVo;
@@ -48,6 +47,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     RankService rankService;
+
+    @Autowired
+    BattleMapper battleMapper;
 
     @Override
     public User getById(Long id) {
@@ -205,5 +207,47 @@ public class UserServiceImpl implements UserService {
             fighters.add(userFighter.getFighterNo());
         }
         return fighters;
+    }
+
+    @Override
+    public void banUser(Long id) {
+        User user = userMapper.selectById(id);
+        List<Battle> battleList = battleMapper.getPlayerBattle(id, 10);
+        int point = 0;
+        for (int index = 9; index >= 0; index --) {
+            Battle battle = battleList.get(index);
+            if (GameStatus.end.name().equals(battle.getGameStatus())) {
+                point -= 1;
+                if (point < 0) {
+                    point = 0;
+                }
+            }
+            if (GameStatus.stop.name().equals(battle.getGameStatus())) {
+                point += 2;
+            }
+        }
+        LocalDateTime now = LocalDateTime.now();
+        Integer banCount = user.getBanCount();
+
+        if (point <= 2) {
+            banCount = 0;
+        } else if (point <= 10) {
+            banCount += 1;
+            if (banCount == 3) {
+                user.setBanUntil(Timestamp.valueOf(now.plusMinutes(30)));
+            }
+        } else if (point <= 15) {
+            banCount += 1;
+            if (banCount == 3) {
+                user.setBanUntil(Timestamp.valueOf(now.plusHours(2)));
+            }
+        } else {
+            banCount += 1;
+            if (banCount == 3) {
+                user.setBanUntil(Timestamp.valueOf(now.plusHours(6)));
+            }
+        }
+        user.setBanCount(banCount);
+        userMapper.updateById(user);
     }
 }

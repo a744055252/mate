@@ -7,6 +7,7 @@ import com.cnsmash.pojo.vo.MatchResultVo;
 import com.cnsmash.pojo.vo.PageBattleVo;
 import com.cnsmash.pojo.vo.UserBattleStatusVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -97,4 +98,11 @@ public interface BattleService {
      * @return
      */
     Long getHead2HeadCount(Long userId1, Long userId2);
+
+    /**
+     * 查询报分冲突列表
+     * @param userId 用户ID
+     * @return 冲突报分比赛ID列表
+     */
+    List<Long> getConflict(Long userId);
 }

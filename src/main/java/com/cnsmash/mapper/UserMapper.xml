@@ -17,4 +17,8 @@
     <select id="getNickNameById" resultType="java.lang.String">
         SELECT nick_name FROM user WHERE id = #{id}
     </select>
+
+    <update id="updateBanTime">
+        UPDATE `user` SET ban_until = #{banTime} WHERE id = #{id}
+    </update>
 </mapper>

@@ -60,4 +60,9 @@ public class AddUserRo {
      */
     private Long scoreGap;
 
+    /**
+     * 主号ID
+     */
+    private Long mainId;
+
 }

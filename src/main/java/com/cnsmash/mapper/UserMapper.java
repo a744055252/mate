@@ -7,6 +7,7 @@ import com.cnsmash.pojo.vo.UserDetail;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -28,5 +29,12 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 对应昵称
      */
     String getNickNameById(@Param("id") Long id);
+
+    /**
+     * BAN人啦
+     * @param banTime ban结束时间
+     * @return
+     */
+    Void updateBanTime(Long id, Timestamp banTime);
 
 }

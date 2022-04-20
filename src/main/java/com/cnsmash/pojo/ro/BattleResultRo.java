@@ -26,5 +26,9 @@ public class BattleResultRo {
      */
     private Set<String> userFighterSet;
 
+    /**
+     * 中止原因
+     */
+    private String stopReason;
 
 }

@@ -57,6 +57,17 @@
     </select>
 
     <select id="getConflictBattle" resultType="java.lang.Long">
+        SELECT a.id1 FROM (
+            SELECT * FROM
+                (SELECT battle_id id1 FROM game_fighter WHERE user_id = #{userId} AND game_fighter_status = 'submit')a INNER JOIN
+                (SELECT battle_id id2 FROM game_fighter WHERE user_id != #{userId} AND game_fighter_status = 'submit')b
+                ON a.id1 = b.id2
+        )a INNER JOIN (
+            SELECT * FROM battle WHERE game_status = 'ing'
+        )b ON a.id1 = b.id
+    </select>
+
+    <select id="getConflictBattleCount" resultType="java.lang.Long">
         SELECT COUNT(DISTINCT a.id1) FROM (
             SELECT a.id1 FROM (
                 SELECT * FROM
@@ -80,5 +91,16 @@
                 SELECT * FROM battle WHERE game_status = 'end' AND quarter = #{quarter}
             )b ON a.id1 = b.id
         )a
+    </select>
+
+    <select id="getPlayerBattle" resultType="com.cnsmash.pojo.entity.Battle">
+        SELECT battle.*
+        FROM battle
+        INNER JOIN game_fighter ON game_fighter.battle_id = battle.id
+        WHERE game_fighter.user_id = #{userId}
+        ORDER BY battle.create_time DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
     </select>
 </mapper>

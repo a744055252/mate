@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -151,7 +152,17 @@ public class BattleController {
      * @return 返回
      */
     @GetMapping("/wait")
-    public ReposResult<MatchBean> waitMatch(@RequestParam Long userId){
+    public ReposResult<MatchBean> waitMatch(@RequestParam Long userId) {
         return ReposResult.ok(battleService.waitMatch(userId));
+    }
+
+    /**
+     * 查询比赛报分冲突列表
+     * @return 冲突比赛ID列表
+     */
+    @GetMapping("/conflict")
+    public ReposResult<List<Long>> conflict() {
+        LoginUser loginUser = MateAuthUtils.getLoginUser();
+        return ReposResult.ok(battleService.getConflict(loginUser.getUserId()));
     }
 }
