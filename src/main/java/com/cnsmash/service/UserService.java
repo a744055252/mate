@@ -113,4 +113,10 @@ public interface UserService {
      * @return 斗士列表
      */
     List<String> getFighterById(Long id);
+
+    /**
+     * 查询比赛数据之后ban人
+     * @param id 用户ID
+     */
+    void banUser(Long id);
 }

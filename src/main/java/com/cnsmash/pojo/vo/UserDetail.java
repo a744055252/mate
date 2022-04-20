@@ -91,4 +91,9 @@ public class UserDetail {
      * 分数
      */
     private String score;
+
+    /**
+     * 主号ID
+     */
+    private Long mainId;
 }

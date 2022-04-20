@@ -81,4 +81,14 @@ public class User extends BaseEntity {
      * 状态 0 正常 1 禁止
      */
     private Integer status;
+
+    /**
+     * 主号ID
+     */
+    private Long mainId;
+
+    /**
+     * 被ban时间
+     */
+    private Timestamp banUntil;
 }

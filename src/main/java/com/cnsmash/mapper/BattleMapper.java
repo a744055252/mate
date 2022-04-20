@@ -8,6 +8,8 @@ import com.cnsmash.pojo.vo.PageBattleVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author guanhuan_li
  */
@@ -30,11 +32,18 @@ public interface BattleMapper extends BaseMapper<Battle> {
     Battle getCurrentBattle(@Param("userId") Long userId);
 
     /**
+     * 获取用户未能正常结束的对战列表
+     * @param userId 用户id
+     * @return 对战
+     */
+    List<Long> getConflictBattle(@Param("userId") Long userId);
+
+    /**
      * 获取用户未能正常结束的对战数量
      * @param userId 用户id
      * @return 对战
      */
-    Long getConflictBattle(@Param("userId") Long userId);
+    Long getConflictBattleCount(@Param("userId") Long userId);
 
     /**
      * 计算两人对战次数
@@ -43,4 +52,6 @@ public interface BattleMapper extends BaseMapper<Battle> {
      * @return
      */
     Long getHead2HeadCount(@Param("userId1") Long userId1, @Param("userId2") Long userId2, @Param("quarter") String quarter);
+
+    List<Battle> getPlayerBattle(@Param("userId") Long id, @Param("limit") Integer limit);
 }
