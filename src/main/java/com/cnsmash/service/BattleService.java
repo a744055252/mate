@@ -1,15 +1,8 @@
 package com.cnsmash.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cnsmash.match.MatchBean;
-import com.cnsmash.pojo.bean.Room;
-import com.cnsmash.pojo.ro.BattleResultRo;
-import com.cnsmash.pojo.ro.CreateRoomRo;
-import com.cnsmash.pojo.ro.FindRoomRo;
-import com.cnsmash.pojo.ro.PageBattleRo;
-import com.cnsmash.pojo.ro.StopBattleRo;
-import com.cnsmash.pojo.ro.SubmitFighterRo;
+import com.cnsmash.pojo.ro.*;
 import com.cnsmash.pojo.vo.MatchResultVo;
 import com.cnsmash.pojo.vo.PageBattleVo;
 import com.cnsmash.pojo.vo.UserBattleStatusVo;
@@ -21,6 +14,8 @@ import java.util.Map;
  * @author guanhuan_li
  */
 public interface BattleService {
+
+    String matchKey = "BATTLE_MATCH";
 
     /**
      * 开始匹配
