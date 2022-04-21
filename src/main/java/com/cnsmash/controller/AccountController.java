@@ -40,6 +40,13 @@ public class AccountController {
         return ReposResult.ok(vo);
     }
 
+    @PostMapping("/wechat")
+    public ReposResult<AccountUserVo> wechat(@RequestParam String code, HttpSession session) {
+        AccountUserVo vo = accountService.wxUser(code);
+        session.setAttribute(AccountService.LOGIN_AUTH_KEY, JsonUtil.toJson(new LoginAuth(vo)));
+        return ReposResult.ok(vo);
+    }
+
     @PostMapping("/register")
     public ReposResult<User> register(@RequestBody @Valid RegisterUserRo ro) {
         return ReposResult.ok(accountService.register(ro));
@@ -65,4 +72,11 @@ public class AccountController {
         return ReposResult.ok();
     }
 
+    @PostMapping("/switchUser")
+    public ReposResult<AccountUserVo> switchUser(HttpSession session) {
+        LoginUser loginUser = MateAuthUtils.getLoginUser();
+        AccountUserVo vo = accountService.switchUser(loginUser.getId());
+        session.setAttribute(AccountService.LOGIN_AUTH_KEY, JsonUtil.toJson(new LoginAuth(vo)));
+        return ReposResult.ok(vo);
+    }
 }

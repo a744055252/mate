@@ -50,4 +50,7 @@ public interface ErrorCode {
 
     /** 评论出错 */
     int COMMENT_ERROR = 1017;
+
+    /** 微信接口调用错误，请稍后再试 */
+    int WECHAT_ERROR = 1018;
 }

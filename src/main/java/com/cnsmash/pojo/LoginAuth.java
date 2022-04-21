@@ -1,5 +1,6 @@
 package com.cnsmash.pojo;
 
+import com.cnsmash.pojo.entity.WxUser;
 import com.cnsmash.pojo.vo.AccountUserVo;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class LoginAuth {
         this.accountId = vo.getAccount().getId();
         this.auth = vo.getAuth();
         this.loginTime = now;
+        this.wxUserId = vo.getWxUserId();
     }
 
     private String auth;
@@ -27,5 +29,11 @@ public class LoginAuth {
     private Long accountId;
 
     private Timestamp loginTime;
+
+    /**
+     * 绑定的微信信息id
+     * {@link WxUser#getId()}
+     */
+    private Long wxUserId;
 
 }

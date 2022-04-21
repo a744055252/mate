@@ -34,6 +34,13 @@ public interface AccountService {
     AccountUserVo user(AccountUserRo ro);
 
     /**
+     * 微信获取用户身份列表
+     * @param code 微信code
+     * @return 登录信息
+     */
+    AccountUserVo wxUser(String code);
+
+    /**
      * 注册
      * @param ro 请求
      * @return 注册用户
@@ -68,4 +75,17 @@ public interface AccountService {
      * @return 账号
      */
     Account get(Long accountId);
+
+    /**
+     * 重新登录获取auth
+     * @param accountId 账号id
+     * @return 账号信息
+     */
+    AccountUserVo switchUser(Long accountId);
+
+    /**
+     * 更新账号
+     * @param account 账号
+     */
+    void update(Account account);
 }
