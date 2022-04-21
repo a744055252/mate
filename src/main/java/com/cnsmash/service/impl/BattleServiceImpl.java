@@ -140,7 +140,7 @@ public class BattleServiceImpl implements BattleService {
 
         MyRankVo rank = rankService.userRank(userId);
         //Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        //Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         Set<Long> finalLastUserIds = lastUserIds;
         MatchBean matchBean = waitMatchMap.computeIfAbsent(userId, (id)->
                 MatchBean.builder()
