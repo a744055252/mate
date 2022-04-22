@@ -100,6 +100,13 @@ public class AuthLoginServiceImpl implements LoginUserService {
         }
 
         Account account = accountService.get(user.getAccountId());
+
+        // 如果有微信id更新
+        if (loginAuth.getWxUserId() != null) {
+            account.setMappingId(loginAuth.getWxUserId());
+            accountService.update(account);
+        }
+
         LoginUser loginUser = new LoginUser();
         BeanUtils.copyProperties(account, loginUser);
         List<GrantedAuthority> authorities = new ArrayList<>();

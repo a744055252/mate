@@ -306,6 +306,9 @@ public class BattleServiceImpl implements BattleService {
         user.setUpdateTime(now);
         userService.update(user);
 
+        List<GameFighter> gameFighters = listGameFighterByBattleId(battle.getId());
+
+
     }
 
 
