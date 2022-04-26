@@ -138,6 +138,7 @@ public class AccountServiceImpl implements AccountService {
             log.error("微信接口请求错误!", e);
             throw new CodeException(ErrorCode.WECHAT_ERROR, "微信接口调用错误，请稍后再试");
         }
+        log.info("用户信息：{}", user);
         Optional<WxUser> wxUserOpt = wxUserService.getByOpenid(user.getOpenid());
 
         WxUser wxUser = wxUserOpt.orElseGet(() -> {

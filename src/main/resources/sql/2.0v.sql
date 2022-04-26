@@ -7,7 +7,9 @@ CREATE TABLE `mate`.`wx_user`  (
                                    `province` varchar(255) NULL,
                                    `country` varchar(255) NULL,
                                    `head_img_url` varchar(1024) NULL,
-                                   `unionId` varbinary(100) NULL,
+                                   `union_id` varbinary(100) NULL,
                                    `privilege_json` varchar(1024) NULL,
+                                   `create_time` timestamp(0) NULL,
+                                   `update_time` timestamp(0) NULL,
                                    PRIMARY KEY (`id`)
 );

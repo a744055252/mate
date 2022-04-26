@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/battle/detail", "/battle/page",
                     "/comment/**",
                     "/quarter/**",
-                    "/rank/id", "/rank/total",
+                    "/rank/id", "/rank/total", "/account/wechat",
                     "/user/id", "/user/fighter",
                     "/tournament/list", "/account/user")
                 .permitAll()
