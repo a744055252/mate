@@ -7,8 +7,8 @@
         FROM tournament_set tset
         LEFT JOIN `user` player1 ON player1.id = tset.player1_id
         LEFT JOIN `user` player2 ON player2.id = tset.player2_id
-        LEFT JOIN tournament_player tplayer1 ON tplayer1.player_id = tset.player1_id
-        LEFT JOIN tournament_player tplayer2 ON tplayer2.player_id = tset.player2_id
+        LEFT JOIN tournament_player tplayer1 ON tplayer1.player_id = tset.player1_id AND tplayer1.tournament_id = #{id}
+        LEFT JOIN tournament_player tplayer2 ON tplayer2.player_id = tset.player2_id AND tplayer2.tournament_id = #{id}
         WHERE tset.tournament_id = #{id}
         ORDER BY tset.serial ASC
     </select>

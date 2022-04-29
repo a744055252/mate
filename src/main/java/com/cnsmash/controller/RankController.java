@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author guanhuan_li
  */
@@ -39,5 +41,8 @@ public class RankController {
     public ReposResult<Page<UserDetail>> page(PageFighterRo ro) {
         return ReposResult.ok(rankService.page(ro));
     }
+
+    @GetMapping("/fullrank")
+    public ReposResult<List<UserDetail>> fullRank(PageFighterRo ro) { return ReposResult.ok(rankService.getFullRank(ro)); }
 
 }

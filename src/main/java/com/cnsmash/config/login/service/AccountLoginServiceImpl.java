@@ -1,7 +1,9 @@
 package com.cnsmash.config.login.service;
 
 import com.cnsmash.config.login.pojo.*;
+import com.cnsmash.mapper.UploadFileMapper;
 import com.cnsmash.pojo.entity.Account;
+import com.cnsmash.pojo.entity.UploadFile;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.service.AccountService;
 import com.cnsmash.service.UserService;
@@ -34,6 +36,9 @@ public class AccountLoginServiceImpl implements LoginUserService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    UploadFileMapper uploadFileMapper;
 
     @Override
     public LoginUserVo getLoginUserVo(LoginUser loginUser) {
@@ -71,7 +76,12 @@ public class AccountLoginServiceImpl implements LoginUserService {
         if (CollectionUtils.isEmpty(users)) {
             throw new BadCredentialsException("身份不存在！");
         }
+
         User user = users.get(0);
+
+        // 头像
+        UploadFile uploadFile = uploadFileMapper.selectById(user.getHead());
+
         LoginUser loginUser = new LoginUser();
         BeanUtils.copyProperties(account, loginUser);
         loginUser.setAccountNonLocked(true);
@@ -87,6 +97,11 @@ public class AccountLoginServiceImpl implements LoginUserService {
         loginUser.setUserId(user.getId());
         loginUser.setPassword(account.getPassword());
         loginUser.setUsername(username);
+        loginUser.setNickName(user.getNickName());
+        // 如果有头像就保存头像信息
+        if (uploadFile != null) {
+            loginUser.setHeadSrc(uploadFile.getSrc());
+        }
         return loginUser;
     }
 }

@@ -38,4 +38,9 @@ public interface FreeroomMapper extends BaseMapper<Freeroom> {
      */
     FreeroomVo detailByUser(Long id);
 
+    /**
+     * 更新所有房间状态
+     */
+    void updateRoom();
+
 }

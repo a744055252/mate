@@ -190,6 +190,11 @@ public class RankServiceImpl extends ServiceImpl<UserRankMapper,UserRank>  imple
     }
 
     @Override
+    public List<UserDetail> getFullRank(PageFighterRo ro) {
+        return userRankMapper.fullRank(ro);
+    }
+
+    @Override
     public UserRank initQuarterRank(Long userId, String quarter) {
         return null;
     }

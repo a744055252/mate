@@ -5,17 +5,25 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     # 指定数据源
-    url: jdbc:mysql://112.74.17.146:8036/mate_dev?useUnicode=true&characterEncode=utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
-    # url: jdbc:mysql://localhost:8036/mate?useUnicode=true&characterEncode=utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
+    # url: jdbc:mysql://112.74.17.146:8036/mate_dev?useUnicode=true&characterEncode=utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:8036/mate?useUnicode=true&characterEncode=utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
     username: root
     password: GZ_smash8
     driver-class-name: com.mysql.cj.jdbc.Driver
 file:
-  # rootPath: /usr/temp
-  rootPath: /Users/hesongheng/Documents/mateimg
+  rootPath: /usr/temp
+  # rootPath: /Users/hesongheng/Documents/mateimg
 # Logger Config
 logging:
   level:
     com.cnsmash: debug
 mybatis:
   mapper-locations: classpath*:com/cnsmash/**/*Mapper.xml
+
+# 公众号配置(必填)
+wx:
+  mp:
+    appId: wx9de4776b3c327003
+    secret: f5c67d98dab810d74719784e18a5aaae
+    token: 1111
+    aesKey: 1111

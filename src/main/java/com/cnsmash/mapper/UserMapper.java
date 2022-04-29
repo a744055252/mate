@@ -37,4 +37,18 @@ public interface UserMapper extends BaseMapper<User> {
      */
     Void updateBanTime(Long id, Timestamp banTime);
 
+    /**
+     * 根据用户ID获取头像地址
+     * @param id
+     * @return
+     */
+    String getHeadUrlById(Long id);
+
+    /**
+     * 根据AccountId获取主号ID
+     * @param id accountId
+     * @return 对应主号ID
+     */
+    Long getMainId(Long id);
+
 }

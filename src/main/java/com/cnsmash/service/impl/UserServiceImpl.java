@@ -2,6 +2,7 @@ package com.cnsmash.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cnsmash.mapper.BattleMapper;
+import com.cnsmash.mapper.UploadFileMapper;
 import com.cnsmash.mapper.UserFighterMapper;
 import com.cnsmash.mapper.UserMapper;
 import com.cnsmash.pojo.BattleResultType;
@@ -22,10 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -38,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    UploadFileMapper uploadFileMapper;
 
     @Autowired
     UserFighterMapper userFighterMapper;
@@ -57,6 +58,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDetail getDetailById(Long id) {
+        List queryList = new ArrayList();
+        queryList.add(id);
+        List<UserDetail> userDetailList = userMapper.listUserDetail(queryList);
+        return userDetailList.get(0);
+    }
+
+    @Override
     public void add(AddUserRo ro) {
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         User user = new User();
@@ -67,6 +76,7 @@ public class UserServiceImpl implements UserService {
         user.setTeamId(0L);
         user.setUpdateTime(now);
         user.setCreateTime(now);
+        user.setMainId(userMapper.getMainId(ro.getAccountId()));
         userMapper.insert(user);
     }
 
@@ -163,7 +173,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetail getUserDetail(Long id) {
-        UserDetail detail = new UserDetail();
+
+        List queryList = new ArrayList();
+        queryList.add(id);
+        List<UserDetail> userDetailList = userMapper.listUserDetail(queryList);
+        UserDetail detail = userDetailList.get(0);
+
         User user = getById(id);
         Quarter quarter = quarterService.getCurrent();
         BeanUtils.copyProperties(user, detail);
@@ -214,7 +229,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectById(id);
         List<Battle> battleList = battleMapper.getPlayerBattle(id, 10);
         int point = 0;
-        for (int index = 9; index >= 0; index --) {
+        for (int index = battleList.size() - 1; index >= 0; index --) {
             Battle battle = battleList.get(index);
             if (GameStatus.end.name().equals(battle.getGameStatus())) {
                 point -= 1;
@@ -249,5 +264,10 @@ public class UserServiceImpl implements UserService {
         }
         user.setBanCount(banCount);
         userMapper.updateById(user);
+    }
+
+    @Override
+    public String getHeadUrlById(Long id) {
+        return userMapper.getHeadUrlById(id);
     }
 }

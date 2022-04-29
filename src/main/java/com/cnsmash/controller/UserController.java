@@ -27,9 +27,9 @@ public class UserController {
     UserService userService;
 
     @GetMapping
-    public ReposResult<User> get() {
+    public ReposResult<UserDetail> get() {
         LoginUser loginUser = MateAuthUtils.getLoginUser();
-        return ReposResult.ok(userService.getById(loginUser.getUserId()));
+        return ReposResult.ok(userService.getDetailById(loginUser.getUserId()));
     }
 
     @PostMapping
@@ -54,8 +54,8 @@ public class UserController {
     }
 
     @GetMapping("/id")
-    public ReposResult<User> getById(@RequestParam Long userId){
-        return ReposResult.ok(userService.getById(userId));
+    public ReposResult<UserDetail> getById(@RequestParam Long userId){
+        return ReposResult.ok(userService.getDetailById(userId));
     }
 
     @GetMapping("/detail")

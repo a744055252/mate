@@ -11,7 +11,11 @@ public class LoginUserVo {
     private String username;
     private String id;
     private Long userId;
+    private Long mainId;
     private String name;
+    private String nickName;
+    private String mainNickName;
+    private String headSrc;
     private RoleType roleType;
     private String token;
 }

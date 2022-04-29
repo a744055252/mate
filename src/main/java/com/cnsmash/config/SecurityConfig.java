@@ -66,10 +66,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/account/register",
                     "/battle/detail", "/battle/page",
                     "/comment/**",
+                    "/file/**",
+                    "/freeroom/list", "/freeroom/detail",
                     "/quarter/**",
-                    "/rank/id", "/rank/total",
+                    "/rank/id", "/rank/total", "/rank/fullrank",
                     "/user/id", "/user/fighter",
-                    "/tournament/list", "/account/user")
+                    "/tournament/list", "/tournament/user", "/tournament/playerList",
+                    "/tournament/setlist", "/tournament/resultList", "/tournament/detail",
+                    "/account/user"
+                    )
                 .permitAll()
             .anyRequest()
                 .authenticated();

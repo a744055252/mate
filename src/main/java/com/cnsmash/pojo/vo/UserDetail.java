@@ -96,4 +96,9 @@ public class UserDetail {
      * 主号ID
      */
     private Long mainId;
+
+    /**
+     * 主号昵称
+     */
+    private String mainNickName;
 }

@@ -3,10 +3,10 @@
 <mapper namespace="com.cnsmash.mapper.UserRankMapper">
 
     <select id="pageFighter" resultType="com.cnsmash.pojo.vo.UserDetail">
-        SELECT u.id, u.*, ur.score, uc.fighters fighters<!--, f.id as head, f.src as headSrc -->
+        SELECT u.id, u.*, ur.score, uc.fighters fighters, f.id as head, f.src as headSrc
         FROM user_rank ur
-        INNER JOIN user u on u.id = ur.user_id
-        <!--INNER JOIN upload_file f on u.head = f.id-->
+        INNER JOIN user u ON u.id = ur.user_id
+        LEFT JOIN upload_file f on u.head = f.id
         LEFT JOIN (
             SELECT user_id, GROUP_CONCAT(fighter_no) AS fighters FROM user_fighter
             WHERE quarter = #{ro.quarter} AND total >= 5
@@ -30,6 +30,20 @@
                 ORDER BY ur.score DESC
             </otherwise>
         </choose>
+    </select>
 
+    <select id="fullRank" resultType="com.cnsmash.pojo.vo.UserDetail">
+        SELECT u.id, u.*, ur.score, uc.fighters fighters, f.id as head, f.src as headSrc
+        FROM user_rank ur
+        INNER JOIN user u ON u.id = ur.user_id
+        LEFT JOIN upload_file f on u.head = f.id
+        LEFT JOIN (
+            SELECT user_id, GROUP_CONCAT(fighter_no) AS fighters FROM user_fighter
+            WHERE quarter = #{quarter} AND total >= 5
+            GROUP BY user_id
+        )uc ON u.id = uc.user_id
+        WHERE ur.quarter = #{quarter}
+        ORDER BY ur.score DESC
+        LIMIT 50
     </select>
 </mapper>

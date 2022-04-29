@@ -40,6 +40,12 @@ public interface RankService {
     Page<UserDetail> page(PageFighterRo ro);
 
     /**
+     * 获取总榜数据（剔除小号）
+     * @return 总榜列表
+     */
+    List<UserDetail> getFullRank(PageFighterRo ro);
+
+    /**
      * 初始化赛季排名
      * @param userId 用户id
      * @param quarter

@@ -25,6 +25,13 @@ public interface UserService {
     User getById(Long id);
 
     /**
+     * 获取用户详情
+     * @param id 用户ID
+     * @return 用户详情
+     */
+    UserDetail getDetailById(Long id);
+
+    /**
      * 新增身份
      * @param ro 请求
      */
@@ -119,4 +126,11 @@ public interface UserService {
      * @param id 用户ID
      */
     void banUser(Long id);
+
+    /**
+     * 根据ID获取头像地址
+     * @param id 用户ID
+     * @return
+     */
+    String getHeadUrlById(Long id);
 }

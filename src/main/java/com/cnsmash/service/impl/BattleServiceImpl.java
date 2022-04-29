@@ -85,6 +85,15 @@ public class BattleServiceImpl implements BattleService {
         }
 
         Quarter quarter = quarterService.getCurrent();
+        // 赛季是否结束
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        if (quarter.getEndTime().before(now)) {
+            throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "当前赛季已经结束");
+        }
+        if (quarter.getBeginTime().after(now)) {
+            throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "当前赛季未开始");
+        }
+
         User user = userService.getById(userId);
 
         // 判断是否完成赛季设置
@@ -94,8 +103,8 @@ public class BattleServiceImpl implements BattleService {
 
         // 判断现在是否被ban
         Timestamp banUntil = user.getBanUntil();
-        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-        if (now.before(banUntil)) {
+        // Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        if (banUntil != null && now.before(banUntil)) {
             throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "当前用户因过多中止而被禁止匹配至" + banUntil.toString().substring(0, 19));
         }
 
@@ -194,6 +203,7 @@ public class BattleServiceImpl implements BattleService {
             detail.setUserId(userId);
             detail.setRankScore(rank.getScore());
             detail.setNickName(user.getNickName());
+            detail.setHeadSrc(userService.getHeadUrlById(userId));
             userId2detail.put(userId, detail);
 
             // 用户1
@@ -210,6 +220,7 @@ public class BattleServiceImpl implements BattleService {
             detail.setUserId(targetUserId);
             detail.setRankScore(targetMatch.getScore());
             detail.setNickName(targetUser.getNickName());
+            detail.setHeadSrc(userService.getHeadUrlById(targetUserId));
             userId2detail.put(targetUserId, detail);
 
             // 用户2
