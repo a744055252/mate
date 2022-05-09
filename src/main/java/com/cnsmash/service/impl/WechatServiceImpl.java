@@ -42,6 +42,12 @@ public class WechatServiceImpl implements WechatService {
 
     @Override
     public void battleBegin(MatchResultVo vo) {
+        // 模板 wf_nBNgK7kq4dIpRomnWUfe5gbdj3SdJXIQB4cy2Fk0
+        // {{first.DATA}}
+        //比赛：{{keyword1.DATA}}
+        //时间：{{keyword2.DATA}}
+        //{{remark.DATA}}
+
 
         // 发送用户1
         UserDetail p1 = vo.getP1();
@@ -50,7 +56,7 @@ public class WechatServiceImpl implements WechatService {
                 .ifPresent(wxUser -> {
                     List<WxMpTemplateData> data = new ArrayList<>();
                     WxMpTemplateMessage msg = WxMpTemplateMessage.builder()
-                            .templateId("")
+                            .templateId("wf_nBNgK7kq4dIpRomnWUfe5gbdj3SdJXIQB4cy2Fk0")
                             .url("https://mate.cnsmash.com/battle/" + vo.getBattleId())
                             .toUser(wxUser.getOpenid())
                             .data(data)
@@ -75,7 +81,7 @@ public class WechatServiceImpl implements WechatService {
                             WxMpTemplateData data = new WxMpTemplateData();
                         }
                         WxMpTemplateMessage msg = WxMpTemplateMessage.builder()
-                                .templateId("")
+                                .templateId("wf_nBNgK7kq4dIpRomnWUfe5gbdj3SdJXIQB4cy2Fk0")
 //                                .url("https://mate.cnsmash.com/battle/" + vo.getBattleId())
                                 .toUser(wxUser.getOpenid())
 //                                .data(data)
