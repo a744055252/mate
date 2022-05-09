@@ -220,6 +220,7 @@ public class BattleServiceImpl implements BattleService {
         battleMapper.updateById(battle);
 
         MatchResultVo vo = getMatchResultVo(quarter, user, targetUser);
+        vo.setBattle(battle);
         vo.setBattleId(battle.getId());
 
         // 发送公众号消息
@@ -309,15 +310,15 @@ public class BattleServiceImpl implements BattleService {
         user.setUpdateTime(now);
         userService.update(user);
 
-        // 创建的人不发，其他人发
-        List<GameFighter> gameFighters = listGameFighterByBattleId(battle.getId())
-                .stream().filter(gameFighter -> !gameFighter.getUserId().equals(userId)).collect(Collectors.toList());
+        // 创建的人不发，其他人发 目前暂时不发建房成功提醒
+//        List<GameFighter> gameFighters = listGameFighterByBattleId(battle.getId())
+//                .stream().filter(gameFighter -> !gameFighter.getUserId().equals(userId)).collect(Collectors.toList());
         // 发送公众号消息
-        try {
-            wechatService.createRoom(battle, room, gameFighters);
-        } catch (Exception e) {
-            log.error("发送公众号消息失败", e);
-        }
+//        try {
+//            wechatService.createRoom(battle, room, gameFighters);
+//        } catch (Exception e) {
+//            log.error("发送公众号消息失败", e);
+//        }
 
     }
 

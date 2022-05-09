@@ -20,6 +20,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,12 +50,6 @@ public class WechatServiceImpl implements WechatService {
         UserDetail p1 = vo.getP1();
         UserDetail p2 = vo.getP2();
 
-        // 模板 wf_nBNgK7kq4dIpRomnWUfe5gbdj3SdJXIQB4cy2Fk0
-        // {{first.DATA}}
-        //比赛：{{keyword1.DATA}}
-        //时间：{{keyword2.DATA}}
-        //{{remark.DATA}}
-
         List<WxMpTemplateData> dataList = getBattleBeginTemplateData(vo);
 
         // 发送用户1
@@ -74,7 +69,7 @@ public class WechatServiceImpl implements WechatService {
         wxUserService.get(account.getMappingId())
                 .ifPresent(wxUser -> {
                     WxMpTemplateMessage msg = WxMpTemplateMessage.builder()
-                            .templateId("wf_nBNgK7kq4dIpRomnWUfe5gbdj3SdJXIQB4cy2Fk0")
+                            .templateId("_3_DaR4Cz3mw6YQDVWgfY4KkM-zbauczCziKg3FX-fg")
                             .url("https://mate.cnsmash.com/battle/" + vo.getBattleId())
                             .toUser(wxUser.getOpenid())
                             .data(dataList)
@@ -92,14 +87,14 @@ public class WechatServiceImpl implements WechatService {
         List<User> userList = gameFighters.stream().map(gameFighter -> userService.getById(gameFighter.getUserId()))
                 .collect(Collectors.toList());
 
-        List<WxMpTemplateData> dataList = getCreateTemplateData(battle, userList);
+        List<WxMpTemplateData> dataList = getCreateTemplateData(battle, room);
 
         userList.forEach(user -> {
             Account account = accountService.get(user.getAccountId());
             wxUserService.get(account.getMappingId())
                     .ifPresent(wxUser -> {
                         WxMpTemplateMessage msg = WxMpTemplateMessage.builder()
-                                .templateId("wf_nBNgK7kq4dIpRomnWUfe5gbdj3SdJXIQB4cy2Fk0")
+                                .templateId("_3_DaR4Cz3mw6YQDVWgfY4KkM-zbauczCziKg3FX-fg")
                                 .url("https://mate.cnsmash.com/battle/" + battle.getId())
                                 .toUser(wxUser.getOpenid())
                                 .data(dataList)
@@ -128,27 +123,25 @@ public class WechatServiceImpl implements WechatService {
             WxMpTemplateData data = new WxMpTemplateData();
             data.setName("keyword1");
             data.setValue(p1.getNickName() + " vs " + p2.getNickName());
+            data.setColor("#DC143C");
             dataList.add(data);
         }
         {
             WxMpTemplateData data = new WxMpTemplateData();
             data.setName("keyword2");
-            data.setValue(DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.format(vo.getBattle().getCreateTime()));
+            data.setValue(DateFormatUtils.format(vo.getBattle().getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
             dataList.add(data);
         }
         {
             WxMpTemplateData data = new WxMpTemplateData();
             data.setName("remark");
-            data.setValue("感谢您的使用，祝您游戏愉快。点击跳转页面!");
+            data.setValue("感谢您的使用，祝您游戏愉快。\r\n>>>>点击跳转页面!");
             dataList.add(data);
         }
         return dataList;
     }
 
-    private List<WxMpTemplateData> getCreateTemplateData(Battle battle, List<User> userList) {
-        String vsMsg = userList.stream()
-                .map(User::getNickName)
-                .collect(Collectors.joining(" vs "));
+    private List<WxMpTemplateData> getCreateTemplateData(Battle battle, Room room) {
         List<WxMpTemplateData> dataList = new ArrayList<>();
         {
             WxMpTemplateData data = new WxMpTemplateData();
@@ -159,19 +152,20 @@ public class WechatServiceImpl implements WechatService {
         {
             WxMpTemplateData data = new WxMpTemplateData();
             data.setName("keyword1");
-            data.setValue(vsMsg);
+            data.setValue("房间【" + room.getNo() + "】【" + room.getPwd() + "】【" + room.serverConvertToZh()+"】");
+            data.setColor("#DC143C");
             dataList.add(data);
         }
         {
             WxMpTemplateData data = new WxMpTemplateData();
             data.setName("keyword2");
-            data.setValue(DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.format(battle.getCreateTime()));
+            data.setValue(DateFormatUtils.format(battle.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
             dataList.add(data);
         }
         {
             WxMpTemplateData data = new WxMpTemplateData();
             data.setName("remark");
-            data.setValue("请尽快进入并开始比赛，感谢您的使用，祝您游戏愉快。点击跳转页面!");
+            data.setValue("请尽快进入并开始比赛，感谢您的使用，祝您游戏愉快。\r\n>>>>点击跳转页面!");
             dataList.add(data);
         }
         return dataList;
