@@ -121,7 +121,7 @@ public class WechatServiceImpl implements WechatService {
         {
             WxMpTemplateData data = new WxMpTemplateData();
             data.setName("first");
-            data.setValue("成功匹配到比赛!");
+            data.setValue("您好，您在聚能斗天梯功能中匹配成功，请前往页面确认!");
             dataList.add(data);
         }
         {
@@ -139,7 +139,7 @@ public class WechatServiceImpl implements WechatService {
         {
             WxMpTemplateData data = new WxMpTemplateData();
             data.setName("remark");
-            data.setValue("请尽快确认!");
+            data.setValue("感谢您的使用，祝您游戏愉快。点击跳转页面!");
             dataList.add(data);
         }
         return dataList;
@@ -153,7 +153,7 @@ public class WechatServiceImpl implements WechatService {
         {
             WxMpTemplateData data = new WxMpTemplateData();
             data.setName("first");
-            data.setValue("对战房间已创建");
+            data.setValue("您好，您的对战房间已创建");
             dataList.add(data);
         }
         {
@@ -171,7 +171,7 @@ public class WechatServiceImpl implements WechatService {
         {
             WxMpTemplateData data = new WxMpTemplateData();
             data.setName("remark");
-            data.setValue("请尽快进入并开始比赛!");
+            data.setValue("请尽快进入并开始比赛，感谢您的使用，祝您游戏愉快。点击跳转页面!");
             dataList.add(data);
         }
         return dataList;
