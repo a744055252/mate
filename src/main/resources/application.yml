@@ -19,3 +19,11 @@ logging:
     com.cnsmash: debug
 mybatis:
   mapper-locations: classpath*:com/cnsmash/**/*Mapper.xml
+
+# 公众号配置(必填)
+wx:
+  mp:
+    appId: wx9de4776b3c327003
+    secret: f5c67d98dab810d74719784e18a5aaae
+    token: 1111
+    aesKey: 1111
