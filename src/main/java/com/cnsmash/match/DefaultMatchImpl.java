@@ -22,7 +22,7 @@ public class DefaultMatchImpl implements MatchHandle {
                 .filter(bean -> {
                     // 5分钟内不重复遇到同一个对手
                     Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-                    Date min5 = DateUtils.addMinutes(now, -1);
+                    Date min5 = DateUtils.addMinutes(now, -5);
                     if (bean.getFindTime().compareTo(min5) > 0) {
                         return !bean.getLastUserIds().contains(ro.getUserId());
                     }
