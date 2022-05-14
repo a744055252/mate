@@ -1,4 +1,4 @@
-![聚能斗](http://mate.cnsmash.com/banner/hero06.jpg)
+![聚能斗](	http://mate.cnsmash.com/icon/cnsmash_black.png)
 
 [聚能斗](http://mate.cnsmash.com/index)
 是一款任天堂明星大乱斗在线匹配系统。
