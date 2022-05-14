@@ -12,5 +12,5 @@
 克隆代码并以dev启动即可
 
 ## 动态
-请关注bilibili [超级粉碎老铁](https://space.bilibili.com/449525461)
-广州乱斗堂QQ群 870289620
+* 请关注bilibili [超级粉碎老铁](https://space.bilibili.com/449525461)
+* 广州乱斗堂QQ群 870289620
