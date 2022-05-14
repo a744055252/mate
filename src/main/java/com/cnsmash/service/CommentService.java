@@ -7,6 +7,7 @@ import com.cnsmash.pojo.entity.Comment;
 import com.cnsmash.pojo.ro.AddCommentRo;
 import com.cnsmash.pojo.vo.CommentVo;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public interface CommentService {
      * @param ro 分页
      * @return 评论列表
      */
-    Page<CommentVo> page(CommentType type, Long objectId, PageRo ro);
+    Page<CommentVo> page(CommentType type, Long objectId, Long latestId, PageRo ro);
 
     /**
      * 新增评论
@@ -45,4 +46,5 @@ public interface CommentService {
      * @return 能否评论的boolean
      */
     Boolean getCanComment(Long author, Long player);
+
 }

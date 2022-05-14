@@ -35,4 +35,7 @@ public class Account extends BaseEntity {
      * 状态 0 正常 1 禁止
      */
     private Integer status;
+
+    /** 关联第三方id */
+    private Long mappingId;
 }

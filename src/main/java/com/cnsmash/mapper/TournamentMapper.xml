@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnsmash.mapper.TournamentMapper">
+
+    <!-- 分页查询比赛列表 -->
+    <select id="pageTournament" resultType="com.cnsmash.pojo.vo.TournamentThumbnailVo">
+        SELECT tournament.id, tournament.name, LEFT(tournament.detail, 100) detail, tournament.start_time, host.id host, host.nick_name hostName, file.src hostHead
+        FROM tournament
+        INNER JOIN `user` host ON host.id = tournament.host
+        INNER JOIN upload_file file ON file.id = host.head
+        <where>
+            <if test="ro.status != null">
+                tournament.status = #{ro.status}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询比赛详情 -->
+    <select id="tournamentDetail" resultType="com.cnsmash.pojo.vo.TournamentDetailVo">
+        SELECT tournament.*, host.nick_name hostName, file.src hostHead,
+        (SELECT COUNT(*) FROM tournament_player WHERE tournament_id = #{id}) registerCount
+        FROM tournament
+        INNER JOIN `user` host ON host.id = tournament.host
+        LEFT JOIN upload_file file ON file.id = host.head
+        WHERE tournament.id = #{id}
+    </select>
+
+    <!-- 查询比赛报名列表 -->
+    <select id="playerList" resultType="com.cnsmash.pojo.vo.UserThumbnailVo">
+        SELECT player.id, player.nick_name, file.src avatar
+        FROM `user` player
+        LEFT JOIN upload_file file ON file.id = player.head
+        INNER JOIN tournament_player ON tournament_player.player_id = player.id
+        INNER JOIN tournament ON tournament.id = tournament_player.tournament_id
+        WHERE tournament.id = #{id}
+    </select>
+
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnsmash.mapper.FreeroomMapper">
+
+    <!-- 关闭用户所有开房 -->
+    <update id="updatePlayerRoomShutdown">
+        UPDATE freeroom SET status = 'shutdown' WHERE host = #{host}
+    </update>
+
+    <!-- 查询房间列表 -->
+    <select id="list" resultType="com.cnsmash.pojo.vo.FreeroomVo">
+        SELECT room.id, room.room_id, room.maximum, room.server, room.update_time, host.id, file.src hostAvatar, host.nick_name hostName, room.password, room.description, room.create_time
+        FROM freeroom room
+        INNER JOIN `user` host ON host.id = room.host
+        LEFT JOIN upload_file file ON file.id = host.head
+        <where>
+            room.status = 'active'
+            <if test="server != '' and server != null">
+                AND room.server = #{server}
+            </if>
+            <if test="maximum != 0 and maximum != null">
+                AND room.maximum = #{maximum}
+            </if>
+        </where>
+        ORDER BY room.update_time ASC
+    </select>
+
+    <!-- 查询房间详情 -->
+    <select id="detail" resultType="com.cnsmash.pojo.vo.FreeroomVo">
+        SELECT room.id, room.room_id, room.maximum, room.server, room.update_time, host.id, file.src hostAvatar, host.nick_name hostName, room.password, room.description, room.create_time
+        FROM freeroom room
+        INNER JOIN `user` host ON host.id = room.host
+        LEFT JOIN upload_file file ON file.id = host.head
+        WHERE room.id = #{id}
+    </select>
+
+    <!-- 根据用户ID查询房间详情 -->
+    <select id="detailByUser" resultType="com.cnsmash.pojo.vo.FreeroomVo">
+        SELECT room.id, room.room_id, room.maximum, room.server, room.update_time, host.id, file.src hostAvatar, host.nick_name hostName, room.password, room.description, room.create_time, room.status
+        FROM freeroom room
+        INNER JOIN `user` host ON host.id = room.host
+        LEFT JOIN upload_file file ON file.id = host.head
+        WHERE room.host = #{id} AND room.status != 'shutdown'
+    </select>
+
+</mapper>

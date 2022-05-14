@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnsmash.mapper.TournamentPlayerMapper">
+
+    <update id="updateResult">
+        UPDATE tournament_player
+        SET result = #{result}
+        WHERE tournament_id = #{tournamentId} AND player_id = #{playerId}
+    </update>
+
+    <select id="getPlayerResultList" resultType="com.cnsmash.pojo.vo.TournamentResultVo">
+        SELECT player.result, tournament.name, tournament.start_time `time`
+        FROM tournament_player player
+        INNER JOIN tournament ON tournament.id = player.tournament_id
+        WHERE player.player_id = #{id}
+        ORDER BY `time` DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+</mapper>

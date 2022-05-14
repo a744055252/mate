@@ -8,6 +8,7 @@ import com.cnsmash.pojo.entity.Quarter;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.entity.UserFighter;
 import com.cnsmash.pojo.entity.UserRank;
+import com.cnsmash.pojo.ro.AddUserRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
 import com.cnsmash.pojo.vo.RuleVo;
 import com.cnsmash.pojo.vo.UserDetail;
@@ -51,6 +52,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(Long id) {
         return userMapper.selectById(id);
+    }
+
+    @Override
+    public void add(AddUserRo ro) {
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        User user = new User();
+        BeanUtils.copyProperties(ro, user);
+        user.setTagJson(JsonUtil.toJson(ro.getTagList()));
+        user.setAccountId(ro.getAccountId());
+        user.setCode("");
+        user.setTeamId(0L);
+        user.setUpdateTime(now);
+        user.setCreateTime(now);
+        userMapper.insert(user);
     }
 
     @Override
@@ -172,6 +187,7 @@ public class UserServiceImpl implements UserService {
         return detail;
     }
 
+    @Override
     public String getNickNameById(Long id) {
         return userMapper.getNickNameById(id);
     }

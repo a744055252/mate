@@ -18,7 +18,18 @@
                 AND (fighters LIKE concat('%',#{ro.fighterNo,jdbcType=VARCHAR},',%')
                         OR fighters = #{ro.fighterNo})
             </if>
+            <if test="ro.text != null and ro.text != ''">
+                AND (u.nick_name LIKE concat('%',#{ro.text,jdbcType=VARCHAR},'%'))
+            </if>
         </where>
-        ORDER BY ur.score DESC
+        <choose>
+            <when test="ro.text != null and ro.text != ''">
+                ORDER BY LENGTH(u.nick_name) ASC, ur.score DESC
+            </when>
+            <otherwise>
+                ORDER BY ur.score DESC
+            </otherwise>
+        </choose>
+
     </select>
 </mapper>

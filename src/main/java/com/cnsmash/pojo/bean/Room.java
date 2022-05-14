@@ -30,4 +30,23 @@ public class Room {
     /** 创建时间 */
     private Timestamp createTime;
 
+    public String serverConvertToZh(){
+        String result = "";
+        switch (server){
+            case "zh":
+                result = "裸连";
+                break;
+            case "jp":
+                result = "日服";
+                break;
+            case "hk":
+                result = "港服";
+                break;
+            case "usa":
+                result = "美服";
+                break;
+            default:
+        }
+        return result;
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author guanhuan_li
@@ -26,7 +27,7 @@ public class CommentController {
 
     @GetMapping
     public ReposResult<Page<CommentVo>> myComment(@Valid PageCommentRo ro){
-        return ReposResult.ok(commentService.page(ro.getCommentType(), ro.getObjectId(), ro));
+        return ReposResult.ok(commentService.page(ro.getCommentType(), ro.getObjectId(), ro.getLatestId(), ro));
     }
 
     @PostMapping

@@ -70,6 +70,9 @@ public class BattleServiceImpl implements BattleService {
     @Autowired
     IRankCountHandle rankCountHandle;
 
+    @Autowired
+    WechatService wechatService;
+
     /** 匹配列表 */
     private Map<Long, MatchBean> waitMatchMap;
 
@@ -120,17 +123,29 @@ public class BattleServiceImpl implements BattleService {
 //        if (conflictBattleCount != 0) {
 //            throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "存在结果冲突的对局，请重新填写结果后重试");
 //        }
+        // 上次玩过的对手
+        Battle lastBattle = battleMapper.getLastBattle(userId);
+        Set<Long> lastUserIds = new HashSet<>();
+        if (lastBattle != null) {
+            lastUserIds = listGameFighterByBattleId(lastBattle.getId())
+                    .stream()
+                    .map(GameFighter::getUserId)
+                    .filter(id -> !id.equals(userId))
+                    .collect(Collectors.toSet());
+        }
 
         MyRankVo rank = rankService.userRank(userId);
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-        MatchBean matchBean = waitMatchMap.computeIfAbsent(userId, (id)->
+        Set<Long> finalLastUserIds = lastUserIds;
+        MatchBean matchBean = waitMatchMap.computeIfAbsent(userId, (id) ->
                 MatchBean.builder()
-                .userId(userId)
-                .score(rank.getScore())
-                .server(user.getServer())
-                .scoreGap(user.getScoreGap())
-                .findTime(now)
-                .build());
+                        .userId(userId)
+                        .score(rank.getScore())
+                        .server(user.getServer())
+                        .scoreGap(user.getScoreGap())
+                        .findTime(now)
+                        .lastUserIds(finalLastUserIds)
+                        .build());
 
         Optional<MatchBean> matchOpt = matchHandle.match(matchBean, waitMatchMap);
         if (!matchOpt.isPresent()) {
@@ -205,7 +220,16 @@ public class BattleServiceImpl implements BattleService {
         battleMapper.updateById(battle);
 
         MatchResultVo vo = getMatchResultVo(quarter, user, targetUser);
+        vo.setBattle(battle);
         vo.setBattleId(battle.getId());
+
+        // 发送公众号消息
+        try {
+            wechatService.battleBegin(vo);
+        } catch (Exception e) {
+            log.error("发送公众号消息失败", e);
+        }
+
         return vo;
     }
 
@@ -285,6 +309,16 @@ public class BattleServiceImpl implements BattleService {
         user.setCreateRoomTime(now);
         user.setUpdateTime(now);
         userService.update(user);
+
+        // 创建的人不发，其他人发 目前暂时不发建房成功提醒
+//        List<GameFighter> gameFighters = listGameFighterByBattleId(battle.getId())
+//                .stream().filter(gameFighter -> !gameFighter.getUserId().equals(userId)).collect(Collectors.toList());
+        // 发送公众号消息
+//        try {
+//            wechatService.createRoom(battle, room, gameFighters);
+//        } catch (Exception e) {
+//            log.error("发送公众号消息失败", e);
+//        }
 
     }
 
@@ -638,6 +672,7 @@ public class BattleServiceImpl implements BattleService {
         gameFighterMapper.update(gameFighter, queryWrapper);
     }
 
+    @Override
     public Long getHead2HeadCount(Long userId1, Long userId2) {
         Quarter quarter = quarterService.getCurrent();
         return battleMapper.getHead2HeadCount(userId1, userId2, quarter.getCode());

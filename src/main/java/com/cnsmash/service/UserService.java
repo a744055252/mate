@@ -4,6 +4,7 @@ import com.cnsmash.pojo.BattleResultType;
 import com.cnsmash.pojo.entity.Quarter;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.entity.UserFighter;
+import com.cnsmash.pojo.ro.AddUserRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
 import com.cnsmash.pojo.vo.RuleVo;
 import com.cnsmash.pojo.vo.UserDetail;
@@ -22,6 +23,12 @@ public interface UserService {
      * @return 用户
      */
     User getById(Long id);
+
+    /**
+     * 新增身份
+     * @param ro 请求
+     */
+    void add(AddUserRo ro);
 
     /**
      * 获取用户详情

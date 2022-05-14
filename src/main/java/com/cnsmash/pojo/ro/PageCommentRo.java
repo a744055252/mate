@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 /**
  * 查询评论记录
@@ -26,11 +27,16 @@ public class PageCommentRo extends PageRo {
     private CommentType commentType;
 
     /**
-     * 评论的对象类型
+     * 评论的对象ID
      * 用户 user {@link User#getId()}
      * 对战 battle {@link Battle#getId()}
      */
     @NotNull
     private Long objectId;
+
+    /**
+     * 查询起始ID
+     */
+    private Long latestId;
 
 }

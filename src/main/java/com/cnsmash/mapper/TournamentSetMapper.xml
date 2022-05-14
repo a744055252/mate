@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnsmash.mapper.TournamentSetMapper">
+
+    <select id="setList" resultType="com.cnsmash.pojo.vo.TournamentSetVo">
+        SELECT tset.id, tset.serial, player1.id player1Id, player1.nick_name player1Nickname, player2.id player2Id, player2.nick_name player2Nickname, tset.winner_id winnerId, tset.focus, tplayer1.ban_map player1BanMap, tplayer2.ban_map player2BanMap, tset.room
+        FROM tournament_set tset
+        LEFT JOIN `user` player1 ON player1.id = tset.player1_id
+        LEFT JOIN `user` player2 ON player2.id = tset.player2_id
+        LEFT JOIN tournament_player tplayer1 ON tplayer1.player_id = tset.player1_id
+        LEFT JOIN tournament_player tplayer2 ON tplayer2.player_id = tset.player2_id
+        WHERE tset.tournament_id = #{id}
+        ORDER BY tset.serial ASC
+    </select>
+
+</mapper>

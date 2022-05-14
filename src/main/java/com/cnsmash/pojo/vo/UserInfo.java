@@ -2,6 +2,8 @@ package com.cnsmash.pojo.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author guanhuan_li
  */
@@ -26,6 +28,6 @@ public class UserInfo {
 
     private Integer sex;
 
-    private UserDetail user;
+    private List<UserDetail> userList;
 
 }

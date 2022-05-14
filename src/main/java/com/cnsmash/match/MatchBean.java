@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author guanhuan_li
@@ -29,6 +30,11 @@ public class MatchBean {
      * 分差
      */
     private Long scoreGap;
+
+    /**
+     * 上次比赛的用户
+     */
+    private Set<Long> lastUserIds;
 
     /** 开始排位时间 */
     private Timestamp findTime;

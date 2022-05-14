@@ -21,4 +21,9 @@ public class PageFighterRo extends PageRo {
      */
     private String quarter;
 
+    /**
+     * 搜索文本
+     */
+    private String text;
+
 }
