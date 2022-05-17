@@ -81,6 +81,13 @@ public class FreeroomServiceImpl implements FreeroomService {
         freeroomMapper.updatePlayerRoomShutdown(id);
     }
 
+    @Override
+    public Integer getAvailableCount() {
+        QueryWrapper<Freeroom> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", "active");
+        return freeroomMapper.selectList(queryWrapper).size();
+    }
+
 
     /********** 定时任务 **********/
     @Scheduled(cron = "0 */5 * * * ?")

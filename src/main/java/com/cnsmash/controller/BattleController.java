@@ -165,4 +165,13 @@ public class BattleController {
         LoginUser loginUser = MateAuthUtils.getLoginUser();
         return ReposResult.ok(battleService.getConflict(loginUser.getUserId()));
     }
+
+    /**
+     * 查询在线人数
+     * @return 在线人数
+     */
+    @GetMapping("/onlineCount")
+    public ReposResult<Integer> getOnlineCount() {
+        return ReposResult.ok(battleService.getOnlineCount());
+    }
 }

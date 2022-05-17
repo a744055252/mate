@@ -60,5 +60,17 @@ public interface BattleMapper extends BaseMapper<Battle> {
      */
     Long getHead2HeadCount(@Param("userId1") Long userId1, @Param("userId2") Long userId2, @Param("quarter") String quarter);
 
+    /**
+     * 获取选手对局列表
+     * @param id
+     * @param limit
+     * @return
+     */
     List<Battle> getPlayerBattle(@Param("userId") Long id, @Param("limit") Integer limit);
+
+    /**
+     * 获取进行中比赛列表
+     * @return
+     */
+    List<Battle> getOnGoingBattle();
 }

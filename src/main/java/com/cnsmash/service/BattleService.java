@@ -105,4 +105,10 @@ public interface BattleService {
      * @return 冲突报分比赛ID列表
      */
     List<Long> getConflict(Long userId);
+
+    /**
+     * 查询在线人数
+     * @return 在线人数
+     */
+    Integer getOnlineCount();
 }

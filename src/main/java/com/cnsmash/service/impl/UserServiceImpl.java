@@ -1,10 +1,7 @@
 package com.cnsmash.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.cnsmash.mapper.BattleMapper;
-import com.cnsmash.mapper.UploadFileMapper;
-import com.cnsmash.mapper.UserFighterMapper;
-import com.cnsmash.mapper.UserMapper;
+import com.cnsmash.mapper.*;
 import com.cnsmash.pojo.BattleResultType;
 import com.cnsmash.pojo.GameStatus;
 import com.cnsmash.pojo.entity.*;
@@ -51,6 +48,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     BattleMapper battleMapper;
+
+    @Autowired
+    GameFighterMapper gameFighterMapper;
 
     @Override
     public User getById(Long id) {
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void useFighter(String quarter, Long userId, BattleResultType type, Collection<String> fighterList) {
-        Map<String, UserFighter> no2fighter = listAllUserFighter(userId).stream()
+        Map<String, UserFighter> no2fighter = listAllUserFighter(userId, quarter).stream()
                 .collect(Collectors.toMap(UserFighter::getFighterNo, Function.identity()));
 
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
@@ -149,17 +149,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public List<UserFighter> listAllUserFighter(Long userId) {
+    public List<UserFighter> listAllUserFighter(Long userId, String quarter) {
         QueryWrapper<UserFighter> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
+        queryWrapper.eq("quarter", quarter);
         return userFighterMapper.selectList(queryWrapper);
     }
 
     @Override
     public List<UserFighter> listUserFighter(Long userId) {
+        Quarter quarter = quarterService.getCurrent();
         QueryWrapper<UserFighter> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId)
-        .ge("total", 5);
+                .eq("quarter", quarter.getCode())
+                .ge("total", 5);
         return userFighterMapper.selectList(queryWrapper);
     }
 
@@ -249,16 +252,19 @@ public class UserServiceImpl implements UserService {
         } else if (point <= 10) {
             banCount += 1;
             if (banCount == 3) {
+                banCount = 0;
                 user.setBanUntil(Timestamp.valueOf(now.plusMinutes(30)));
             }
         } else if (point <= 15) {
             banCount += 1;
             if (banCount == 3) {
+                banCount = 0;
                 user.setBanUntil(Timestamp.valueOf(now.plusHours(2)));
             }
         } else {
             banCount += 1;
             if (banCount == 3) {
+                banCount = 0;
                 user.setBanUntil(Timestamp.valueOf(now.plusHours(6)));
             }
         }
@@ -269,5 +275,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getHeadUrlById(Long id) {
         return userMapper.getHeadUrlById(id);
+    }
+
+    @Override
+    public void recountFighter() {
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        Quarter quarter = quarterService.getCurrent();
+        List<UserFighter> userFighterList = gameFighterMapper.getQuarterUserFighter(quarter.getCode());
+        for (UserFighter userFighter : userFighterList) {
+            userFighter.setQuarter(quarter.getCode());
+            userFighter.setCreateTime(now);
+            userFighter.setUpdateTime(now);
+            // userFighterMapper.insert(userFighter);
+            System.out.println(userFighter);
+        }
     }
 }

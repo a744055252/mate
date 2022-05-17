@@ -8,22 +8,22 @@
             LEFT JOIN game_fighter gf on gf.battle_id = b.id
         <where>
             <if test="ro.userId != null">
-                gf.user_id = #{ro.userId}
+                AND gf.user_id = #{ro.userId}
             </if>
             <if test="ro.quarter != null and ro.quarter != ''">
-                b.quarter = #{ro.quarter}
+                AND b.quarter = #{ro.quarter}
             </if>
             <if test="ro.type != null and ro.type != ''">
-                b.type = #{ro.type}
+                AND b.type = #{ro.type}
             </if>
             <if test="ro.gameStatus != null and ro.gameStatus != ''">
-                bgame_status = #{ro.gameStatus}
+                AND bgame_status = #{ro.gameStatus}
             </if>
             <if test="ro.beforeTime != null">
-                b.end_time &gt;= #{ro.beforeTime}
+                AND b.end_time &gt;= #{ro.beforeTime}
             </if>
             <if test="ro.afterTime != null">
-                b.end_time &lt; #{ro.afterTime}
+                AND b.end_time &lt; #{ro.afterTime}
             </if>
         </where>
         ORDER BY b.create_time DESC

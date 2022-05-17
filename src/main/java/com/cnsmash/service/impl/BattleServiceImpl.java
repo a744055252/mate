@@ -28,6 +28,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -79,7 +80,7 @@ public class BattleServiceImpl implements BattleService {
     }
 
     @Override
-    public synchronized MatchResultVo match(Long userId) {
+    public  MatchResultVo match(Long userId) {
         if (!systemArgService.allowMatch()) {
             throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "当前不允许匹配");
         }
@@ -92,6 +93,14 @@ public class BattleServiceImpl implements BattleService {
         }
         if (quarter.getBeginTime().after(now)) {
             throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "当前赛季未开始");
+        }
+
+        // 是否匹配时间
+        LocalDateTime current = LocalDateTime.now();
+        if (current.getDayOfWeek() != DayOfWeek.SATURDAY && current.getDayOfWeek() != DayOfWeek.SUNDAY) {
+            if (current.getHour() < 18) {
+                throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "本日匹配从18:00开始");
+            }
         }
 
         User user = userService.getById(userId);
@@ -148,8 +157,6 @@ public class BattleServiceImpl implements BattleService {
         }
 
         MyRankVo rank = rankService.userRank(userId);
-        //Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-        //Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         Set<Long> finalLastUserIds = lastUserIds;
         MatchBean matchBean = waitMatchMap.computeIfAbsent(userId, (id)->
                 MatchBean.builder()
@@ -703,5 +710,14 @@ public class BattleServiceImpl implements BattleService {
 
     public List<Long> getConflict(Long userId) {
         return battleMapper.getConflictBattle(userId);
+    }
+
+    @Override
+    public Integer getOnlineCount() {
+        Integer waiting = this.waitMatchMap.size();
+
+        // Integer playing = battleMapper.getOnGoingBattle();
+
+        return waiting;
     }
 }

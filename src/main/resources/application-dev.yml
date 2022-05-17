@@ -5,7 +5,7 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     # 指定数据源
-    url: jdbc:mysql://112.74.17.146:8036/mate?useUnicode=true&characterEncode=utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://112.74.17.146:8036/mate_dev?useUnicode=true&characterEncode=utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
     # url: jdbc:mysql://localhost:8036/mate?useUnicode=true&characterEncode=utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
     username: root
     password: GZ_smash8

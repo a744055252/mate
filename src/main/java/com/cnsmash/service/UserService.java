@@ -6,6 +6,7 @@ import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.entity.UserFighter;
 import com.cnsmash.pojo.ro.AddUserRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
+import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.RuleVo;
 import com.cnsmash.pojo.vo.UserDetail;
 
@@ -133,4 +134,10 @@ public interface UserService {
      * @return
      */
     String getHeadUrlById(Long id);
+
+    /**
+     * 重新计算角色信息
+     */
+    void recountFighter();
+
 }
