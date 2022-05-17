@@ -1,12 +1,15 @@
 package com.cnsmash.config.login.service;
 
 import com.cnsmash.config.login.pojo.*;
+import com.cnsmash.pojo.LoginAuth;
 import com.cnsmash.mapper.UploadFileMapper;
 import com.cnsmash.pojo.entity.Account;
 import com.cnsmash.pojo.entity.UploadFile;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.service.AccountService;
 import com.cnsmash.service.UserService;
+import com.cnsmash.util.JsonUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +80,19 @@ public class AccountLoginServiceImpl implements LoginUserService {
         if (CollectionUtils.isEmpty(users)) {
             throw new BadCredentialsException("身份不存在！");
         }
+
+        HttpSession httpSession = ro.getDetails().getHttpSession();
+        String authJson = (String) httpSession.getAttribute(AccountService.LOGIN_AUTH_KEY);
+        if (StringUtils.isNoneBlank(authJson)) {
+            LoginAuth loginAuth = JsonUtil.parseJson(authJson, new TypeReference<LoginAuth>() {
+            });
+            // 如果有微信id更新
+            if (loginAuth.getWxUserId() != null) {
+                account.setMappingId(loginAuth.getWxUserId());
+                accountService.update(account);
+            }
+        }
+
 
         User user = users.get(0);
 

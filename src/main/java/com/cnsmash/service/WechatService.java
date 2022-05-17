@@ -1,6 +1,7 @@
 package com.cnsmash.service;
 
 import com.cnsmash.pojo.bean.Room;
+import com.cnsmash.pojo.entity.Battle;
 import com.cnsmash.pojo.entity.GameFighter;
 import com.cnsmash.pojo.vo.MatchResultVo;
 
@@ -19,8 +20,9 @@ public interface WechatService {
 
     /**
      * 发送建房通知
+     * @param battle 对战
      * @param room 房间
      * @param gameFighters 参赛选手
      */
-    void createRoom(Room room, List<GameFighter> gameFighters);
+    void createRoom(Battle battle, Room room, List<GameFighter> gameFighters);
 }

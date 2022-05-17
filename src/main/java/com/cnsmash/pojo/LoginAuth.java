@@ -1,5 +1,6 @@
 package com.cnsmash.pojo;
 
+import com.cnsmash.pojo.entity.Account;
 import com.cnsmash.pojo.entity.WxUser;
 import com.cnsmash.pojo.vo.AccountUserVo;
 import lombok.Builder;
@@ -18,7 +19,10 @@ public class LoginAuth {
 
     public LoginAuth(AccountUserVo vo){
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-        this.accountId = vo.getAccount().getId();
+        Account account = vo.getAccount();
+        if (account != null) {
+            this.accountId = account.getId();
+        }
         this.auth = vo.getAuth();
         this.loginTime = now;
         this.wxUserId = vo.getWxUserId();

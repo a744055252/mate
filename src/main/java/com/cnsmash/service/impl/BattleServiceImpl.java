@@ -71,6 +71,9 @@ public class BattleServiceImpl implements BattleService {
     @Autowired
     IRankCountHandle rankCountHandle;
 
+    @Autowired
+    WechatService wechatService;
+
     /** 匹配列表 */
     private Map<Long, MatchBean> waitMatchMap;
 
@@ -152,21 +155,21 @@ public class BattleServiceImpl implements BattleService {
             lastUserIds = listGameFighterByBattleId(lastBattle.getId())
                     .stream()
                     .map(GameFighter::getUserId)
-                    .filter(id ->!id.equals(userId))
+                    .filter(id -> !id.equals(userId))
                     .collect(Collectors.toSet());
         }
 
         MyRankVo rank = rankService.userRank(userId);
         Set<Long> finalLastUserIds = lastUserIds;
-        MatchBean matchBean = waitMatchMap.computeIfAbsent(userId, (id)->
+        MatchBean matchBean = waitMatchMap.computeIfAbsent(userId, (id) ->
                 MatchBean.builder()
-                .userId(userId)
-                .score(rank.getScore())
-                .server(user.getServer())
-                .scoreGap(user.getScoreGap())
-                .findTime(now)
-                .lastUserIds(finalLastUserIds)
-                .build());
+                        .userId(userId)
+                        .score(rank.getScore())
+                        .server(user.getServer())
+                        .scoreGap(user.getScoreGap())
+                        .findTime(now)
+                        .lastUserIds(finalLastUserIds)
+                        .build());
 
         Optional<MatchBean> matchOpt = matchHandle.match(matchBean, waitMatchMap);
         if (!matchOpt.isPresent()) {
@@ -243,7 +246,16 @@ public class BattleServiceImpl implements BattleService {
         battleMapper.updateById(battle);
 
         MatchResultVo vo = getMatchResultVo(quarter, user, targetUser);
+        vo.setBattle(battle);
         vo.setBattleId(battle.getId());
+
+        // 发送公众号消息
+        try {
+            wechatService.battleBegin(vo);
+        } catch (Exception e) {
+            log.error("发送公众号消息失败", e);
+        }
+
         return vo;
     }
 
@@ -324,8 +336,15 @@ public class BattleServiceImpl implements BattleService {
         user.setUpdateTime(now);
         userService.update(user);
 
-        List<GameFighter> gameFighters = listGameFighterByBattleId(battle.getId());
-
+        // 创建的人不发，其他人发 目前暂时不发建房成功提醒
+//        List<GameFighter> gameFighters = listGameFighterByBattleId(battle.getId())
+//                .stream().filter(gameFighter -> !gameFighter.getUserId().equals(userId)).collect(Collectors.toList());
+        // 发送公众号消息
+//        try {
+//            wechatService.createRoom(battle, room, gameFighters);
+//        } catch (Exception e) {
+//            log.error("发送公众号消息失败", e);
+//        }
 
     }
 

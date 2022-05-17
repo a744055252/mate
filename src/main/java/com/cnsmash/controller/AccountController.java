@@ -13,8 +13,11 @@ import com.cnsmash.pojo.vo.UserInfo;
 import com.cnsmash.service.AccountService;
 import com.cnsmash.util.JsonUtil;
 import com.cnsmash.util.MateAuthUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -36,7 +39,15 @@ public class AccountController {
     @PostMapping("/user")
     public ReposResult<AccountUserVo> user(@RequestBody @Valid AccountUserRo ro, HttpSession session) {
         AccountUserVo vo = accountService.user(ro);
-        session.setAttribute(AccountService.LOGIN_AUTH_KEY, JsonUtil.toJson(new LoginAuth(vo)));
+        String authJson = (String) session.getAttribute(AccountService.LOGIN_AUTH_KEY);
+        LoginAuth loginAuth = new LoginAuth(vo);
+        if (!StringUtils.isBlank(authJson)) {
+            // 传递wxUserId
+            LoginAuth temp = JsonUtil.parseJson(authJson, new TypeReference<LoginAuth>() {
+            });
+            loginAuth.setWxUserId(temp.getWxUserId());
+        }
+        session.setAttribute(AccountService.LOGIN_AUTH_KEY, JsonUtil.toJson(loginAuth));
         return ReposResult.ok(vo);
     }
 
