@@ -15,7 +15,6 @@ import java.util.Set;
 public class UpdateMatchRuleRo {
 
     /** ban图 */
-    @NotEmpty
     private Set<String> banMap;
 
     /**

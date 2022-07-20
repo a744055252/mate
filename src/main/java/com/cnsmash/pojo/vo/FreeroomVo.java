@@ -2,6 +2,7 @@ package com.cnsmash.pojo.vo;
 
 import com.cnsmash.pojo.FreeroomStatus;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.sql.Timestamp;
 
@@ -9,6 +10,7 @@ import java.sql.Timestamp;
  * @author Toddhead
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class FreeroomVo extends FreeroomThumbnailVo {
 
     /**

@@ -64,12 +64,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers("/actuator/**",
                     "/account/register",
-                    "/battle/detail", "/battle/page",
+                    "/battle/detail", "/battle/page", "/battle/onlineCount",
                     "/comment/**",
+                    "/file/**",
+                    "/freeroom/list", "/freeroom/detail", "/freeroom/count",
                     "/quarter/**",
-                    "/rank/id", "/rank/total", "/account/wechat",
-                    "/user/id", "/user/fighter",
-                    "/tournament/list", "/account/user")
+                    "/rank/id", "/rank/total", "/rank/fullrank",
+                    "/user/id", "/user/fighter", "/user/recountFighter",
+                    "/tournament/list", "/tournament/user", "/tournament/playerList",
+                    "/tournament/setlist", "/tournament/resultList", "/tournament/detail",
+                    "/account/user","account/wechat"
+                    )
                 .permitAll()
             .anyRequest()
                 .authenticated();

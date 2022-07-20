@@ -6,6 +6,7 @@ import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.entity.UserFighter;
 import com.cnsmash.pojo.ro.AddUserRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
+import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.RuleVo;
 import com.cnsmash.pojo.vo.UserDetail;
 
@@ -23,6 +24,13 @@ public interface UserService {
      * @return 用户
      */
     User getById(Long id);
+
+    /**
+     * 获取用户详情
+     * @param id 用户ID
+     * @return 用户详情
+     */
+    UserDetail getDetailById(Long id);
 
     /**
      * 新增身份
@@ -113,4 +121,23 @@ public interface UserService {
      * @return 斗士列表
      */
     List<String> getFighterById(Long id);
+
+    /**
+     * 查询比赛数据之后ban人
+     * @param id 用户ID
+     */
+    void banUser(Long id);
+
+    /**
+     * 根据ID获取头像地址
+     * @param id 用户ID
+     * @return
+     */
+    String getHeadUrlById(Long id);
+
+    /**
+     * 重新计算角色信息
+     */
+    void recountFighter();
+
 }

@@ -5,6 +5,7 @@ import com.cnsmash.pojo.bean.ReposResult;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.ro.AddUserRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
+import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.RuleVo;
 import com.cnsmash.pojo.vo.UserDetail;
 import com.cnsmash.service.UserService;
@@ -27,9 +28,9 @@ public class UserController {
     UserService userService;
 
     @GetMapping
-    public ReposResult<User> get() {
+    public ReposResult<UserDetail> get() {
         LoginUser loginUser = MateAuthUtils.getLoginUser();
-        return ReposResult.ok(userService.getById(loginUser.getUserId()));
+        return ReposResult.ok(userService.getDetailById(loginUser.getUserId()));
     }
 
     @PostMapping
@@ -54,8 +55,8 @@ public class UserController {
     }
 
     @GetMapping("/id")
-    public ReposResult<User> getById(@RequestParam Long userId){
-        return ReposResult.ok(userService.getById(userId));
+    public ReposResult<UserDetail> getById(@RequestParam Long userId){
+        return ReposResult.ok(userService.getDetailById(userId));
     }
 
     @GetMapping("/detail")
@@ -73,5 +74,16 @@ public class UserController {
     public ReposResult<List<String>> getUserFighter(@RequestParam Long userId) {
         return ReposResult.ok(userService.getFighterById(userId));
     }
+
+    @GetMapping("/recountFighter")
+    public ReposResult<String> recountFighter() {
+        userService.recountFighter();
+        return ReposResult.ok("finish");
+    }
+
+//    @GetMapping("/historyRecord")
+//    public ReposResult<HistoryRecordVo> getHistoryRecord(@RequestParam Long userId) {
+//        return ReposResult.ok(userService.getHistoryRecord(userId));
+//    }
 
 }

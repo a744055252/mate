@@ -18,12 +18,16 @@ public class LoginUser implements UserDetails, Serializable {
     private static final long serialVersionUID = -1257363449090585625L;
     private Long id;
     private Long userId;
+    private Long mainId;
     private String name;
     private String phone;
     private String mail;
     private String account;
+    private String nickName;
+    private String mainNickName;
     private String username;
     private String password;
+    private String headSrc;
     private RoleType roleType;
     private LoginType loginType;
     private Collection<? extends GrantedAuthority> authorities;

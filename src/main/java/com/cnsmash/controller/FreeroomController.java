@@ -63,4 +63,9 @@ public class FreeroomController {
         return ReposResult.ok();
     }
 
+    @GetMapping("/count")
+    public ReposResult<Integer> getCount() {
+        return ReposResult.ok(freeroomService.getAvailableCount());
+    }
+
 }

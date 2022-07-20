@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * @author liguanhuan
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/file")
 @Slf4j

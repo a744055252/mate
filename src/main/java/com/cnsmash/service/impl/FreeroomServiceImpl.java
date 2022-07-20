@@ -9,8 +9,10 @@ import com.cnsmash.pojo.ro.ListFreeroomRo;
 import com.cnsmash.pojo.vo.FreeroomThumbnailVo;
 import com.cnsmash.pojo.vo.FreeroomVo;
 import com.cnsmash.service.FreeroomService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -20,6 +22,7 @@ import java.util.List;
 /**
  * @author Toddhead
  */
+@Slf4j
 @Service
 public class FreeroomServiceImpl implements FreeroomService {
 
@@ -78,4 +81,19 @@ public class FreeroomServiceImpl implements FreeroomService {
         freeroomMapper.updatePlayerRoomShutdown(id);
     }
 
+    @Override
+    public Integer getAvailableCount() {
+        QueryWrapper<Freeroom> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", "active");
+        return freeroomMapper.selectList(queryWrapper).size();
+    }
+
+
+    /********** 定时任务 **********/
+    @Scheduled(cron = "0 */5 * * * ?")
+    public void updateRoom() {
+        log.info("更新房间状态！------start------");
+        freeroomMapper.updateRoom();
+        log.info("更新房间状态！------end------");
+    }
 }

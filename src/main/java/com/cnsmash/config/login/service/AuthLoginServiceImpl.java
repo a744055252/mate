@@ -1,8 +1,10 @@
 package com.cnsmash.config.login.service;
 
 import com.cnsmash.config.login.pojo.*;
+import com.cnsmash.mapper.UploadFileMapper;
 import com.cnsmash.pojo.LoginAuth;
 import com.cnsmash.pojo.entity.Account;
+import com.cnsmash.pojo.entity.UploadFile;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.vo.UserInfo;
 import com.cnsmash.service.AccountService;
@@ -36,6 +38,9 @@ public class AuthLoginServiceImpl implements LoginUserService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    UploadFileMapper uploadFileMapper;
 
     @Override
     public LoginUserVo getLoginUserVo(LoginUser loginUser) {
@@ -107,6 +112,12 @@ public class AuthLoginServiceImpl implements LoginUserService {
             accountService.update(account);
         }
 
+        // 大号信息
+        User mainUser = userService.getById(user.getMainId());
+
+        // 头像
+        UploadFile uploadFile = uploadFileMapper.selectById(user.getHead());
+
         LoginUser loginUser = new LoginUser();
         BeanUtils.copyProperties(account, loginUser);
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -121,6 +132,16 @@ public class AuthLoginServiceImpl implements LoginUserService {
         loginUser.setEnabled(true);
         loginUser.setId(account.getId());
         loginUser.setUserId(user.getId());
+        loginUser.setNickName(user.getNickName());
+        loginUser.setMainId(user.getMainId());
+        // 如果有大号就保存大号信息
+        if (mainUser != null) {
+            loginUser.setMainNickName(mainUser.getNickName());
+        }
+        // 如果有头像就保存头像信息
+        if (uploadFile != null) {
+            loginUser.setHeadSrc(uploadFile.getSrc());
+        }
         // 登录凭证作为密码，和传过来的进行等值比较
         loginUser.setPassword(loginAuth.getAuth());
         loginUser.setUsername(account.getAccount());

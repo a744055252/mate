@@ -22,7 +22,7 @@
                 AND room.maximum = #{maximum}
             </if>
         </where>
-        ORDER BY room.update_time ASC
+        ORDER BY room.update_time DESC
     </select>
 
     <!-- 查询房间详情 -->
@@ -42,5 +42,15 @@
         LEFT JOIN upload_file file ON file.id = host.head
         WHERE room.host = #{id} AND room.status != 'shutdown'
     </select>
+
+    <!-- 更新房间状态 -->
+    <update id="updateRoom">
+        UPDATE freeroom
+        SET status =
+            CASE
+                WHEN TIMESTAMPDIFF(HOUR, expire_time, NOW()) >= 3 THEN 'shutdown'
+                WHEN TIMESTAMPDIFF(MINUTE, expire_time, NOW()) >= 0 THEN 'inactive'
+            END
+    </update>
 
 </mapper>

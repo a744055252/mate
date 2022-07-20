@@ -3,11 +3,12 @@
 <mapper namespace="com.cnsmash.mapper.UserMapper">
 
     <select id="listUserDetail" resultType="com.cnsmash.pojo.vo.UserDetail">
-        SELECT u.*<!--, uf.id as head, uf.src as headSrc-->
+        SELECT u.*, uf.id AS head, uf.src AS headSrc, mu.nick_name mainNickName
         FROM user u
-            <!--inner join upload_file uf on u.head = uf.id-->
+            LEFT JOIN upload_file uf ON u.head = uf.id
+            LEFT JOIN `user` mu ON mu.id = u.main_id
         <where>
-            u.id in
+            u.id IN
             <foreach collection="userIds" item="id" index="index" open="(" close=")" separator=",">
                 #{id}
             </foreach>
@@ -16,5 +17,20 @@
 
     <select id="getNickNameById" resultType="java.lang.String">
         SELECT nick_name FROM user WHERE id = #{id}
+    </select>
+
+    <update id="updateBanTime">
+        UPDATE `user` SET ban_until = #{banTime} WHERE id = #{id}
+    </update>
+
+    <select id="getHeadUrlById" resultType="java.lang.String">
+        SELECT upload_file.src
+        FROM upload_file
+        INNER JOIN `user` ON `user`.head = upload_file.id
+        WHERE `user`.id = #{id}
+    </select>
+
+    <select id="getMainId" resultType="java.lang.Long">
+        SELECT id FROM `user` WHERE main_id = NULL AND account_id = #{id}
     </select>
 </mapper>

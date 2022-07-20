@@ -62,5 +62,10 @@ public class SingleBattleDetail {
          * 参赛用户使用斗士
          */
         private Set<String> userFighterSet;
+
+        /**
+         * 参赛用户头像地址
+         */
+        private String headSrc;
     }
 }

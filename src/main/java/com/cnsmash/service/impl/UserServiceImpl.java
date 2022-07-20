@@ -1,13 +1,10 @@
 package com.cnsmash.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.cnsmash.mapper.UserFighterMapper;
-import com.cnsmash.mapper.UserMapper;
+import com.cnsmash.mapper.*;
 import com.cnsmash.pojo.BattleResultType;
-import com.cnsmash.pojo.entity.Quarter;
-import com.cnsmash.pojo.entity.User;
-import com.cnsmash.pojo.entity.UserFighter;
-import com.cnsmash.pojo.entity.UserRank;
+import com.cnsmash.pojo.GameStatus;
+import com.cnsmash.pojo.entity.*;
 import com.cnsmash.pojo.ro.AddUserRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
 import com.cnsmash.pojo.vo.RuleVo;
@@ -23,10 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -41,6 +35,9 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
 
     @Autowired
+    UploadFileMapper uploadFileMapper;
+
+    @Autowired
     UserFighterMapper userFighterMapper;
 
     @Autowired
@@ -49,9 +46,23 @@ public class UserServiceImpl implements UserService {
     @Autowired
     RankService rankService;
 
+    @Autowired
+    BattleMapper battleMapper;
+
+    @Autowired
+    GameFighterMapper gameFighterMapper;
+
     @Override
     public User getById(Long id) {
         return userMapper.selectById(id);
+    }
+
+    @Override
+    public UserDetail getDetailById(Long id) {
+        List queryList = new ArrayList();
+        queryList.add(id);
+        List<UserDetail> userDetailList = userMapper.listUserDetail(queryList);
+        return userDetailList.get(0);
     }
 
     @Override
@@ -65,6 +76,7 @@ public class UserServiceImpl implements UserService {
         user.setTeamId(0L);
         user.setUpdateTime(now);
         user.setCreateTime(now);
+        user.setMainId(userMapper.getMainId(ro.getAccountId()));
         userMapper.insert(user);
     }
 
@@ -111,7 +123,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void useFighter(String quarter, Long userId, BattleResultType type, Collection<String> fighterList) {
-        Map<String, UserFighter> no2fighter = listAllUserFighter(userId).stream()
+        Map<String, UserFighter> no2fighter = listAllUserFighter(userId, quarter).stream()
                 .collect(Collectors.toMap(UserFighter::getFighterNo, Function.identity()));
 
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
@@ -137,17 +149,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public List<UserFighter> listAllUserFighter(Long userId) {
+    public List<UserFighter> listAllUserFighter(Long userId, String quarter) {
         QueryWrapper<UserFighter> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
+        queryWrapper.eq("quarter", quarter);
         return userFighterMapper.selectList(queryWrapper);
     }
 
     @Override
     public List<UserFighter> listUserFighter(Long userId) {
+        Quarter quarter = quarterService.getCurrent();
         QueryWrapper<UserFighter> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId)
-        .ge("total", 5);
+                .eq("quarter", quarter.getCode())
+                .ge("total", 5);
         return userFighterMapper.selectList(queryWrapper);
     }
 
@@ -161,7 +176,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetail getUserDetail(Long id) {
-        UserDetail detail = new UserDetail();
+
+        List queryList = new ArrayList();
+        queryList.add(id);
+        List<UserDetail> userDetailList = userMapper.listUserDetail(queryList);
+        UserDetail detail = userDetailList.get(0);
+
         User user = getById(id);
         Quarter quarter = quarterService.getCurrent();
         BeanUtils.copyProperties(user, detail);
@@ -205,5 +225,69 @@ public class UserServiceImpl implements UserService {
             fighters.add(userFighter.getFighterNo());
         }
         return fighters;
+    }
+
+    @Override
+    public void banUser(Long id) {
+        User user = userMapper.selectById(id);
+        List<Battle> battleList = battleMapper.getPlayerBattle(id, 10);
+        int point = 0;
+        for (int index = battleList.size() - 1; index >= 0; index --) {
+            Battle battle = battleList.get(index);
+            if (GameStatus.end.name().equals(battle.getGameStatus())) {
+                point -= 1;
+                if (point < 0) {
+                    point = 0;
+                }
+            }
+            if (GameStatus.stop.name().equals(battle.getGameStatus())) {
+                point += 2;
+            }
+        }
+        LocalDateTime now = LocalDateTime.now();
+        Integer banCount = user.getBanCount();
+
+        if (point <= 2) {
+            banCount = 0;
+        } else if (point <= 10) {
+            banCount += 1;
+            if (banCount == 3) {
+                banCount = 0;
+                user.setBanUntil(Timestamp.valueOf(now.plusMinutes(30)));
+            }
+        } else if (point <= 15) {
+            banCount += 1;
+            if (banCount == 3) {
+                banCount = 0;
+                user.setBanUntil(Timestamp.valueOf(now.plusHours(2)));
+            }
+        } else {
+            banCount += 1;
+            if (banCount == 3) {
+                banCount = 0;
+                user.setBanUntil(Timestamp.valueOf(now.plusHours(6)));
+            }
+        }
+        user.setBanCount(banCount);
+        userMapper.updateById(user);
+    }
+
+    @Override
+    public String getHeadUrlById(Long id) {
+        return userMapper.getHeadUrlById(id);
+    }
+
+    @Override
+    public void recountFighter() {
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        Quarter quarter = quarterService.getCurrent();
+        List<UserFighter> userFighterList = gameFighterMapper.getQuarterUserFighter(quarter.getCode());
+        for (UserFighter userFighter : userFighterList) {
+            userFighter.setQuarter(quarter.getCode());
+            userFighter.setCreateTime(now);
+            userFighter.setUpdateTime(now);
+            // userFighterMapper.insert(userFighter);
+            System.out.println(userFighter);
+        }
     }
 }

@@ -53,4 +53,10 @@ public interface FreeroomService {
      */
     void shutdownRoomByPlayer(Long id);
 
+    /**
+     * 获取可用房间数量
+     * @return 房间数量
+     */
+    Integer getAvailableCount();
+
 }
