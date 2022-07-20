@@ -10,12 +10,12 @@ public class TournamentPlayerVo {
     /**
      * 玩家ID
      */
-    private Long plyaerId;
+    private Long playerId;
 
     /**
      * 玩家名称
      */
-    private String nickname;
+    private String nickName;
 
     /**
      * 玩家头像

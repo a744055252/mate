@@ -115,6 +115,10 @@ public class CommentServiceImpl implements CommentService {
         comment.setUpdateTime(now);
         comment.setCreateTime(now);
         commentMapper.insert(comment);
+
+        if (ro.getCommentType() == CommentType.user) {
+            userService.addGachaToken(userId, 1);
+        }
     }
 
     public Boolean getCanComment(Long author, Long player) {

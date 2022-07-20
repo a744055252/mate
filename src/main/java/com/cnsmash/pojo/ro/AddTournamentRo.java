@@ -85,4 +85,9 @@ public class AddTournamentRo {
      */
     private String server;
 
+    /**
+     * 有无第三名决赛
+     */
+    private Integer thirdPlace;
+
 }

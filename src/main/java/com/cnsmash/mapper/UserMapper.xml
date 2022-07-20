@@ -3,10 +3,11 @@
 <mapper namespace="com.cnsmash.mapper.UserMapper">
 
     <select id="listUserDetail" resultType="com.cnsmash.pojo.vo.UserDetail">
-        SELECT u.*, uf.id AS head, uf.src AS headSrc, mu.nick_name mainNickName
+        SELECT u.*, uf.id AS head, uf.src AS headSrc, mu.nick_name mainNickName, badge.uri badgeUri, badge.note badgeNote
         FROM user u
             LEFT JOIN upload_file uf ON u.head = uf.id
             LEFT JOIN `user` mu ON mu.id = u.main_id
+            LEFT JOIN badge ON badge.id  = u.badge
         <where>
             u.id IN
             <foreach collection="userIds" item="id" index="index" open="(" close=")" separator=",">
@@ -33,4 +34,8 @@
     <select id="getMainId" resultType="java.lang.Long">
         SELECT id FROM `user` WHERE main_id = NULL AND account_id = #{id}
     </select>
+
+    <update id="addGachaToken">
+        UPDATE `user` SET gacha_token = gacha_token + #{gachaToken} WHERE id = #{playerId}
+    </update>
 </mapper>

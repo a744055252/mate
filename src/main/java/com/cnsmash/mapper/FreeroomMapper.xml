@@ -50,6 +50,7 @@
             CASE
                 WHEN TIMESTAMPDIFF(HOUR, expire_time, NOW()) >= 3 THEN 'shutdown'
                 WHEN TIMESTAMPDIFF(MINUTE, expire_time, NOW()) >= 0 THEN 'inactive'
+                ELSE 'active'
             END
     </update>
 

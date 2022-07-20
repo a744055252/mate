@@ -7,6 +7,7 @@ import com.cnsmash.pojo.GameStatus;
 import com.cnsmash.pojo.entity.*;
 import com.cnsmash.pojo.ro.AddUserRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
+import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.RuleVo;
 import com.cnsmash.pojo.vo.UserDetail;
 import com.cnsmash.service.QuarterService;
@@ -290,4 +291,11 @@ public class UserServiceImpl implements UserService {
             System.out.println(userFighter);
         }
     }
+
+    @Override
+    public void addGachaToken(Long playerId, int gachaToken) {
+        userMapper.addGachaToken(playerId, gachaToken);
+    }
+
+
 }

@@ -13,6 +13,7 @@ import com.cnsmash.pojo.entity.Quarter;
 import com.cnsmash.pojo.entity.RankLog;
 import com.cnsmash.pojo.entity.UserRank;
 import com.cnsmash.pojo.ro.PageFighterRo;
+import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.MyRankVo;
 import com.cnsmash.pojo.vo.UserDetail;
 import com.cnsmash.service.QuarterService;
@@ -210,5 +211,10 @@ public class RankServiceImpl extends ServiceImpl<UserRankMapper,UserRank>  imple
     @Override
     public boolean updateBatchById(Collection<UserRank> entityList) {
         return super.updateBatchById(entityList);
+    }
+
+    @Override
+    public List<HistoryRecordVo> getHistoryRecord(Long playerId) {
+        return userRankMapper.getHistoryRecord(playerId);
     }
 }

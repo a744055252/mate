@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cnsmash.config.login.pojo.LoginUser;
 import com.cnsmash.pojo.bean.ReposResult;
 import com.cnsmash.pojo.ro.PageFighterRo;
+import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.MyRankVo;
 import com.cnsmash.pojo.vo.UserDetail;
 import com.cnsmash.service.RankService;
@@ -44,5 +45,10 @@ public class RankController {
 
     @GetMapping("/fullrank")
     public ReposResult<List<UserDetail>> fullRank(PageFighterRo ro) { return ReposResult.ok(rankService.getFullRank(ro)); }
+
+    @GetMapping("/historyRecord")
+    public ReposResult<List<HistoryRecordVo>> getHistoryRecord(@RequestParam Long userId) {
+        return ReposResult.ok(rankService.getHistoryRecord(userId));
+    }
 
 }

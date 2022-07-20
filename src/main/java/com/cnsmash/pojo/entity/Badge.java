@@ -1,5 +1,6 @@
 package com.cnsmash.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.cnsmash.pojo.bean.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,20 +13,9 @@ import java.sql.Timestamp;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Badge extends BaseEntity {
+public class Badge {
 
     private Long id;
-
-    /**
-     * 用户id
-     * {@link User#getId()}
-     */
-    private Long userId;
-
-    /**
-     * 编号
-     */
-    private Integer no;
 
     /**
      * 名称
@@ -33,12 +23,18 @@ public class Badge extends BaseEntity {
     private String name;
 
     /**
-     * 获得时间
+     * 图标
      */
-    private Timestamp obtainTime;
+    private String uri;
 
     /**
      * 获取方式
      */
-    private String obtainWay;
+    private String note;
+
+    /**
+     * 排序
+     */
+    @TableField(value = "`order`")
+    private Integer order;
 }

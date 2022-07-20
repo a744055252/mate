@@ -8,6 +8,7 @@ import com.cnsmash.pojo.entity.UserRank;
 import com.cnsmash.pojo.ro.PageFighterRo;
 import com.cnsmash.pojo.ro.PageTournamentRo;
 import com.cnsmash.pojo.vo.TournamentDetailVo;
+import com.cnsmash.pojo.vo.TournamentPlayerVo;
 import com.cnsmash.pojo.vo.TournamentThumbnailVo;
 import com.cnsmash.pojo.vo.UserThumbnailVo;
 import org.apache.ibatis.annotations.Param;
@@ -40,6 +41,6 @@ public interface TournamentMapper extends BaseMapper<Tournament> {
      * 查询比赛报名列表
      * @param id 比赛ID
      */
-    List<UserThumbnailVo> playerList(Long id);
+    List<TournamentPlayerVo> playerList(Long id, String orderCol);
 
 }

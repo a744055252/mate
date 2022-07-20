@@ -96,4 +96,14 @@ public class User extends BaseEntity {
      * 封禁计数
      */
     private Integer banCount;
+
+    /**
+     * 佩戴徽章
+     */
+    private Long badge;
+
+    /**
+     * 抽奖分数
+     */
+    private Integer gachaToken;
 }

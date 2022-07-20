@@ -5,6 +5,7 @@ import com.cnsmash.pojo.BattleResultType;
 import com.cnsmash.pojo.RankChangeType;
 import com.cnsmash.pojo.entity.UserRank;
 import com.cnsmash.pojo.ro.PageFighterRo;
+import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.MyRankVo;
 import com.cnsmash.pojo.vo.UserDetail;
 
@@ -84,4 +85,11 @@ public interface RankService {
      * @return 结果
      */
     boolean updateBatchById(Collection<UserRank> userRanks);
+
+    /**
+     * 获取选手历史实绩
+     * @param playerId 选手ID
+     * @return 实绩列表
+     */
+    List<HistoryRecordVo> getHistoryRecord(Long playerId);
 }

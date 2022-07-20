@@ -29,4 +29,11 @@ public interface TournamentPlayerMapper extends BaseMapper<TournamentPlayer> {
      */
     List<TournamentResultVo> getPlayerResultList(Long id, Integer limit);
 
+    /**
+     *
+     * @param id
+     * @param seed
+     */
+    void updateSeeding(Long id, Integer seed);
+
 }

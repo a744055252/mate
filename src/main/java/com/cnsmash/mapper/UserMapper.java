@@ -3,6 +3,7 @@ package com.cnsmash.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cnsmash.pojo.entity.Account;
 import com.cnsmash.pojo.entity.User;
+import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.UserDetail;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -50,5 +51,12 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 对应主号ID
      */
     Long getMainId(Long id);
+
+    /**
+     *
+     * @param playerId
+     * @param gachaToken
+     */
+    void addGachaToken(Long playerId, int gachaToken);
 
 }

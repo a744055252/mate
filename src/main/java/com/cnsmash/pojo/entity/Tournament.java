@@ -95,4 +95,9 @@ public class Tournament extends BaseEntity {
      * 比赛状态
      */
     private TournamentStatus status;
+
+    /**
+     * 有无第三名确定战
+     */
+    private Integer thirdPlace;
 }
