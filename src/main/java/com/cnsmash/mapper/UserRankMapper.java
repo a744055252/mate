@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cnsmash.pojo.entity.UserRank;
 import com.cnsmash.pojo.ro.PageFighterRo;
+import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.UserDetail;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -30,5 +31,12 @@ public interface UserRankMapper extends BaseMapper<UserRank> {
      * @return 总榜列表
      */
     List<UserDetail> fullRank(PageFighterRo ro);
+
+    /**
+     * 获取历史成绩
+     * @param playerId 选手ID
+     * @return 实绩列表
+     */
+    List<HistoryRecordVo> getHistoryRecord(Long playerId);
 
 }

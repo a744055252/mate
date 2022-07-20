@@ -44,7 +44,7 @@ public class TournamentController {
     }
 
     @GetMapping("/playerList")
-    public ReposResult<List<UserThumbnailVo>> playerList(@RequestParam Long id) {
+    public ReposResult<List<TournamentPlayerVo>> playerList(@RequestParam Long id) {
         return ReposResult.ok(tournamentService.playerList(id));
     }
 
@@ -115,6 +115,23 @@ public class TournamentController {
     @GetMapping("/resultList")
     public ReposResult<List<TournamentResultVo>> playerResultList(PlayerResultListRo ro) {
         return ReposResult.ok(tournamentService.playerResultList(ro.getId(), ro.getLimit()));
+    }
+
+    @GetMapping("/seedList")
+    public ReposResult<List<TournamentPlayerVo>> seedList(@RequestParam Long id) {
+        return ReposResult.ok(tournamentService.seedList(id));
+    }
+
+    @PostMapping("/updateSeeding")
+    public ReposResult<String> updateSeeding(@RequestBody TournamentSeedingRo seeding) {
+        LoginUser loginUser = MateAuthUtils.getLoginUser();
+        return ReposResult.ok(tournamentService.updateSeeing(seeding, loginUser.getUserId()));
+    }
+
+    @PostMapping("/publish")
+    public ReposResult<String> StartTournamentRo(@RequestBody StartTournamentRo ro) {
+        LoginUser loginUser = MateAuthUtils.getLoginUser();
+        return ReposResult.ok(tournamentService.publishTournament(ro.getTournamentId(), loginUser.getUserId()));
     }
 
 }

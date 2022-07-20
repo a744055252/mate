@@ -46,4 +46,12 @@
         ORDER BY ur.score DESC
         LIMIT 50
     </select>
+
+    <select id="getHistoryRecord" resultType="com.cnsmash.pojo.vo.HistoryRecordVo">
+        SELECT ur.score, ur.rank ranking, `quarter`.name `quarter`
+        FROM user_rank as ur
+        INNER JOIN `quarter` on `quarter`.code = ur.`quarter`
+        WHERE user_id = #{playerId} AND ur.rank &lt;= 50 AND TIMESTAMPDIFF(SECOND, NOW(), `quarter`.end_time) &lt;= 0
+        ORDER BY `quarter`.id
+    </select>
 </mapper>

@@ -9,7 +9,7 @@
     </update>
 
     <select id="getPlayerResultList" resultType="com.cnsmash.pojo.vo.TournamentResultVo">
-        SELECT player.result, tournament.name, tournament.start_time `time`
+        SELECT tournament.id tournamentId, player.result, tournament.name, tournament.start_time `time`
         FROM tournament_player player
         INNER JOIN tournament ON tournament.id = player.tournament_id
         WHERE player.player_id = #{id}
@@ -18,5 +18,11 @@
             LIMIT #{limit}
         </if>
     </select>
+
+    <update id="updateSeeding">
+        UPDATE tournament_player
+        SET seed = #{seed}
+        WHERE id = #{id}
+    </update>
 
 </mapper>

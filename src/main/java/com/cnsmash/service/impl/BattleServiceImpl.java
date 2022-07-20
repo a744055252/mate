@@ -523,20 +523,36 @@ public class BattleServiceImpl implements BattleService {
         if (maxScore == 0) {
             battle.setGameStatus(GameStatus.stop.name());
             battle.setStopReason(ro.getStopReason());
+
+            // 如果比赛结果为中止则ban人
+            for (Long playerId : userId2detail.keySet()) {
+                userService.banUser(playerId);
+            }
+
         } else if (maxScore > 0) {
             // 比赛正常结束
             battle.setBattleWin(battleWinUserId);
             battle.setGameStatus(GameStatus.end.name());
+
+            List<Long> playerIds = new ArrayList<>();
+            List<Integer> playerPoints = new ArrayList<>();
+
+            // 如果比赛结束则为双方加抽奖token
+            for (SingleBattleDetail.UserBattleDetail userDetail: userId2detail.values()) {
+                playerIds.add(userDetail.getUserId());
+                if (userDetail.getUserFighterSet() != null) {
+                    playerPoints.add(2);
+                } else {
+                    playerPoints.add(1);
+                }
+            }
+            userService.addGachaToken(playerIds.get(0), playerPoints.get(1));
+            userService.addGachaToken(playerIds.get(1), playerPoints.get(0));
         }
         battleMapper.updateById(battle);
 
         // 更新用户建房时间
         updateCreateRoomTime(battle);
-
-        // 如果比赛结果为中止则ban人
-        for (Long playerId : userId2detail.keySet()) {
-            userService.banUser(playerId);
-        }
     }
 
     private Map<Long, Long> updateRankScore(Long battleId, Map<Long, Long> id2score, Long battleWinUserId) {
@@ -564,7 +580,28 @@ public class BattleServiceImpl implements BattleService {
 
     @Override
     public Page<PageBattleVo> pageBattle(PageBattleRo ro) {
-        return battleMapper.page(new Page<>(ro.getCurrent(), ro.getSize()), ro);
+        Page<PageBattleVo> res = battleMapper.page(new Page<>(ro.getCurrent(), ro.getSize()), ro);
+
+        for (PageBattleVo pageBattleVo: res.getRecords()) {
+
+            SingleBattleDetail singleBattleDetail = JsonUtil.parseJson(pageBattleVo.getDetailJson(), new TypeReference<SingleBattleDetail>() {
+            });
+            Map<Long, SingleBattleDetail.UserBattleDetail> userId2detail = singleBattleDetail.getUserId2detail();
+
+            Map<Long, Object> userInfo = new HashMap<>();
+            for (Long userId: userId2detail.keySet()) {
+                UserDetail userDetail = userService.getDetailById(userId);
+                Map<String, Object> additionDetail = new HashMap<>();
+                additionDetail.put("badgeNote", userDetail.getBadgeNote());
+
+                userInfo.put(userId, additionDetail);
+            }
+
+            pageBattleVo.setUserInfoMap(userInfo);
+
+        }
+
+        return res;
     }
 
     @Override

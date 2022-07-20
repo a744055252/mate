@@ -63,8 +63,8 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     @Override
-    public List<UserThumbnailVo> playerList(Long id) {
-        return tournamentMapper.playerList(id);
+    public List<TournamentPlayerVo> playerList(Long id) {
+        return tournamentMapper.playerList(id, "create_time");
     }
 
     @Override
@@ -81,10 +81,18 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     public String register(Long playerId, RegisterTournamentRo ro) {
+        Tournament tournament = tournamentMapper.selectById(ro.getTournamentId());
+
         // 检查是否已经报名
         if (isRegister(playerId, ro.getTournamentId()) != null) {
             return "该比赛已经报名";
         }
+
+        // 检查比赛是否已经开始
+        if (tournament.getStatus() != TournamentStatus.before) {
+            return "该比赛已截止报名";
+        }
+
 
         TournamentPlayer tournamentPlayer = new TournamentPlayer();
         tournamentPlayer.setBanMap(ro.getBanMap());
@@ -132,11 +140,17 @@ public class TournamentServiceImpl implements TournamentService {
         }
         QueryWrapper<TournamentPlayer> deleteWrapper = new QueryWrapper<>();
         deleteWrapper.eq("seed", -1);
+        deleteWrapper.eq("tournament_id", tournamentId);
         tournamentPlayerMapper.delete(deleteWrapper);
     }
 
     private void bracketGenerator(Long tournamentId) {
         Tournament tournament = tournamentMapper.selectById(tournamentId);
+        // 删除本比赛set
+        QueryWrapper<TournamentSet> delWrapper = new QueryWrapper<>();
+        delWrapper.eq("tournament_id", tournamentId);
+        tournamentSetMapper.delete(delWrapper);
+
         QueryWrapper<TournamentPlayer> wrapper = new QueryWrapper<>();
         wrapper.eq("tournament_id", tournamentId)
                 .orderByAsc("seed");
@@ -145,6 +159,17 @@ public class TournamentServiceImpl implements TournamentService {
         List<Integer> nodeInd = new ArrayList<>();
 
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+
+        // 3、4名决赛
+        if (tournament.getThirdPlace() != null && tournament.getThirdPlace() == 1) {
+            TournamentSet thirdPlace = new TournamentSet();
+            thirdPlace.setSerial(-1);
+            thirdPlace.setStatus(TournamentSetStatus.waiting);
+            thirdPlace.setFocus(0);
+            thirdPlace.setCreateTime(now);
+            thirdPlace.setUpdateTime(now);
+            setList.add(thirdPlace);
+        }
 
         // 第一个节点手动插入
         TournamentSet origin = new TournamentSet();
@@ -214,9 +239,14 @@ public class TournamentServiceImpl implements TournamentService {
         }
         startToutnament(tournamentId);
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-        tournament.setStatus(TournamentStatus.process);
+        tournament.setStatus(TournamentStatus.pending);
         tournament.setUpdateTime(now);
         tournamentMapper.updateById(tournament);
+
+        // 首先生成随机种子位
+//        seedGenerator(tournamentId);
+//        bracketGenerator(tournamentId);
+
         return "success";
     }
 
@@ -250,6 +280,7 @@ public class TournamentServiceImpl implements TournamentService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public String report(Long tournamentSetId, Long playerId) {
         TournamentSet currentSet = tournamentSetMapper.selectById(tournamentSetId);
+        Tournament tournament = tournamentMapper.selectById(currentSet.getTournamentId());
         Integer serial = currentSet.getSerial();
         Long loserId = null;
         if (currentSet.getStatus() == TournamentSetStatus.waiting) {
@@ -275,10 +306,17 @@ public class TournamentServiceImpl implements TournamentService {
         tournamentSetMapper.updateById(currentSet);
 
         // 更新败者成绩
-        tournamentPlayerMapper.updateResult(currentSet.getTournamentId(), loserId, getHighBit(currentSet.getSerial() + 1));
+        if (serial != -1) {
+            tournamentPlayerMapper.updateResult(currentSet.getTournamentId(), loserId, getHighBit(serial + 1));
+        }
 
+        // 3、4名决赛
+        if (serial == -1) {
+            // 更新第三名成绩
+            tournamentPlayerMapper.updateResult(currentSet.getTournamentId(), playerId, 3);
+        }
         // 非决赛
-        if (serial != 1) {
+        else if (serial != 1) {
             QueryWrapper<TournamentSet> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("tournament_id", currentSet.getTournamentId())
                     .eq("serial", serial / 2);
@@ -294,13 +332,29 @@ public class TournamentServiceImpl implements TournamentService {
                     nextSet.setStatus(TournamentSetStatus.process);
                 }
             }
+
             nextSet.setUpdateTime(now);
             tournamentSetMapper.updateById(nextSet);
+
+            // 3、4名决赛
+//            if (tournament.getThirdPlace() == 1 && (serial == 2 || serial == 3)) {
+//                QueryWrapper<TournamentSet> thirdQueryWrapper = new QueryWrapper<>();
+//                thirdQueryWrapper.eq("tournament_id", currentSet.getTournamentId())
+//                        .eq("serial", -1);
+//                TournamentSet thirdPlaceSet = tournamentSetMapper.selectOne(queryWrapper);
+//                if (serial == 2) {
+//                    thirdPlaceSet.setPlayer1Id(loserId);
+//                } else if (serial == 3) {
+//                    thirdPlaceSet.setPlayer2Id(loserId);
+//                }
+//                thirdPlaceSet.setUpdateTime(now);
+//                tournamentSetMapper.updateById(thirdPlaceSet);
+//            }
+
         } else {
             // 更新冠军成绩
             tournamentPlayerMapper.updateResult(currentSet.getTournamentId(), playerId, 1);
 
-            Tournament tournament = tournamentMapper.selectById(currentSet.getTournamentId());
             tournament.setStatus(TournamentStatus.finish);
             tournament.setUpdateTime(now);
             tournamentMapper.updateById(tournament);
@@ -325,6 +379,40 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public List<TournamentResultVo> playerResultList(Long id, Integer limit) {
         return tournamentPlayerMapper.getPlayerResultList(id, limit);
+    }
+
+    @Override
+    public List<TournamentPlayerVo> seedList(Long id) {
+        return tournamentMapper.playerList(id, "seed");
+    }
+
+    @Override
+    public String updateSeeing(TournamentSeedingRo seeding, Long playerId) {
+        Tournament tournament = tournamentMapper.selectById(seeding.getTournamentId());
+        if (playerId.equals(tournament.getHost()) == false) {
+            return "非管理人无权限开始比赛";
+        }
+        for (int seed = 0; seed < seeding.getSeeding().size(); seed++) {
+            tournamentPlayerMapper.updateSeeding(seeding.getSeeding().get(seed), seed + 1);
+        }
+
+        bracketGenerator(seeding.getTournamentId());
+
+        return "success";
+    }
+
+    @Override
+    public String publishTournament(Long tournamentId, Long playerId) {
+        Tournament tournament = tournamentMapper.selectById(tournamentId);
+        if (playerId.equals(tournament.getHost()) == false) {
+            return "非管理人无权限开始比赛";
+        }
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        tournament.setStatus(TournamentStatus.process);
+        tournament.setUpdateTime(now);
+        tournamentMapper.updateById(tournament);
+
+        return "success";
     }
 
 }

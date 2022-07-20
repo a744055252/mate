@@ -81,9 +81,6 @@ public class UserController {
         return ReposResult.ok("finish");
     }
 
-//    @GetMapping("/historyRecord")
-//    public ReposResult<HistoryRecordVo> getHistoryRecord(@RequestParam Long userId) {
-//        return ReposResult.ok(userService.getHistoryRecord(userId));
-//    }
+
 
 }

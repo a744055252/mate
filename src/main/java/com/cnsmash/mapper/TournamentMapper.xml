@@ -7,12 +7,21 @@
         SELECT tournament.id, tournament.name, LEFT(tournament.detail, 100) detail, tournament.start_time, host.id host, host.nick_name hostName, file.src hostHead
         FROM tournament
         INNER JOIN `user` host ON host.id = tournament.host
-        INNER JOIN upload_file file ON file.id = host.head
+        LEFT JOIN upload_file file ON file.id = host.head
         <where>
             <if test="ro.status != null">
                 tournament.status = #{ro.status}
             </if>
+            <if test="ro.status == @com.cnsmash.pojo.TournamentStatus@process">
+                OR tournament.status = 'pending'
+            </if>
         </where>
+        <if test="ro.status == @com.cnsmash.pojo.TournamentStatus@process || ro.status == @com.cnsmash.pojo.TournamentStatus@before">
+            ORDER BY tournament.start_time
+        </if>
+        <if test="ro.status == @com.cnsmash.pojo.TournamentStatus@finish">
+            ORDER BY tournament.start_time DESC
+        </if>
     </select>
 
     <!-- 查询比赛详情 -->
@@ -26,13 +35,19 @@
     </select>
 
     <!-- 查询比赛报名列表 -->
-    <select id="playerList" resultType="com.cnsmash.pojo.vo.UserThumbnailVo">
-        SELECT player.id, player.nick_name, file.src avatar
+    <select id="playerList" resultType="com.cnsmash.pojo.vo.TournamentPlayerVo">
+        SELECT tournament_player.id, player.id playerId, player.nick_name, file.src avatar
         FROM `user` player
         LEFT JOIN upload_file file ON file.id = player.head
         INNER JOIN tournament_player ON tournament_player.player_id = player.id
         INNER JOIN tournament ON tournament.id = tournament_player.tournament_id
         WHERE tournament.id = #{id}
+        <if test="orderCol == 'create_time'">
+            ORDER BY tournament_player.create_time ASC
+        </if>
+        <if test="orderCol == 'seed'">
+            ORDER BY tournament_player.seed ASC
+        </if>
     </select>
 
 </mapper>

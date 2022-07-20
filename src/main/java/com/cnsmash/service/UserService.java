@@ -140,4 +140,11 @@ public interface UserService {
      */
     void recountFighter();
 
+    /**
+     * 添加
+     * @param playerId
+     * @param gachaToken
+     */
+    void addGachaToken(Long playerId, int gachaToken);
+
 }

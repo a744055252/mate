@@ -101,4 +101,14 @@ public class UserDetail {
      * 主号昵称
      */
     private String mainNickName;
+
+    /**
+     * 徽章资源路径
+     */
+    private String badgeUri;
+
+    /**
+     * 徽章说明
+     */
+    private String badgeNote;
 }

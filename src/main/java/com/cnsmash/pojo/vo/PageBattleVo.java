@@ -3,6 +3,8 @@ package com.cnsmash.pojo.vo;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author guanhuan_li
@@ -23,12 +25,12 @@ public class PageBattleVo {
      * type 是 single 单打 objectId存userId
      * type 是 doubles 双打 objectId存teamId
      */
-    private String type;
+    // private String type;
 
     /**
      * 比赛次数 bio 1 3 5
      */
-    private Integer gameNum;
+    // private Integer gameNum;
 
     /**
      * 被ban图
@@ -73,5 +75,10 @@ public class PageBattleVo {
      * 对战创建时间
      */
     private Timestamp createTime;
+
+    /**
+     * 选手详情
+     */
+    private Map<Long, Object> userInfoMap;
 
 }

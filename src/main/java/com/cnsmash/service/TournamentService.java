@@ -35,7 +35,7 @@ public interface TournamentService {
      * 查询比赛选手报名列表
      * @param id 比赛ID
      */
-    List<UserThumbnailVo> playerList(Long id);
+    List<TournamentPlayerVo> playerList(Long id);
 
     /**
      * 判断是否已经报名
@@ -116,5 +116,27 @@ public interface TournamentService {
      * @return 列表
      */
     List<TournamentResultVo> playerResultList(Long id, Integer limit);
+
+    /**
+     * 按种子位查询比赛选手报名列表
+     * @param id 比赛ID
+     */
+    List<TournamentPlayerVo> seedList(Long id);
+
+    /**
+     * 更新种子排位
+     * @param seeding 选手种子位列表
+     * @param playerId 修改人ID
+     * @return
+     */
+    String updateSeeing(TournamentSeedingRo seeding, Long playerId);
+
+    /**
+     * 发布比赛对阵图
+     * @param tournamentId 比赛ID
+     * @param playerId 主办人ID
+     */
+    String publishTournament(Long tournamentId, Long playerId);
+
 
 }

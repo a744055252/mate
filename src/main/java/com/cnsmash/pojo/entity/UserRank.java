@@ -1,5 +1,6 @@
 package com.cnsmash.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.cnsmash.pojo.bean.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,11 +24,13 @@ public class UserRank extends BaseEntity {
     /**
      * 赛季
      */
+    @TableField(value = "`quarter`")
     private String quarter;
 
     /**
      * 排名
      */
+    @TableField(value = "`rank`")
     private Long rank;
 
     /**
