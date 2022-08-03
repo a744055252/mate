@@ -36,11 +36,12 @@
 
     <!-- 查询比赛报名列表 -->
     <select id="playerList" resultType="com.cnsmash.pojo.vo.TournamentPlayerVo">
-        SELECT tournament_player.id, player.id playerId, player.nick_name, file.src avatar
+        SELECT tournament_player.id, player.id playerId, player.nick_name, file.src avatar, badge.uri badgeUri, badge.note badgeNote
         FROM `user` player
         LEFT JOIN upload_file file ON file.id = player.head
         INNER JOIN tournament_player ON tournament_player.player_id = player.id
         INNER JOIN tournament ON tournament.id = tournament_player.tournament_id
+        LEFT JOIN badge ON badge.id = player.badge
         WHERE tournament.id = #{id}
         <if test="orderCol == 'create_time'">
             ORDER BY tournament_player.create_time ASC

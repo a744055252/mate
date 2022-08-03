@@ -81,6 +81,10 @@ public class UserController {
         return ReposResult.ok("finish");
     }
 
-
+    @GetMapping("/token")
+    public int getGachaToken() {
+        LoginUser loginUser = MateAuthUtils.getLoginUser();
+        return userService.getGachaToken(loginUser.getUserId());
+    }
 
 }

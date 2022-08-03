@@ -27,4 +27,14 @@ public class TournamentPlayerVo {
      */
     private String banMap;
 
+    /**
+     * 徽章资源
+     */
+    private String badgeUri;
+
+    /**
+     * 徽章说明
+     */
+    private String badgeNote;
+
 }

@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService {
         user.setTeamId(0L);
         user.setUpdateTime(now);
         user.setCreateTime(now);
+        user.setGachaToken(0);
         user.setMainId(userMapper.getMainId(ro.getAccountId()));
         userMapper.insert(user);
     }
@@ -295,6 +296,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addGachaToken(Long playerId, int gachaToken) {
         userMapper.addGachaToken(playerId, gachaToken);
+    }
+
+    @Override
+    public int getGachaToken(Long userId) {
+        User user = userMapper.selectById(userId);
+        return user.getGachaToken();
     }
 
 

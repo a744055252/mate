@@ -147,4 +147,11 @@ public interface UserService {
      */
     void addGachaToken(Long playerId, int gachaToken);
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
+    int getGachaToken(Long userId);
+
 }

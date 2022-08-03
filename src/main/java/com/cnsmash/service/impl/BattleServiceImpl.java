@@ -101,7 +101,7 @@ public class BattleServiceImpl implements BattleService {
         // 是否匹配时间
         LocalDateTime current = LocalDateTime.now();
         if (current.getDayOfWeek() != DayOfWeek.SATURDAY && current.getDayOfWeek() != DayOfWeek.SUNDAY) {
-            if (current.getHour() < 18) {
+            if (current.getHour() < 18 && !systemArgService.allowMorning()) {
                 throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "本日匹配从18:00开始");
             }
         }
@@ -593,6 +593,8 @@ public class BattleServiceImpl implements BattleService {
                 UserDetail userDetail = userService.getDetailById(userId);
                 Map<String, Object> additionDetail = new HashMap<>();
                 additionDetail.put("badgeNote", userDetail.getBadgeNote());
+                additionDetail.put("badgeUri", userDetail.getBadgeUri());
+                additionDetail.put("nickName", userDetail.getNickName());
 
                 userInfo.put(userId, additionDetail);
             }

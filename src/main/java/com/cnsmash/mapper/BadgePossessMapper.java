@@ -2,14 +2,14 @@ package com.cnsmash.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cnsmash.pojo.entity.Badge;
+import com.cnsmash.pojo.entity.BadgePossess;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author Toddhead
- */
-@Repository
-public interface BadgeMapper extends BaseMapper<Badge> {
+import java.util.List;
 
-    Badge gachaBadge(String badgeType);
+@Repository
+public interface BadgePossessMapper extends BaseMapper<BadgePossess> {
+
+    List<Badge> getUserBadgeList(Long userId);
 
 }

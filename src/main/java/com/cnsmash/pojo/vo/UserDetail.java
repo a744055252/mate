@@ -111,4 +111,9 @@ public class UserDetail {
      * 徽章说明
      */
     private String badgeNote;
+
+    /**
+     * 抽奖分数
+     */
+    private Integer gachaToken;
 }

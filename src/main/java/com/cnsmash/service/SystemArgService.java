@@ -1,6 +1,7 @@
 package com.cnsmash.service;
 
 import com.cnsmash.pojo.Arg;
+import com.cnsmash.pojo.GachaPR;
 import com.cnsmash.pojo.entity.SystemArg;
 
 /**
@@ -21,4 +22,16 @@ public interface SystemArgService {
      * @return 是否
      */
     boolean allowMatch();
+
+    /**
+     * 是否允许平日早上匹配
+     * @return
+     */
+    boolean allowMorning();
+
+    /**
+     * 获取当前抽奖概率
+     * @return
+     */
+    GachaPR getGachaPR();
 }
