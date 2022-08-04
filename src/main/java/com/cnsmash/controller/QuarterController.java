@@ -36,4 +36,9 @@ public class QuarterController {
         return ReposResult.ok(quarterService.getCurrent());
     }
 
+    @GetMapping("/sumup")
+    public void sumup() {
+        quarterService.quarterSumup();
+    }
+
 }

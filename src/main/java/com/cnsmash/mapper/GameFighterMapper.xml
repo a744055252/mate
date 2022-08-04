@@ -10,4 +10,15 @@
         GROUP BY user_id, fighter, `quarter`
     </select>
 
+    <select id="getPlayerQuarterFighter" resultType="com.cnsmash.pojo.dto.PlayerQuarterFighterDto">
+        SELECT a.user_id, a.fighter, a.`count`, ur.score FROM (
+            SELECT gf.user_id, gf.fighter, COUNT(*) `count`
+            FROM game_fighter gf
+            INNER JOIN battle b ON gf.battle_id = b.id
+            WHERE b.`quarter` = #{quarter} and fighter != ''
+            GROUP BY gf.user_id, gf.fighter
+        )a INNER JOIN user_rank ur
+        ON ur.user_id = a.user_id
+    </select>
+
 </mapper>

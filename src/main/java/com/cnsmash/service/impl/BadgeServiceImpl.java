@@ -3,10 +3,12 @@ package com.cnsmash.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cnsmash.mapper.BadgeMapper;
 import com.cnsmash.mapper.BadgePossessMapper;
+import com.cnsmash.mapper.GachaRecordMapper;
 import com.cnsmash.mapper.UserMapper;
 import com.cnsmash.pojo.GachaPR;
 import com.cnsmash.pojo.entity.Badge;
 import com.cnsmash.pojo.entity.BadgePossess;
+import com.cnsmash.pojo.entity.GachaRecord;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.service.BadgeService;
 import com.cnsmash.service.SystemArgService;
@@ -40,6 +42,9 @@ public class BadgeServiceImpl implements BadgeService {
     @Autowired
     SystemArgService systemArgService;
 
+    @Autowired
+    GachaRecordMapper gachaRecordMapper;
+
     public List<Badge> getFullList() {
         QueryWrapper<Badge> wrapper = new QueryWrapper<>();
         wrapper.orderByAsc("`order`");
@@ -48,6 +53,20 @@ public class BadgeServiceImpl implements BadgeService {
 
     public List<Badge> getMyBadgeList(Long userId) {
         return badgePossessMapper.getUserBadgeList(userId);
+    }
+
+    public void addBadge(Long userId, Long badgeId) {
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        QueryWrapper<BadgePossess> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("player_id", userId).eq("badge_id", badgeId);
+        if (badgePossessMapper.selectList(queryWrapper).size() == 0) {
+            BadgePossess badgePossess = new BadgePossess();
+            badgePossess.setPlayerId(userId);
+            badgePossess.setBadgeId(badgeId);
+            badgePossess.setCreateTime(now);
+            badgePossess.setUpdateTime(now);
+            badgePossessMapper.insert(badgePossess);
+        }
     }
 
     public String wearBadge(Long badgeId, Long userId) {
@@ -119,25 +138,31 @@ public class BadgeServiceImpl implements BadgeService {
             return gachaResult;
         }
 
-        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        String resultStr = "";
 
         for (int c=0; c<count; c++) {
             Badge gachaBadge = gachaOne();
-            QueryWrapper<BadgePossess> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("player_id", userId).eq("badge_id", gachaBadge.getId());
-            if (badgePossessMapper.selectList(queryWrapper).size() == 0) {
-                BadgePossess badgePossess = new BadgePossess();
-                badgePossess.setPlayerId(userId);
-                badgePossess.setBadgeId(gachaBadge.getId());
-                badgePossess.setCreateTime(now);
-                badgePossess.setUpdateTime(now);
-                badgePossessMapper.insert(badgePossess);
-            }
+            addBadge(userId, gachaBadge.getId());
             gachaResult.add(gachaBadge);
+            if (resultStr.equals("")) {
+                resultStr = gachaBadge.getId() + "";
+            } else {
+                resultStr += "," + gachaBadge.getId();
+            }
         }
 
         user.setGachaToken(token);
         userMapper.updateById(user);
+
+        // 保存抽奖记录
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        GachaRecord gachaRecord = new GachaRecord();
+        gachaRecord.setUserId(userId);
+        gachaRecord.setGachaType(count);
+        gachaRecord.setGachaResult(resultStr);
+        gachaRecord.setCreateTime(now);
+        gachaRecord.setUpdateTime(now);
+        gachaRecordMapper.insert(gachaRecord);
 
         return gachaResult;
     }

@@ -30,4 +30,7 @@ public class Quarter {
     /** 赛季结束时间 */
     private Timestamp endTime;
 
+    /** 赛季是否结算 */
+    private Integer sumup;
+
 }

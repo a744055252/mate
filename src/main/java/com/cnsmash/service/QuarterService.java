@@ -19,4 +19,6 @@ public interface QuarterService {
      * @param ro 赛季信息
      */
     void add(AddQuarterRo ro);
+
+    void quarterSumup();
 }

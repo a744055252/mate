@@ -74,7 +74,9 @@ public class BattleServiceImpl implements BattleService {
     @Autowired
     WechatService wechatService;
 
-    /** 匹配列表 */
+    /**
+     * 匹配列表
+     */
     private Map<Long, MatchBean> waitMatchMap;
 
     @PostConstruct
@@ -83,7 +85,7 @@ public class BattleServiceImpl implements BattleService {
     }
 
     @Override
-    public  MatchResultVo match(Long userId) {
+    public MatchResultVo match(Long userId) {
         if (!systemArgService.allowMatch()) {
             throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "当前不允许匹配");
         }
@@ -538,7 +540,7 @@ public class BattleServiceImpl implements BattleService {
             List<Integer> playerPoints = new ArrayList<>();
 
             // 如果比赛结束则为双方加抽奖token
-            for (SingleBattleDetail.UserBattleDetail userDetail: userId2detail.values()) {
+            for (SingleBattleDetail.UserBattleDetail userDetail : userId2detail.values()) {
                 playerIds.add(userDetail.getUserId());
                 if (userDetail.getUserFighterSet() != null) {
                     playerPoints.add(2);
@@ -582,14 +584,14 @@ public class BattleServiceImpl implements BattleService {
     public Page<PageBattleVo> pageBattle(PageBattleRo ro) {
         Page<PageBattleVo> res = battleMapper.page(new Page<>(ro.getCurrent(), ro.getSize()), ro);
 
-        for (PageBattleVo pageBattleVo: res.getRecords()) {
+        for (PageBattleVo pageBattleVo : res.getRecords()) {
 
             SingleBattleDetail singleBattleDetail = JsonUtil.parseJson(pageBattleVo.getDetailJson(), new TypeReference<SingleBattleDetail>() {
             });
             Map<Long, SingleBattleDetail.UserBattleDetail> userId2detail = singleBattleDetail.getUserId2detail();
 
             Map<Long, Object> userInfo = new HashMap<>();
-            for (Long userId: userId2detail.keySet()) {
+            for (Long userId : userId2detail.keySet()) {
                 UserDetail userDetail = userService.getDetailById(userId);
                 Map<String, Object> additionDetail = new HashMap<>();
                 additionDetail.put("badgeNote", userDetail.getBadgeNote());
@@ -753,7 +755,7 @@ public class BattleServiceImpl implements BattleService {
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         QueryWrapper<GameFighter> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("battle_id", battleId)
-                        .eq("user_id", userId);
+                .eq("user_id", userId);
         GameFighter gameFighter = new GameFighter();
         gameFighter.setUpdateTime(now);
         gameFighter.setGameFighterStatus(status.name());
@@ -778,4 +780,5 @@ public class BattleServiceImpl implements BattleService {
 
         return waiting;
     }
+
 }

@@ -16,8 +16,10 @@
         <where>
             ur.quarter = #{ro.quarter} AND ur.status = 0 AND u.status = 0
             <if test="ro.fighterNo != null and ro.fighterNo != ''">
-                AND (fighters LIKE concat('%',#{ro.fighterNo,jdbcType=VARCHAR},',%')
-                        OR fighters = #{ro.fighterNo})
+                AND (fighters LIKE concat('%,',#{ro.fighterNo,jdbcType=VARCHAR},',%')
+                        OR fighters = #{ro.fighterNo}
+                        OR fighters LIKE concat('%,',#{ro.fighterNo,jdbcType=VARCHAR})
+                        OR fighters LIKE concat(#{ro.fighterNo,jdbcType=VARCHAR},',%'))
             </if>
             <if test="ro.text != null and ro.text != ''">
                 AND (u.nick_name LIKE concat('%',#{ro.text,jdbcType=VARCHAR},'%'))
@@ -53,7 +55,7 @@
         SELECT ur.score, ur.rank ranking, `quarter`.name `quarter`
         FROM user_rank as ur
         INNER JOIN `quarter` on `quarter`.code = ur.`quarter`
-        WHERE user_id = #{playerId} AND ur.rank &lt;= 50 AND TIMESTAMPDIFF(SECOND, NOW(), `quarter`.end_time) &lt;= 0
+        WHERE user_id = #{playerId} AND ur.rank &lt;= 50 AND TIMESTAMPDIFF(HOUR, NOW(), `quarter`.end_time) &lt;= 6
         ORDER BY `quarter`.id
     </select>
 </mapper>
