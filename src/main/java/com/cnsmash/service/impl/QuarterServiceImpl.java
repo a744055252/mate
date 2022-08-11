@@ -3,17 +3,16 @@ package com.cnsmash.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cnsmash.exception.CodeException;
 import com.cnsmash.exception.ErrorCode;
-import com.cnsmash.mapper.BattleMapper;
-import com.cnsmash.mapper.GameFighterMapper;
-import com.cnsmash.mapper.QuarterMapper;
-import com.cnsmash.mapper.UserMapper;
+import com.cnsmash.mapper.*;
 import com.cnsmash.pojo.GameStatus;
 import com.cnsmash.pojo.bean.SingleBattleDetail;
 import com.cnsmash.pojo.dto.PlayerQuarterFighterDto;
+import com.cnsmash.pojo.entity.Badge;
 import com.cnsmash.pojo.entity.Battle;
 import com.cnsmash.pojo.entity.Quarter;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.ro.AddQuarterRo;
+import com.cnsmash.service.BadgeService;
 import com.cnsmash.service.QuarterService;
 import com.cnsmash.util.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -47,6 +46,12 @@ public class QuarterServiceImpl implements QuarterService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    BadgeService badgeService;
+
+    @Autowired
+    BadgeMapper badgeMapper;
 
     @Override
     public Quarter getCurrent() {
@@ -174,8 +179,10 @@ public class QuarterServiceImpl implements QuarterService {
             log.info(fighter + ": ");
             Set<Long> userIds = fighterTopUsePlayerMap.get(fighter);
             for (Long userId: userIds) {
-                User user = userMapper.selectById(userId);
-                log.info(user.getNickName());
+                QueryWrapper wrapper = new QueryWrapper();
+                wrapper.eq("note", "fighter-" + fighter + "-red");
+                List<Badge> badge = badgeMapper.selectList(wrapper);
+                badgeService.addBadge(userId, badge.get(0).getId());
             }
         }
     }

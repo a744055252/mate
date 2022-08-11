@@ -18,4 +18,9 @@ public class ListFreeroomRo {
      */
     private Integer maximum;
 
+    /**
+     * 列表长度
+     */
+    private Integer limit;
+
 }

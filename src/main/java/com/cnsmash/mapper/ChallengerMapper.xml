@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnsmash.mapper.ChallengerMapper">
+
+    <select id="getCurrentChallenger" resultType="com.cnsmash.pojo.vo.ChallengerVo">
+        SELECT challenger.*, `user`.nick_name, file.src headSrc
+        FROM challenger
+        INNER JOIN `user` ON challenger.user_id = `user`.id
+        LEFT JOIN upload_file file ON file.id = `user`.head
+        WHERE TIMESTAMPDIFF(HOUR, NOW(), challenger.start_time) &lt;= 15 AND TIMESTAMPDIFF(MINUTE, NOW(), challenger.end_time) &gt;= 0
+    </select>
+
+</mapper>

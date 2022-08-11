@@ -12,6 +12,8 @@ public interface BadgeService {
 
     List<Badge> getFullList();
 
+    void addBadge(Long userId, Long badgeId);
+
     List<Badge> getMyBadgeList(Long userId);
 
     String wearBadge(Long badgeId, Long userId);

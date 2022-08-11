@@ -55,6 +55,7 @@ public class BadgeServiceImpl implements BadgeService {
         return badgePossessMapper.getUserBadgeList(userId);
     }
 
+    @Override
     public void addBadge(Long userId, Long badgeId) {
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         QueryWrapper<BadgePossess> queryWrapper = new QueryWrapper<>();

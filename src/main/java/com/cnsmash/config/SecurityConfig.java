@@ -74,7 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/tournament/list", "/tournament/user", "/tournament/playerList",
                     "/tournament/setlist", "/tournament/resultList", "/tournament/detail",
                     "/account/user", "/account/wechat",
-                    "/badge/**"
+                    "/badge/**",
+                    "/challenger/**"
                     )
                 .permitAll()
             .anyRequest()

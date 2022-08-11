@@ -63,7 +63,7 @@ public class FreeroomServiceImpl implements FreeroomService {
 
     @Override
     public List<FreeroomVo> list(ListFreeroomRo ro) {
-        return freeroomMapper.list(ro.getServer(), ro.getMaximum());
+        return freeroomMapper.list(ro.getServer(), ro.getMaximum(), ro.getLimit());
     }
 
     @Override

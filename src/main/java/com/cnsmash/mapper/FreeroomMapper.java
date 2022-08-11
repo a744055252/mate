@@ -22,7 +22,7 @@ public interface FreeroomMapper extends BaseMapper<Freeroom> {
      * @param maximum 人数上限
      * @return
      */
-    List<FreeroomVo> list(String server, Integer maximum);
+    List<FreeroomVo> list(String server, Integer maximum, Integer limit);
 
     /**
      * 查询房间详情

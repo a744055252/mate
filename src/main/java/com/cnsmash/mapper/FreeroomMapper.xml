@@ -23,6 +23,9 @@
             </if>
         </where>
         ORDER BY room.update_time DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
     </select>
 
     <!-- 查询房间详情 -->
