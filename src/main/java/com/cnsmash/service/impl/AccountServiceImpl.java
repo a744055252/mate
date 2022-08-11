@@ -122,6 +122,7 @@ public class AccountServiceImpl implements AccountService {
         user.setTagJson(JsonUtil.toJson(ro.getTags()));
         user.setUpdateTime(now);
         user.setCreateTime(now);
+        user.setGachaToken(0);
         userService.add(user);
 
         return user;

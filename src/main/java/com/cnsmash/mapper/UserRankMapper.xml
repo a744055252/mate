@@ -3,10 +3,11 @@
 <mapper namespace="com.cnsmash.mapper.UserRankMapper">
 
     <select id="pageFighter" resultType="com.cnsmash.pojo.vo.UserDetail">
-        SELECT u.id, u.*, ur.score, uc.fighters fighters, f.id as head, f.src as headSrc
+        SELECT u.id, u.*, ur.score, uc.fighters fighters, f.id as head, f.src as headSrc, badge.uri badgeUri, badge.note badgeNote
         FROM user_rank ur
         INNER JOIN user u ON u.id = ur.user_id
         LEFT JOIN upload_file f on u.head = f.id
+        LEFT JOIN badge on u.badge = badge.id
         LEFT JOIN (
             SELECT user_id, GROUP_CONCAT(fighter_no) AS fighters FROM user_fighter
             WHERE quarter = #{ro.quarter} AND total >= 5
@@ -33,10 +34,11 @@
     </select>
 
     <select id="fullRank" resultType="com.cnsmash.pojo.vo.UserDetail">
-        SELECT u.id, u.*, ur.score, uc.fighters fighters, f.id as head, f.src as headSrc
+        SELECT u.id, u.*, ur.score, uc.fighters fighters, f.id as head, f.src as headSrc, badge.uri badgeUri, badge.note badgeNote
         FROM user_rank ur
         INNER JOIN user u ON u.id = ur.user_id
         LEFT JOIN upload_file f on u.head = f.id
+        LEFT JOIN badge on u.badge = badge.id
         LEFT JOIN (
             SELECT user_id, GROUP_CONCAT(fighter_no) AS fighters FROM user_fighter
             WHERE quarter = #{quarter} AND total >= 5

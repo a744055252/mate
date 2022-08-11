@@ -12,4 +12,10 @@ public interface BadgeService {
 
     List<Badge> getFullList();
 
+    List<Badge> getMyBadgeList(Long userId);
+
+    String wearBadge(Long badgeId, Long userId);
+
+    List<Badge> gacha(Long userId, int count);
+
 }

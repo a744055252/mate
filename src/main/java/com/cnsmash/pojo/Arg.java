@@ -9,7 +9,12 @@ import lombok.Getter;
 @Getter
 public enum Arg {
     /** 允许匹配 */
-    allowMatch
+    allowMatch,
+    allowMorning,
+    /** 抽奖概率 */
+    gachaSilver,
+    gachaGold,
+    gachaSsr
     ;
     
 }
