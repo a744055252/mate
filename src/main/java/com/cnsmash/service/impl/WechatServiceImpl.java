@@ -70,7 +70,7 @@ public class WechatServiceImpl implements WechatService {
                 .ifPresent(wxUser -> {
                     WxMpTemplateMessage msg = WxMpTemplateMessage.builder()
                             .templateId("_3_DaR4Cz3mw6YQDVWgfY4KkM-zbauczCziKg3FX-fg")
-                            .url("https://mate.cnsmash.com/battle/" + vo.getBattleId())
+                            .url("http://mate.cnsmash.com/battle/" + vo.getBattleId())
                             .toUser(wxUser.getOpenid())
                             .data(dataList)
                             .build();
@@ -95,7 +95,7 @@ public class WechatServiceImpl implements WechatService {
                     .ifPresent(wxUser -> {
                         WxMpTemplateMessage msg = WxMpTemplateMessage.builder()
                                 .templateId("_3_DaR4Cz3mw6YQDVWgfY4KkM-zbauczCziKg3FX-fg")
-                                .url("https://mate.cnsmash.com/battle/" + battle.getId())
+                                .url("http://mate.cnsmash.com/battle/" + battle.getId())
                                 .toUser(wxUser.getOpenid())
                                 .data(dataList)
                                 .build();
