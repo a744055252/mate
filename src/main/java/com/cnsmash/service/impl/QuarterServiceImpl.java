@@ -174,16 +174,30 @@ public class QuarterServiceImpl implements QuarterService {
                 }
             }
         }
-        // TODO:发徽章
+        // 角色榜TOP1徽章
         for (String fighter : fighterTopUsePlayerMap.keySet()) {
             log.info(fighter + ": ");
             Set<Long> userIds = fighterTopUsePlayerMap.get(fighter);
-            for (Long userId: userIds) {
+            for (Long userId : userIds) {
                 QueryWrapper wrapper = new QueryWrapper();
-                wrapper.eq("note", "fighter-" + fighter + "-red");
+                wrapper.eq("uri", "fighter-" + fighter + "-red");
                 List<Badge> badge = badgeMapper.selectList(wrapper);
                 badgeService.addBadge(userId, badge.get(0).getId());
             }
         }
+        // 个人main徽章
+        for (Long playerId : playerMostFighterMap.keySet()) {
+            Set<String> characters = playerMostFighterMap.get(playerId);
+            for (String character : characters) {
+                QueryWrapper wrapper = new QueryWrapper();
+                wrapper.eq("uri", "fighter-" + character + "-green");
+                List<Badge> badge = badgeMapper.selectList(wrapper);
+                badgeService.addBadge(playerId, badge.get(0).getId());
+            }
+        }
+
+        // 更新赛季更新状态
+        current.setSumup(1);
+        quarterMapper.updateById(current);
     }
 }
