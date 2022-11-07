@@ -1,17 +1,18 @@
 package com.cnsmash.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cnsmash.exception.CodeException;
 import com.cnsmash.exception.ErrorCode;
 import com.cnsmash.mapper.*;
 import com.cnsmash.pojo.GameStatus;
 import com.cnsmash.pojo.bean.SingleBattleDetail;
 import com.cnsmash.pojo.dto.PlayerQuarterFighterDto;
-import com.cnsmash.pojo.entity.Badge;
-import com.cnsmash.pojo.entity.Battle;
-import com.cnsmash.pojo.entity.Quarter;
-import com.cnsmash.pojo.entity.User;
+import com.cnsmash.pojo.entity.*;
 import com.cnsmash.pojo.ro.AddQuarterRo;
+import com.cnsmash.pojo.ro.CustomQuarterAttendRo;
+import com.cnsmash.pojo.ro.CustomQuarterListRo;
+import com.cnsmash.pojo.vo.PageBattleVo;
 import com.cnsmash.service.BadgeService;
 import com.cnsmash.service.QuarterService;
 import com.cnsmash.util.JsonUtil;
@@ -52,6 +53,10 @@ public class QuarterServiceImpl implements QuarterService {
 
     @Autowired
     BadgeMapper badgeMapper;
+
+    @Autowired
+
+    QuarterPlayerMapper quarterPlayerMapper;
 
     @Override
     public Quarter getCurrent() {
@@ -200,4 +205,125 @@ public class QuarterServiceImpl implements QuarterService {
         current.setSumup(1);
         quarterMapper.updateById(current);
     }
+
+    /********** custom quarter **********/
+    public List<Quarter> getList(CustomQuarterListRo ro) {
+        return quarterMapper.page(new Page<>(ro.getCurrent(), ro.getSize()), ro).getRecords();
+    }
+
+    public List<Quarter> getAttendList(CustomQuarterListRo ro, Long userId) {
+        return quarterMapper.pageAttend(new Page<>(ro.getCurrent(), ro.getSize()), ro, userId).getRecords();
+    }
+
+    public String signinQuarter(CustomQuarterAttendRo ro, Long userId) {
+
+        Quarter quarter = quarterMapper.selectById(ro.getQuarterId());
+
+        /** 密码判断 **/
+        if (quarter.getPassword().equals("") == false && quarter.getPassword().equals(ro.getPassword()) == false) {
+            return "通行密码错误";
+        }
+
+        /** 时间判断 **/
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        if (now.after(quarter.getEndTime()) || quarter.getStatus() == "finish") {
+            return "赛季已结束";
+        }
+
+        /** 已报名判断 **/
+        QueryWrapper<QuarterPlayer> wrapper = new QueryWrapper<>();
+        wrapper.eq("player_id", userId);
+        wrapper.eq("quarter_id", ro.getQuarterId());
+        List<QuarterPlayer> quarterPlayers = quarterPlayerMapper.selectList(wrapper);
+        if (quarterPlayers.size() > 0) {
+            return "已经报名过了";
+        }
+
+        QuarterPlayer quarterPlayer = new QuarterPlayer();
+        quarterPlayer.setPlayerId(userId);
+        quarterPlayer.setQuarterId(ro.getQuarterId());
+        quarterPlayer.setBanMap(ro.getBanMap());
+        quarterPlayer.setCreateTime(now);
+        quarterPlayer.setUpdateTime(now);
+        quarterPlayerMapper.insert(quarterPlayer);
+
+        return "success";
+    }
+
+    @Override
+    public String signinUpdate(CustomQuarterAttendRo ro, Long userId) {
+
+        /** 已报名判断 **/
+        QueryWrapper<QuarterPlayer> wrapper = new QueryWrapper<>();
+        wrapper.eq("player_id", userId);
+        wrapper.eq("quarter_id", ro.getQuarterId());
+        List<QuarterPlayer> quarterPlayers = quarterPlayerMapper.selectList(wrapper);
+        if (quarterPlayers.size() == 0) {
+            return "未报名，操作无效";
+        }
+
+        /** 赛季状态判断 **/
+        Quarter quarter = quarterMapper.selectById(ro.getQuarterId());
+        if (quarter.getStatus().equals("finish")) {
+            return "已结束，操作无效";
+        }
+
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        QuarterPlayer quarterPlayer = new QuarterPlayer();
+        quarterPlayer.setId(ro.getId());
+        quarterPlayer.setPlayerId(userId);
+        quarterPlayer.setQuarterId(ro.getQuarterId());
+        quarterPlayer.setBanMap(ro.getBanMap());
+        quarterPlayer.setCreateTime(now);
+        quarterPlayer.setUpdateTime(now);
+        quarterPlayerMapper.updateById(quarterPlayer);
+
+        return "success";
+    }
+
+    @Override
+    public String signout(CustomQuarterAttendRo ro, Long userId) {
+
+        /** 已报名判断 **/
+        QueryWrapper<QuarterPlayer> wrapper = new QueryWrapper<>();
+        wrapper.eq("player_id", userId);
+        wrapper.eq("quarter_id", ro.getQuarterId());
+        List<QuarterPlayer> quarterPlayers = quarterPlayerMapper.selectList(wrapper);
+        if (quarterPlayers.size() == 0) {
+            return "未报名，操作无效";
+        }
+
+        /** 赛季状态判断 **/
+        Quarter quarter = quarterMapper.selectById(ro.getQuarterId());
+        if (quarter.getStatus().equals("before") == false) {
+            return "已开始，操作无效";
+        }
+
+        quarterPlayerMapper.deleteById(ro.getId());
+        return "success";
+
+    }
+
+    @Override
+    public String hostStartQuarter(Long quarterId, Long host) {
+
+        Quarter quarter = quarterMapper.selectById(quarterId);
+
+        /** host判断 **/
+        if (quarter.getHost() != host) {
+            return "非举办人无法开始赛季";
+        }
+
+        /** 状态判断 **/
+        if (quarter.getStatus() != "before") {
+            return "状态错误，无法开始赛季";
+        }
+
+        quarter.setStatus("process");
+        quarterMapper.updateById(quarter);
+
+        return "赛季已开始";
+
+    }
+
 }

@@ -20,6 +20,9 @@ public class MatchBean {
     /** 分数 */
     private Long score;
 
+    /** 赛季 */
+    private String quarter;
+
     /**
      * 服务器
      * 裸连zh 日服jp 港服hk 美服usa

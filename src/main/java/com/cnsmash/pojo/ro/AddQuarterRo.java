@@ -28,4 +28,9 @@ public class AddQuarterRo {
     @NotNull
     private Timestamp endTime;
 
+    /**
+     * 通行密码
+     */
+    private String timestamp;
+
 }

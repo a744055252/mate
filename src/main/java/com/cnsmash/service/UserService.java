@@ -1,10 +1,12 @@
 package com.cnsmash.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cnsmash.pojo.BattleResultType;
 import com.cnsmash.pojo.entity.Quarter;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.entity.UserFighter;
 import com.cnsmash.pojo.ro.AddUserRo;
+import com.cnsmash.pojo.ro.PageFighterRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
 import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.RuleVo;
@@ -153,5 +155,12 @@ public interface UserService {
      * @return
      */
     int getGachaToken(Long userId);
+
+    /**
+     * 分页查询用户
+     * @param ro 请求
+     * @return 返回数据
+     */
+    Page<UserDetail> page(PageFighterRo ro);
 
 }

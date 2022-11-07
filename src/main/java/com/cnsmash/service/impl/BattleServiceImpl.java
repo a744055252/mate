@@ -7,6 +7,7 @@ import com.cnsmash.exception.ErrorCode;
 import com.cnsmash.mapper.BattleGameMapper;
 import com.cnsmash.mapper.BattleMapper;
 import com.cnsmash.mapper.GameFighterMapper;
+import com.cnsmash.mapper.QuarterMapper;
 import com.cnsmash.match.MatchBean;
 import com.cnsmash.match.MatchHandle;
 import com.cnsmash.pojo.*;
@@ -74,6 +75,9 @@ public class BattleServiceImpl implements BattleService {
     @Autowired
     WechatService wechatService;
 
+    @Autowired
+    QuarterMapper quarterMapper;
+
     /**
      * 匹配列表
      */
@@ -100,26 +104,30 @@ public class BattleServiceImpl implements BattleService {
             throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "当前赛季未开始");
         }
 
-        // 是否匹配时间
-        LocalDateTime current = LocalDateTime.now();
-        if (current.getDayOfWeek() != DayOfWeek.SATURDAY && current.getDayOfWeek() != DayOfWeek.SUNDAY) {
-            if (current.getHour() < 18 && !systemArgService.allowMorning()) {
-                throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "本日匹配从18:00开始");
-            }
-        }
 
         User user = userService.getById(userId);
 
-        // 判断是否完成赛季设置
-        if (user.getServer() == null) {
-            throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "请先完成赛季匹配设置");
-        }
+        // 常规赛季判断
+        if (quarter.getCurrent()) {
+            // 是否匹配时间
+            LocalDateTime current = LocalDateTime.now();
+            if (current.getDayOfWeek() != DayOfWeek.SATURDAY && current.getDayOfWeek() != DayOfWeek.SUNDAY) {
+                if (current.getHour() < 18 && !systemArgService.allowMorning()) {
+                    throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "本日匹配从18:00开始");
+                }
+            }
 
-        // 判断现在是否被ban
-        Timestamp banUntil = user.getBanUntil();
-        // Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-        if (banUntil != null && now.before(banUntil)) {
-            throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "当前用户因过多中止而被禁止匹配至" + banUntil.toString().substring(0, 19));
+            // 判断是否完成赛季设置
+            if (user.getServer() == null || user.getScoreGap() == null) {
+                throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "请先完成赛季匹配设置");
+            }
+
+            // 判断现在是否被ban
+            Timestamp banUntil = user.getBanUntil();
+            // Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+            if (banUntil != null && now.before(banUntil)) {
+                throw new CodeException(ErrorCode.MATCH_ALLOW_ERROR, "当前用户因过多中止而被禁止匹配至" + banUntil.toString().substring(0, 19));
+            }
         }
 
         Battle currentBattle = battleMapper.getCurrentBattle(userId);

@@ -38,4 +38,36 @@
     <update id="addGachaToken">
         UPDATE `user` SET gacha_token = gacha_token + #{gachaToken} WHERE id = #{playerId}
     </update>
+
+    <select id="pageFighter" resultType="com.cnsmash.pojo.vo.UserDetail">
+        SELECT u.id, u.*, ur.score, uc.fighters fighters, f.id as head, f.src as headSrc, badge.uri badgeUri, badge.note badgeNote
+        FROM `user` u
+        LEFT JOIN user_rank ur ON u.id = ur.user_id AND ur.quarter = 's1'
+        LEFT JOIN upload_file f on u.head = f.id
+        LEFT JOIN badge on u.badge = badge.id
+        LEFT JOIN (
+            SELECT user_id, GROUP_CONCAT(fighter_no) AS fighters FROM user_fighter
+            WHERE quarter = #{ro.quarter} AND total >= 5
+            GROUP BY user_id
+        )uc ON u.id = uc.user_id
+        <where>
+            <if test="ro.fighterNo != null and ro.fighterNo != ''">
+                AND (fighters LIKE concat('%,',#{ro.fighterNo,jdbcType=VARCHAR},',%')
+                OR fighters = #{ro.fighterNo}
+                OR fighters LIKE concat('%,',#{ro.fighterNo,jdbcType=VARCHAR})
+                OR fighters LIKE concat(#{ro.fighterNo,jdbcType=VARCHAR},',%'))
+            </if>
+            <if test="ro.text != null and ro.text != ''">
+                AND (u.nick_name LIKE concat('%',#{ro.text,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+        <choose>
+            <when test="ro.text != null and ro.text != ''">
+                ORDER BY LENGTH(u.nick_name) ASC, ur.score DESC
+            </when>
+            <otherwise>
+                ORDER BY ISNULL(ur.update_time), ur.update_time DESC
+            </otherwise>
+        </choose>
+    </select>
 </mapper>

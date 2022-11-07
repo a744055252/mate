@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnsmash.mapper.QuarterMapper">
+
+    <select id="page" resultType="com.cnsmash.pojo.entity.Quarter">
+        SELECT * FROM `quarter`
+        WHERE host != -1
+        <if test="ro.status != null">
+            status = #{ro.status}
+        </if>
+        ORDER BY start_time
+    </select>
+
+    <select id="pageAttend" resultType="com.cnsmash.pojo.entity.Quarter">
+        SELECT `quarter`.* FROM `quarter`
+        INNER JOIN quarter_player ON quarter_player.player_id = #{userId}
+        WHERE `quarter`.host != -1
+        <if test="ro.status != null">
+            status = ro.status
+        </if>
+    </select>
+
+</mapper>

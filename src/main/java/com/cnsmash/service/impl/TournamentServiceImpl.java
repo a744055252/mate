@@ -225,6 +225,10 @@ public class TournamentServiceImpl implements TournamentService {
         }
     }
 
+    private void bracketGeneratorDE(Long tournamentId) {
+
+    }
+
     @Override
     public void startToutnament(Long tournamentId) {
         seedGenerator(tournamentId);

@@ -1,8 +1,12 @@
 package com.cnsmash.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cnsmash.pojo.entity.Account;
 import com.cnsmash.pojo.entity.User;
+import com.cnsmash.pojo.entity.UserRank;
+import com.cnsmash.pojo.ro.PageFighterRo;
 import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.UserDetail;
 import org.apache.ibatis.annotations.Param;
@@ -58,5 +62,13 @@ public interface UserMapper extends BaseMapper<User> {
      * @param gachaToken
      */
     void addGachaToken(Long playerId, int gachaToken);
+
+    /**
+     * 查询用户列表
+     * @param page
+     * @param ro
+     * @return
+     */
+    Page<UserDetail> pageFighter(IPage<UserRank> page, @Param("ro") PageFighterRo ro);
 
 }

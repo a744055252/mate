@@ -33,6 +33,17 @@ public class Badge {
     private String note;
 
     /**
+     * 等级类型
+     */
+    @TableField(value = "`type`")
+    private String type;
+
+    /**
+     * 能否抽取
+     */
+    private Integer gacha;
+
+    /**
      * 排序
      */
     @TableField(value = "`order`")

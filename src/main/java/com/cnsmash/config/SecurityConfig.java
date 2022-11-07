@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/freeroom/list", "/freeroom/detail", "/freeroom/count",
                     "/quarter/**",
                     "/rank/id", "/rank/total", "/rank/fullrank", "/rank/historyRecord",
-                    "/user/id", "/user/fighter", "/user/recountFighter",
+                    "/user/id", "/user/fighter", "/user/recountFighter", "/user/page",
                     "/tournament/list", "/tournament/user", "/tournament/playerList",
                     "/tournament/setlist", "/tournament/resultList", "/tournament/detail",
                     "/account/user", "/account/wechat",

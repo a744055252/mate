@@ -33,4 +33,16 @@ public class Quarter {
     /** 赛季是否结算 */
     private Integer sumup;
 
+    /** 通行密码 */
+    private String password;
+
+    /** 主办人 */
+    private Long host;
+
+    /** 描述 */
+    private String description;
+
+    /** 状态 */
+    private String status;
+
 }

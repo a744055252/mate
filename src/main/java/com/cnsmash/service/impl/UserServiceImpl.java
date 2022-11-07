@@ -1,11 +1,13 @@
 package com.cnsmash.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cnsmash.mapper.*;
 import com.cnsmash.pojo.BattleResultType;
 import com.cnsmash.pojo.GameStatus;
 import com.cnsmash.pojo.entity.*;
 import com.cnsmash.pojo.ro.AddUserRo;
+import com.cnsmash.pojo.ro.PageFighterRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
 import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.RuleVo;
@@ -302,6 +304,11 @@ public class UserServiceImpl implements UserService {
     public int getGachaToken(Long userId) {
         User user = userMapper.selectById(userId);
         return user.getGachaToken();
+    }
+
+    @Override
+    public Page<UserDetail> page(PageFighterRo ro) {
+        return userMapper.pageFighter(new Page<>(ro.getCurrent(), ro.getSize()), ro);
     }
 
 

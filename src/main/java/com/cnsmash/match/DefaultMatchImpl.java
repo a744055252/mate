@@ -19,6 +19,8 @@ public class DefaultMatchImpl implements MatchHandle {
         return waitMatchMap.values().stream()
                 // 自己的跳过
                 .filter(bean-> !ro.getUserId().equals(bean.getUserId()))
+                // 同一个赛季
+                //.filter(bean -> ro.getQuarter().equals(bean.getQuarter()))
                 .filter(bean -> {
                     // 5分钟内不重复遇到同一个对手
                     Timestamp now = Timestamp.valueOf(LocalDateTime.now());

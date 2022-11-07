@@ -1,9 +1,11 @@
 package com.cnsmash.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cnsmash.config.login.pojo.LoginUser;
 import com.cnsmash.pojo.bean.ReposResult;
 import com.cnsmash.pojo.entity.User;
 import com.cnsmash.pojo.ro.AddUserRo;
+import com.cnsmash.pojo.ro.PageFighterRo;
 import com.cnsmash.pojo.ro.UpdateMatchRuleRo;
 import com.cnsmash.pojo.vo.HistoryRecordVo;
 import com.cnsmash.pojo.vo.RuleVo;
@@ -85,6 +87,11 @@ public class UserController {
     public int getGachaToken() {
         LoginUser loginUser = MateAuthUtils.getLoginUser();
         return userService.getGachaToken(loginUser.getUserId());
+    }
+
+    @GetMapping("/page")
+    public ReposResult<Page<UserDetail>> page(PageFighterRo ro) {
+        return ReposResult.ok(userService.page(ro));
     }
 
 }
