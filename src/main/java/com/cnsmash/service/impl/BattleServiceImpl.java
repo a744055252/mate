@@ -337,14 +337,14 @@ public class BattleServiceImpl implements BattleService {
         userService.update(user);
 
         // 创建的人不发，其他人发 目前暂时不发建房成功提醒
-//        List<GameFighter> gameFighters = listGameFighterByBattleId(battle.getId())
-//                .stream().filter(gameFighter -> !gameFighter.getUserId().equals(userId)).collect(Collectors.toList());
+        List<GameFighter> gameFighters = listGameFighterByBattleId(battle.getId())
+                .stream().filter(gameFighter -> !gameFighter.getUserId().equals(userId)).collect(Collectors.toList());
         // 发送公众号消息
-//        try {
-//            wechatService.createRoom(battle, room, gameFighters);
-//        } catch (Exception e) {
-//            log.error("发送公众号消息失败", e);
-//        }
+        try {
+            wechatService.createRoom(battle, room, gameFighters);
+        } catch (Exception e) {
+            log.error("发送公众号消息失败", e);
+        }
 
     }
 
